@@ -1,0 +1,3 @@
+[submodule "fuzzystring"]
+	path = fuzzystring
+	url = https://github.com/msdotnetclr/fuzzystring.git

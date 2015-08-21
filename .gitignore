@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/backend/obj/Debug
+/Fasdr.Backend/obj/Debug
+/Fasdr.UnitTests/obj/Debug
+/Fasdr/packages/System.IO.Abstractions.2.0.0.116

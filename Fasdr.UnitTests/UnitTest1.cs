@@ -7,7 +7,7 @@ namespace Fasdr.UnitTests
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Test()
         {
         }
     }

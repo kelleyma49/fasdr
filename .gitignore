@@ -9,3 +9,6 @@
 /Fasdr/packages/NUnit.2.6.4
 /Fasdr/packages/System.IO.Abstractions.TestingHelpers.2.0.0.116
 /Fasdr.UnitTests/bin/Debug
+/Fasdr/.vs/fasdr/v14
+*.dll
+*.pdb

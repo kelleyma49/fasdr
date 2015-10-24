@@ -10,11 +10,23 @@ namespace Fasdr.UnitTests
     [TestClass]
     public class DatabaseTest
     {
+        static string UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+        [TestMethod]
+        public void TestCanConstruct()
+        {
+            var fileSystem = new MockFileSystem();
+            var db = new Database(fileSystem);
+        }
+
         [TestMethod]
         public void TestConfigLoadFileNotFound()
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>{ });
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(UserPath);
+
             var db = new Database(fileSystem);
+            db.Load();
         }
 
         [TestMethod]
@@ -22,7 +34,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileCorruptedFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  @"c:\fasdrConfig.txt", new MockFileData("ThisShouldNotParse") }
+                {  System.IO.Path.Combine(UserPath,"fasdrConfig.txt"), new MockFileData("ThisShouldNotParse") }
             });
  
             var db = new Database(fileSystem);

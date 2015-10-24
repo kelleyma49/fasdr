@@ -20,29 +20,35 @@ namespace Fasdr.Backend
 
         public void Load()
         {
+            var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
             try
             {
                 PathToWeight.Clear();
 
-                foreach (var textFile in FileSystem.Directory.GetFiles(@"c:\", "fasdrConfig.txt", SearchOption.TopDirectoryOnly))
+                foreach (var textFile in FileSystem.Directory.GetFiles(userDir, "fasdrConfig.txt", SearchOption.TopDirectoryOnly))
                 {
-                    foreach (var line in FileSystem.File.ReadLines(textFile))
+                    using (var s = FileSystem.File.OpenText(textFile))
                     {
-                        int indexSplit = line.IndexOf(' ');
-                        if (indexSplit<=0)
+                        while (!s.EndOfStream)
                         {
-                            throw new Exception("Failed to parse line '" + line + "'");
+                            var line = s.ReadLine();
+                            int indexSplit = line.IndexOf(' ');
+                            if (indexSplit <= 0)
+                            {
+                                throw new Exception("Failed to parse line '" + line + "'");
+                            }
+
+                            double weight;
+                            if (!Double.TryParse(line.Substring(0, indexSplit), out weight))
+                            {
+                                throw new Exception("Failed to parse line '" + line + "'");
+                            }
+
+                            string path = line.Substring(indexSplit);
+
+                            PathToWeight.Add(path, weight);
                         }
-
-                        double weight;
-                        if (!Double.TryParse(line.Substring(0, indexSplit), out weight))
-                        {
-                            throw new Exception("Failed to parse line '" + line + "'");
-                        }
-
-                        string path = line.Substring(indexSplit);
-
-                        PathToWeight.Add(path, weight);
                     }
                 }
             }

@@ -33,19 +33,19 @@ namespace Fasdr.Backend
                         while (!s.EndOfStream)
                         {
                             var line = s.ReadLine();
-                            int indexSplit = line.IndexOf(' ');
-                            if (indexSplit <= 0)
+                            var split = line.Split(new char[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (split==null || split.Length!=2)
                             {
                                 throw new Exception("Failed to parse line '" + line + "'");
                             }
 
                             double weight;
-                            if (!Double.TryParse(line.Substring(0, indexSplit), out weight))
+                            if (!Double.TryParse(split[1], out weight))
                             {
-                                throw new Exception("Failed to parse line '" + line + "'");
                             }
 
-                            string path = line.Substring(indexSplit);
+                            var path = split[0];
 
                             PathToWeight.Add(path, weight);
                         }
@@ -54,7 +54,7 @@ namespace Fasdr.Backend
             }
             catch (FileNotFoundException)
             {
-
+                
             }
         }
 

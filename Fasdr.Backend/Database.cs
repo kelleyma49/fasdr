@@ -18,15 +18,23 @@ namespace Fasdr.Backend
             FileSystem = fileSystem;
         }
 
+        static Database()
+        {
+            ConfigDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            ConfigPath = System.IO.Path.Combine(ConfigDir, ConfigFileName);
+        }
+
+        public static readonly string ConfigDir;
+        public static readonly string ConfigFileName = "fasdrConfig.txt";
+        public static readonly string ConfigPath;
+
         public void Load()
         {
-            var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
             try
             {
                 PathToWeight.Clear();
 
-                foreach (var textFile in FileSystem.Directory.GetFiles(userDir, "fasdrConfig.txt", SearchOption.TopDirectoryOnly))
+                foreach (var textFile in FileSystem.Directory.GetFiles(ConfigDir, ConfigFileName, SearchOption.TopDirectoryOnly))
                 {
                     using (var s = FileSystem.File.OpenText(textFile))
                     {
@@ -56,6 +64,20 @@ namespace Fasdr.Backend
             {
                 
             }
+        }
+
+        public void Save()
+        {
+            var fileName = System.IO.Path.Combine(ConfigDir,Path.GetRandomFileName());
+            using (var s = FileSystem.File.CreateText(fileName))
+            {
+                foreach(var p in PathToWeight)
+                {
+                    s.WriteLine(string.Join("|", p.Key, p.Value));
+                }
+            }
+
+            FileSystem.File.Move(fileName, ConfigPath);
         }
 
         public IFileSystem FileSystem { get; }

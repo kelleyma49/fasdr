@@ -10,8 +10,6 @@ namespace Fasdr.UnitTests
     [TestClass]
     public class DatabaseTest
     {
-        static string UserPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
         [TestMethod]
         public void TestCanConstruct()
         {
@@ -23,7 +21,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileNotFound()
         {
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(UserPath);
+            fileSystem.AddDirectory(Database.ConfigDir);
 
             var db = new Database(fileSystem);
             db.Load();
@@ -34,7 +32,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileCorruptedFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  System.IO.Path.Combine(UserPath,"fasdrConfig.txt"), new MockFileData("ThisShouldNotParse") }
+                {  Database.ConfigPath, new MockFileData("ThisShouldNotParse") }
             });
 
             var db = new Database(fileSystem);
@@ -45,7 +43,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileEmptyFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  System.IO.Path.Combine(UserPath,"fasdrConfig.txt"), new MockFileData("") }
+                {  Database.ConfigPath, new MockFileData("") }
             });
  
             var db = new Database(fileSystem);
@@ -59,7 +57,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  System.IO.Path.Combine(UserPath,"fasdrConfig.txt"),
+                {  Database.ConfigPath,
                     new MockFileData(
                         @"c:\dir1\|101.0" + Environment.NewLine +
                         @"c:\dir1\dir2|10.0" + Environment.NewLine) }
@@ -73,6 +71,33 @@ namespace Fasdr.UnitTests
             Assert.AreEqual(101.0f, db.PathToWeight[@"c:\dir1\"]);
             Assert.IsTrue(db.PathToWeight.ContainsKey(@"c:\dir1\dir2"));
             Assert.AreEqual(10.0f, db.PathToWeight[@"c:\dir1\dir2"]);
+        }
+
+        [TestMethod]
+        public void TestConfigSaveFileEmpty()
+        {
+            var fileSystem = new MockFileSystem();
+          
+            var db = new Database(fileSystem);
+            db.Save();
+
+            Assert.IsTrue(fileSystem.FileExists(Database.ConfigPath));
+            Assert.AreEqual("",fileSystem.File.ReadAllText(Database.ConfigPath));
+        }
+
+        [TestMethod]
+        public void TestConfigSimpleDatabase()
+        {
+            var fileSystem = new MockFileSystem();
+
+            var db = new Database(fileSystem);
+            db.PathToWeight.Add(@"c:\dir1\", 12.0);
+            db.PathToWeight.Add(@"c:\dir1\dir2", 34.0);
+            db.Save();
+
+            Assert.IsTrue(fileSystem.FileExists(Database.ConfigPath));
+            Assert.AreEqual(@"c:\dir1\|12" +Environment.NewLine + 
+                   @"c:\dir1\dir2|34" + Environment.NewLine, fileSystem.File.ReadAllText(Database.ConfigPath));
         }
 
     }

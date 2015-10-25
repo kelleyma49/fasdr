@@ -59,8 +59,8 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
                 {  Database.ConfigPath,
                     new MockFileData(
-                        @"c:\dir1\|101.0" + Environment.NewLine +
-                        @"c:\dir1\dir2|10.0" + Environment.NewLine) }
+                        @"c:\dir1\" +  Database.Separator + "101.0" + Environment.NewLine +
+                        @"c:\dir1\dir2" +  Database.Separator + "10.0" + Environment.NewLine) }
             });
 
             var db = new Database(fileSystem);
@@ -96,8 +96,9 @@ namespace Fasdr.UnitTests
             db.Save();
 
             Assert.IsTrue(fileSystem.FileExists(Database.ConfigPath));
-            Assert.AreEqual(@"c:\dir1\|12" +Environment.NewLine + 
-                   @"c:\dir1\dir2|34" + Environment.NewLine, fileSystem.File.ReadAllText(Database.ConfigPath));
+            Assert.AreEqual(@"c:\dir1\" + Database.Separator + "12" +Environment.NewLine +
+                   @"c:\dir1\dir2" + Database.Separator + "34" + Environment.NewLine, 
+                   fileSystem.File.ReadAllText(Database.ConfigPath));
         }
 
     }

@@ -27,6 +27,7 @@ namespace Fasdr.Backend
         public static readonly string ConfigDir;
         public static readonly string ConfigFileName = "fasdrConfig.txt";
         public static readonly string ConfigPath;
+        public static readonly char Separator = '|';
 
         public void Load()
         {
@@ -41,7 +42,7 @@ namespace Fasdr.Backend
                         while (!s.EndOfStream)
                         {
                             var line = s.ReadLine();
-                            var split = line.Split(new char[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                            var split = line.Split(new char[] {Separator}, StringSplitOptions.RemoveEmptyEntries);
 
                             if (split==null || split.Length!=2)
                             {
@@ -73,7 +74,7 @@ namespace Fasdr.Backend
             {
                 foreach(var p in PathToWeight)
                 {
-                    s.WriteLine(string.Join("|", p.Key, p.Value));
+                    s.WriteLine(p.Key + Separator + p.Value);
                 }
             }
 

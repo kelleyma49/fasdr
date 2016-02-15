@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzyString", "..\fuzzystring\FuzzyString\FuzzyString.csproj", "{2AAA900B-64FB-4874-9444-64AE33ACA970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Backend", "..\fasdr.backend\Fasdr.Backend.csproj", "{20F8F9DB-C960-48ED-93E2-FBE95AED3C09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.UnitTests", "..\Fasdr.UnitTests\Fasdr.UnitTests.csproj", "{EADAFA2D-1F74-4D32-AD9A-9039E30FFA80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{C7914313-B32A-4C26-B45D-11A10A45C2F4}"
+	ProjectSection(SolutionItems) = preProject
+		..\.travis.yml = ..\.travis.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -65,7 +65,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\fasdr.backend\Fasdr.Backend.csproj">
+    <ProjectReference Include="..\Fasdr.Backend\Fasdr.Backend.csproj">
       <Project>{20f8f9db-c960-48ed-93e2-fbe95aed3c09}</Project>
       <Name>Fasdr.Backend</Name>
     </ProjectReference>

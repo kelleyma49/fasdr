@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzyString", "..\fuzzystring\FuzzyString\FuzzyString.csproj", "{2AAA900B-64FB-4874-9444-64AE33ACA970}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Backend", "..\fasdr.backend\Fasdr.Backend.csproj", "{20F8F9DB-C960-48ED-93E2-FBE95AED3C09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Backend", "..\Fasdr.Backend\Fasdr.Backend.csproj", "{20F8F9DB-C960-48ED-93E2-FBE95AED3C09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.UnitTests", "..\Fasdr.UnitTests\Fasdr.UnitTests.csproj", "{EADAFA2D-1F74-4D32-AD9A-9039E30FFA80}"
 EndProject

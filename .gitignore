@@ -12,3 +12,5 @@
 /Fasdr/.vs/fasdr/v14
 *.dll
 *.pdb
+/Fasdr/packages/System.IO.Abstractions.2.0.0.124
+/Fasdr/packages/System.IO.Abstractions.TestingHelpers.2.0.0.124

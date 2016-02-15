@@ -1,2 +1,8 @@
 language: csharp
 solution: Fasdr/fasdr.sln
+install:
+  - nuget restore Fasdr/fasdr.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release Fasdr/fasdr.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Fasdr.UnitTests/bin/Release/Fasdr.UnitTests.dll

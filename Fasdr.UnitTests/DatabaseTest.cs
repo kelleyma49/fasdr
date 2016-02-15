@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Fasdr.Backend;
 using System.IO.Abstractions.TestingHelpers;
 using System.Collections.Generic;
@@ -7,17 +7,17 @@ using System.IO;
 
 namespace Fasdr.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class DatabaseTest
     {
-        [TestMethod]
+        [Test]
         public void TestCanConstruct()
         {
             var fileSystem = new MockFileSystem();
             var db = new Database(fileSystem);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConfigLoadFileNotFound()
         {
             var fileSystem = new MockFileSystem();
@@ -27,7 +27,7 @@ namespace Fasdr.UnitTests
             db.Load();
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(Exception))]
         public void TestConfigLoadFileCorruptedFile()
         {
@@ -39,7 +39,7 @@ namespace Fasdr.UnitTests
             db.Load();
         }
 
-        [TestMethod]
+        [Test]
         public void TestConfigLoadFileEmptyFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
@@ -53,7 +53,7 @@ namespace Fasdr.UnitTests
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestConfigLoadFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
@@ -73,7 +73,7 @@ namespace Fasdr.UnitTests
             Assert.AreEqual(10.0f, db.PathToWeight[@"c:\dir1\dir2"]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConfigSaveFileEmpty()
         {
             var fileSystem = new MockFileSystem();
@@ -85,7 +85,7 @@ namespace Fasdr.UnitTests
             Assert.AreEqual("",fileSystem.File.ReadAllText(Database.ConfigPath));
         }
 
-        [TestMethod]
+        [Test]
         public void TestConfigSimpleDatabase()
         {
             var fileSystem = new MockFileSystem();

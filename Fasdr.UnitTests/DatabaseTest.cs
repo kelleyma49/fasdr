@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Fasdr.Backend;
 using System.IO.Abstractions.TestingHelpers;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Fasdr.UnitTests
 {

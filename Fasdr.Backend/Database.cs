@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Fasdr.Backend
 {
-    public class Database
+    public class Database : IDatabase
     {
         public Database(IFileSystem fileSystem)
         {

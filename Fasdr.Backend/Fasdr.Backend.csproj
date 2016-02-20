@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database.cs" />
+    <Compile Include="IDatabase.cs" />
     <Compile Include="Matcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

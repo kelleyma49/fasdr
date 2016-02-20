@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Fasdr.Backend
 {
-    public static class Matcher
+    public interface IDatabase
     {
-        public static IEnumerable<string> Matches(IDatabase db,string input)
-        {
-            return null;
-        }
+        Dictionary<string, Entry> Entries { get; }
     }
 }

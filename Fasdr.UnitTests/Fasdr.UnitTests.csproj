@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DatabaseTest.cs" />
+    <Compile Include="MatcherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

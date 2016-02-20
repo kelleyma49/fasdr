@@ -49,7 +49,7 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
             db.Load();
 
-            Assert.AreEqual(0,db.PathToWeight.Count);
+            Assert.AreEqual(0,db.Entries.Count);
         }
 
 
@@ -59,18 +59,25 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
                 {  Database.ConfigPath,
                     new MockFileData(
-                        @"c:\dir1\" +  Database.Separator + "101.0" + Environment.NewLine +
-                        @"c:\dir1\dir2" +  Database.Separator + "10.0" + Environment.NewLine) }
+                        string.Join("" + Database.Separator,@"c:\dir1\", "101.0", "FileSystem", "true") +
+                        Environment.NewLine +
+                        string.Join("" + Database.Separator,@"c:\dir1\file2", "10.0", "FileSystem", "false") +
+                        Environment.NewLine) }
             });
 
             var db = new Database(fileSystem);
             db.Load();
 
-            Assert.AreEqual(2, db.PathToWeight.Count);
-            Assert.IsTrue(db.PathToWeight.ContainsKey(@"c:\dir1\"));
-            Assert.AreEqual(101.0f, db.PathToWeight[@"c:\dir1\"]);
-            Assert.IsTrue(db.PathToWeight.ContainsKey(@"c:\dir1\dir2"));
-            Assert.AreEqual(10.0f, db.PathToWeight[@"c:\dir1\dir2"]);
+            Assert.AreEqual(2, db.Entries.Count);
+            Assert.IsTrue(db.Entries.ContainsKey(@"c:\dir1\"));
+            Assert.AreEqual(101.0f, db.Entries[@"c:\dir1\"].Weight);
+            Assert.AreEqual("FileSystem", db.Entries[@"c:\dir1\"].Provider);
+            Assert.AreEqual(true, db.Entries[@"c:\dir1\"].IsLeaf);
+
+            Assert.IsTrue(db.Entries.ContainsKey(@"c:\dir1\file2"));
+            Assert.AreEqual(10.0f, db.Entries[@"c:\dir1\file2"].Weight);
+            Assert.AreEqual("FileSystem", db.Entries[@"c:\dir1\file2"].Provider);
+            Assert.AreEqual(false, db.Entries[@"c:\dir1\file2"].IsLeaf);
         }
 
         [Test]
@@ -91,13 +98,16 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem();
 
             var db = new Database(fileSystem);
-            db.PathToWeight.Add(@"c:\dir1\", 12.0);
-            db.PathToWeight.Add(@"c:\dir1\dir2", 34.0);
+            db.Entries.Add(@"c:\dir1\", new Entry(12.0,"FileSystem",false));
+            db.Entries.Add(@"c:\dir1\file2", new Entry(34.0, "FileSystem", true));
             db.Save();
 
             Assert.IsTrue(fileSystem.FileExists(Database.ConfigPath));
-            Assert.AreEqual(@"c:\dir1\" + Database.Separator + "12" +Environment.NewLine +
-                   @"c:\dir1\dir2" + Database.Separator + "34" + Environment.NewLine, 
+            Assert.AreEqual(
+                    string.Join("" + Database.Separator, @"c:\dir1\", "12", "FileSystem", "False") +
+                    Environment.NewLine +
+                    string.Join("" + Database.Separator, @"c:\dir1\file2", "34", "FileSystem", "True") +
+                    Environment.NewLine, 
                    fileSystem.File.ReadAllText(Database.ConfigPath));
         }
 

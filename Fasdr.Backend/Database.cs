@@ -33,7 +33,7 @@ namespace Fasdr.Backend
         {
             try
             {
-                PathToWeight.Clear();
+                Entries.Clear();
 
                 foreach (var textFile in FileSystem.Directory.GetFiles(ConfigDir, ConfigFileName, SearchOption.TopDirectoryOnly))
                 {
@@ -44,19 +44,27 @@ namespace Fasdr.Backend
                             var line = s.ReadLine();
                             var split = line.Split(new char[] {Separator}, StringSplitOptions.RemoveEmptyEntries);
 
-                            if (split==null || split.Length!=2)
+                            if (split==null || split.Length!=4)
                             {
                                 throw new Exception("Failed to parse line '" + line + "'");
                             }
+
+                            var path = split[0];
 
                             double weight;
                             if (!Double.TryParse(split[1], out weight))
                             {
                             }
 
-                            var path = split[0];
+                            string provider = split[2];
 
-                            PathToWeight.Add(path, weight);
+
+                            bool isLeaf;
+                            if (!Boolean.TryParse(split[3], out isLeaf))
+                            {
+                            }
+
+                            Entries.Add(path, new Entry(weight,provider, isLeaf));
                         }
                     }
                 }
@@ -72,9 +80,10 @@ namespace Fasdr.Backend
             var fileName = System.IO.Path.Combine(ConfigDir,Path.GetRandomFileName());
             using (var s = FileSystem.File.CreateText(fileName))
             {
-                foreach(var p in PathToWeight)
+                foreach(var p in Entries)
                 {
-                    s.WriteLine(p.Key + Separator + p.Value);
+                    string line = $"{p.Key}{Separator}{p.Value.Weight}{Separator}{p.Value.Provider}{Separator}{p.Value.IsLeaf}";
+                    s.WriteLine(line);
                 }
             }
 
@@ -82,7 +91,20 @@ namespace Fasdr.Backend
         }
 
         public IFileSystem FileSystem { get; }
-        public Dictionary<string, double> PathToWeight { get; } = new Dictionary<string, double>();
+        public Dictionary<string, Entry> Entries { get; } = new Dictionary<string, Entry>();
     }
 
+    public struct Entry
+    {
+        public Entry(double weight,string provider,bool isLeaf)
+        {
+            Weight = weight;
+            Provider = provider;
+            IsLeaf = isLeaf;
+        }
+
+        public double Weight { get; }
+        public string Provider { get; }
+        public bool IsLeaf { get; }
+    }
 }

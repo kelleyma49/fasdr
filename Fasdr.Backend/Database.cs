@@ -25,7 +25,8 @@ namespace Fasdr.Backend
         }
 
         public static readonly string ConfigDir;
-        public static readonly string ConfigFileName = "fasdrConfig.txt";
+		public static readonly string ConfigFilePrefix = "fasdrConfig";
+		public static readonly string ConfigFileName = $"{ConfigFilePrefix}.*.txt";
         public static readonly string ConfigPath;
         public static readonly char Separator = '|';
 
@@ -33,10 +34,20 @@ namespace Fasdr.Backend
         {
             try
             {
-                Entries.Clear();
+				ProviderEntries.Clear();
 
                 foreach (var textFile in FileSystem.Directory.GetFiles(ConfigDir, ConfigFileName, SearchOption.TopDirectoryOnly))
                 {
+					string fileNameOnly = System.IO.Path.GetFileName(textFile); 
+					string[] fileSplit = fileNameOnly.Split(new char[]{'.'});
+					if (fileSplit==null || fileSplit.Length!=2)
+					{
+						throw new Exception("Failed to parse config file name '" + fileNameOnly + "'");
+					}
+
+					var providerDict = new Dictionary<string,Entry>();
+					ProviderEntries.Add(fileSplit[1],providerDict);
+
                     using (var s = FileSystem.File.OpenText(textFile))
                     {
                         while (!s.EndOfStream)
@@ -64,7 +75,7 @@ namespace Fasdr.Backend
                             {
                             }
 
-                            Entries.Add(path, new Entry(weight,provider, isLeaf));
+                            providerDict.Add(path, new Entry(weight,provider, isLeaf));
                         }
                     }
                 }
@@ -77,21 +88,25 @@ namespace Fasdr.Backend
 
         public void Save()
         {
-            var fileName = System.IO.Path.Combine(ConfigDir,Path.GetRandomFileName());
-            using (var s = FileSystem.File.CreateText(fileName))
-            {
-                foreach(var p in Entries)
-                {
-                    string line = $"{p.Key}{Separator}{p.Value.Weight}{Separator}{p.Value.Provider}{Separator}{p.Value.IsLeaf}";
-                    s.WriteLine(line);
-                }
-            }
+			foreach(var pe in ProviderEntries)
+			{
+	            var fileName = System.IO.Path.Combine(ConfigDir,Path.GetRandomFileName());
+	            using (var s = FileSystem.File.CreateText(fileName))
+	            {
+					foreach(var p in pe.Value)
+	                {
+	                    string line = $"{p.Key}{Separator}{p.Value.Weight}{Separator}{p.Value.Provider}{Separator}{p.Value.IsLeaf}";
+	                    s.WriteLine(line);
+	                }
+	            }
 
-            FileSystem.File.Move(fileName, ConfigPath);
+				FileSystem.File.Move(fileName, System.IO.Path.Combine(ConfigDir,$"{ConfigFilePrefix}.{pe.Key}.txt"));
+			}
         }
 
         public IFileSystem FileSystem { get; }
-        public Dictionary<string, Entry> Entries { get; } = new Dictionary<string, Entry>();
+        public Dictionary<string,Dictionary<string, Entry>> ProviderEntries { get; } = 
+			new Dictionary<string,Dictionary<string, Entry>>();
     }
 
     public struct Entry

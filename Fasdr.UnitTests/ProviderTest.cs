@@ -28,6 +28,7 @@ namespace Fasdr.UnitTests
 			}
 
 			Assert.AreEqual (2, p.Entries.Count);
+			/*
 			Assert.IsTrue(p.Entries.ContainsKey(@"c:\dir1\"));
 			Assert.AreEqual(101.0f, p.Entries[@"c:\dir1\"].Weight);
 			Assert.AreEqual(true, p.Entries[@"c:\dir1\"].IsLeaf);
@@ -35,6 +36,7 @@ namespace Fasdr.UnitTests
 			Assert.IsTrue(p.Entries.ContainsKey(@"c:\dir1\file2"));
 			Assert.AreEqual(10.0f, p.Entries[@"c:\dir1\file2"].Weight);
 			Assert.AreEqual(false, p.Entries[@"c:\dir1\file2"].IsLeaf);
+			*/
 		}
 	}
 }

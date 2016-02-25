@@ -95,8 +95,8 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
 			var fsp = new Provider("FileSystem");
 			db.Providers.Add ("FileSystem", fsp);
-            fsp.Entries.Add(@"c:\dir1\", new Entry(12.0,false));
-            fsp.Entries.Add(@"c:\dir1\file2", new Entry(34.0, true));
+            fsp.Add(@"c:\dir1\", false, 12.0);
+            fsp.Add(@"c:\dir1\file2", true, 34.0);
             db.Save();
 
 			var fsFileName = System.IO.Path.Combine (Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");

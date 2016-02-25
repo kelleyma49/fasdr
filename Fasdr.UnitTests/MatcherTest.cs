@@ -16,7 +16,8 @@ namespace Fasdr.UnitTests
 		{
 			Console.WriteLine ("test1");
 			var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
-				{  FileSystemConfigPath,new MockFileData( TestData.GetMatchFilesystem())
+				{  
+					FileSystemConfigPath,new MockFileData( TestData.GetMatchFilesystem())
 				}
 			});
 			var db = new Database(mfs);

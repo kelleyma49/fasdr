@@ -18,6 +18,7 @@ namespace Fasdr.Backend
 		{
 			Entries.Clear ();
 
+			CurrentId = 0;
 			while (!stream.EndOfStream)
 			{
 				var line = stream.ReadLine();
@@ -41,7 +42,7 @@ namespace Fasdr.Backend
 				{
 				}
 
-				Entries.Add(path, new Entry(weight,isLeaf));
+				Add (path, isLeaf, weight);
 			}
 		}
 
@@ -52,25 +53,44 @@ namespace Fasdr.Backend
 			{
 				foreach(var p in Entries)
 				{
-					string line = $"{p.Key}{Separator}{p.Value.Weight}{Separator}{p.Value.IsLeaf}";
+					string line = $"{p.Value.FullPath}{Separator}{p.Value.Weight}{Separator}{p.Value.IsLeaf}";
 					s.WriteLine(line);
 				}
 			}
 			fileSystem.File.Move(fileName, filePath);
 		}
 
+		public void Add(string fullPath,bool isLeaf,double weight = 1.0)
+		{
+			Entries.Add(CurrentId,new Entry(fullPath,weight,isLeaf));
+			var pathSplit = fullPath.Split (new char[]{ '\\'});
+			string lastElement = pathSplit [pathSplit.Length - 1].ToLower();
+			IList<int> ids;
+			if (!LastEntries.TryGetValue (lastElement, out ids)) 
+			{
+				LastEntries.Add(lastElement,ids = new List<int> ());
+			}
+			ids.Add (CurrentId);
+			CurrentId = CurrentId + 1;
+		}
+			
 		public string Name { get; }
-		public Dictionary<string, Entry> Entries { get; } = new Dictionary<string, Entry>();
+		public Dictionary<int,Entry> Entries { get; } = new Dictionary<int,Entry>();
+		public Dictionary<string,IList<int>> LastEntries { get; } = new Dictionary<string,IList<int>>();
+
+		private int CurrentId { get; set; }
 	}
 
 	public struct Entry
 	{
-		public Entry(double weight,bool isLeaf)
+		public Entry(string fullPath,double weight,bool isLeaf)
 		{
+			FullPath = fullPath;
 			Weight = weight;
 			IsLeaf = isLeaf;
 		}
 
+		public string FullPath { get; }
 		public double Weight { get; }
 		public bool IsLeaf { get; }
 	}

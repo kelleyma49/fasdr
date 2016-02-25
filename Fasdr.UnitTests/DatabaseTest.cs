@@ -41,6 +41,17 @@ namespace Fasdr.UnitTests
         }
 
         [Test]
+        public void TestConfigNoProviders()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {});
+
+            var db = new Database(fileSystem);
+            db.Load();
+
+            Assert.AreEqual(0, db.ProviderEntries.Count);
+        }
+
+        [Test]
         public void TestConfigLoadFileEmptyFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
@@ -92,7 +103,7 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
             db.Save();
 
-            Assert.IsTrue(!fileSystem.FileExists(Database.ConfigPath));
+            Assert.IsTrue(!fileSystem.FileExists(FileSystemConfigPath));
         }
 
         [Test]

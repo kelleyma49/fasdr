@@ -84,6 +84,10 @@ namespace Fasdr.Backend
             {
                 
             }
+            catch (DirectoryNotFoundException)
+            {
+
+            }
         }
 
         public void Save()

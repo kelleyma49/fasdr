@@ -50,8 +50,8 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
             db.Load();
 
-            Assert.AreEqual(1,db.ProviderEntries.Count);
-			Assert.AreEqual(0,db.ProviderEntries["FileSystem"].Count);
+            Assert.AreEqual(1,db.Providers.Count);
+			Assert.AreEqual(0,db.Providers["FileSystem"].Entries.Count);
         }
 
 
@@ -61,27 +61,18 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
 				{   FileSystemConfigPath, 
 					new MockFileData(
-                        string.Join("" + Database.Separator,@"c:\dir1\", "101.0", "FileSystem", "true") +
+                        string.Join("" + Provider.Separator,@"c:\dir1\", "101.0", "true") +
                         Environment.NewLine +
-                        string.Join("" + Database.Separator,@"c:\dir1\file2", "10.0", "FileSystem", "false") +
+                        string.Join("" + Provider.Separator,@"c:\dir1\file2", "10.0", "false") +
                         Environment.NewLine) }
             });
 
             var db = new Database(fileSystem);
             db.Load();
 
-			Assert.AreEqual(1, db.ProviderEntries.Count);
-			var fsp = db.ProviderEntries ["FileSystem"];
-			Assert.AreEqual (2, fsp.Count);
-            Assert.IsTrue(fsp.ContainsKey(@"c:\dir1\"));
-            Assert.AreEqual(101.0f, fsp[@"c:\dir1\"].Weight);
-            Assert.AreEqual("FileSystem", fsp[@"c:\dir1\"].Provider);
-            Assert.AreEqual(true, fsp[@"c:\dir1\"].IsLeaf);
-
-            Assert.IsTrue(fsp.ContainsKey(@"c:\dir1\file2"));
-            Assert.AreEqual(10.0f, fsp[@"c:\dir1\file2"].Weight);
-            Assert.AreEqual("FileSystem", fsp[@"c:\dir1\file2"].Provider);
-            Assert.AreEqual(false, fsp[@"c:\dir1\file2"].IsLeaf);
+			Assert.AreEqual(1, db.Providers.Count);
+			var fsp = db.Providers["FileSystem"];
+			Assert.AreEqual (2, fsp.Entries.Count);
         }
 
         [Test]
@@ -98,22 +89,23 @@ namespace Fasdr.UnitTests
         [Test]
         public void TestConfigSimpleDatabase()
         {
-            var fileSystem = new MockFileSystem();
+			var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {});
+			fileSystem.AddDirectory (Database.ConfigDir);
 
             var db = new Database(fileSystem);
-			var fsp = new Dictionary<string,Entry>();
-			db.ProviderEntries.Add ("FileSystem", fsp);
-            fsp.Add(@"c:\dir1\", new Entry(12.0,"FileSystem",false));
-            fsp.Add(@"c:\dir1\file2", new Entry(34.0, "FileSystem", true));
+			var fsp = new Provider("FileSystem");
+			db.Providers.Add ("FileSystem", fsp);
+            fsp.Entries.Add(@"c:\dir1\", new Entry(12.0,false));
+            fsp.Entries.Add(@"c:\dir1\file2", new Entry(34.0, true));
             db.Save();
 
 			var fsFileName = System.IO.Path.Combine (Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
 			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
             Assert.AreEqual(
-                    string.Join("" + Database.Separator, @"c:\dir1\", "12", "FileSystem", "False") +
+				string.Join("" + Provider.Separator, @"c:\dir1\", "12", "False") +
                     Environment.NewLine +
-                    string.Join("" + Database.Separator, @"c:\dir1\file2", "34", "FileSystem", "True") +
+                    string.Join("" + Provider.Separator, @"c:\dir1\file2", "34", "True") +
                     Environment.NewLine, 
                    fileSystem.File.ReadAllText(fsFileName));
         }

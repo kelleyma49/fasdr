@@ -9,32 +9,28 @@ namespace Fasdr.UnitTests
 {
     [TestFixture]
     public class MatcherTest
-    {
-        IDatabase Db { get; set;  }
-
+	{
 		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
-        [TestFixtureSetUp]
-        public void Init()
-        {
-            var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  FileSystemConfigPath,
-                    new MockFileData(
-                        string.Join("" + Database.Separator,@"c:\dir1\testStr", "101.0", "FileSystem", "true") +
-                        Environment.NewLine +
-                        string.Join("" + Database.Separator,@"c:\testStr", "10.0", "FileSystem", "false") +
-                        Environment.NewLine)
-                }
-            });
-            var db = new Database(mfs);
-            db.Load();
-            Db = db;
-        }
+     	private IDatabase SetupMatchSimple ()
+		{
+			Console.WriteLine ("test1");
+			var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
+				{  FileSystemConfigPath,new MockFileData( TestData.GetMatchFilesystem())
+				}
+			});
+			var db = new Database(mfs);
+			db.Load();
+			Console.WriteLine("test2");
+			return db;
+		}
 
         [Test]
         public void TestMatch()
         {
-            var matches = Matcher.Matches(Db, "testStr", "FileSystem");
+			var db = SetupMatchSimple ();
+
+            var matches = Matcher.Matches(db, "testStr", "FileSystem");
             Assert.AreEqual(2, matches.Count());
             CollectionAssert.AreEqual(new List<string>{@"c:\dir1\testStr", @"c:\testStr"},matches);
         }

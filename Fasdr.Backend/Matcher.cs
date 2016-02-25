@@ -13,10 +13,9 @@ namespace Fasdr.Backend
         {
             var results = new Dictionary<string,double>();
             var opts = new List<FuzzyStringComparisonOptions>{ FuzzyStringComparisonOptions.UseLevenshteinDistance};
-			foreach (var e in db.ProviderEntries[provider])
+			foreach (var e in db.Providers[provider].Entries)
             {
-                if (provider == e.Value.Provider &&
-                    ComparisonMetrics.ApproximatelyEquals(input, e.Key, opts, FuzzyStringComparisonTolerance.Weak))
+                if (ComparisonMetrics.ApproximatelyEquals(input, e.Key, opts, FuzzyStringComparisonTolerance.Weak))
                     results.Add(e.Key,e.Value.Weight);
             }
 

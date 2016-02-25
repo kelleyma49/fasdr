@@ -9,6 +9,8 @@ namespace Fasdr.UnitTests
     [TestFixture]
     public class DatabaseTest
     {
+		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+
         [Test]
         public void TestCanConstruct()
         {
@@ -31,7 +33,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileCorruptedFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  Database.ConfigPath, new MockFileData("ThisShouldNotParse") }
+                {  FileSystemConfigPath, new MockFileData("ThisShouldNotParse") }
             });
 
             var db = new Database(fileSystem);
@@ -42,13 +44,14 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileEmptyFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  Database.ConfigPath, new MockFileData("") }
+                {  FileSystemConfigPath, new MockFileData("") }
             });
  
             var db = new Database(fileSystem);
             db.Load();
 
-            Assert.AreEqual(0,db.ProviderEntries.Count);
+            Assert.AreEqual(1,db.ProviderEntries.Count);
+			Assert.AreEqual(0,db.ProviderEntries["FileSystem"].Count);
         }
 
 
@@ -56,8 +59,8 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
-				{  System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt"),
-                    new MockFileData(
+				{   FileSystemConfigPath, 
+					new MockFileData(
                         string.Join("" + Database.Separator,@"c:\dir1\", "101.0", "FileSystem", "true") +
                         Environment.NewLine +
                         string.Join("" + Database.Separator,@"c:\dir1\file2", "10.0", "FileSystem", "false") +
@@ -106,7 +109,7 @@ namespace Fasdr.UnitTests
 
 			var fsFileName = System.IO.Path.Combine (Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
-            Assert.IsTrue(fileSystem.FileExists(Database.ConfigPath));
+			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
             Assert.AreEqual(
                     string.Join("" + Database.Separator, @"c:\dir1\", "12", "FileSystem", "False") +
                     Environment.NewLine +

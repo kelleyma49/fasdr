@@ -12,11 +12,13 @@ namespace Fasdr.UnitTests
     {
         IDatabase Db { get; set;  }
 
+		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+
         [TestFixtureSetUp]
         public void Init()
         {
             var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
-                {  Database.ConfigPath,
+                {  FileSystemConfigPath,
                     new MockFileData(
                         string.Join("" + Database.Separator,@"c:\dir1\testStr", "101.0", "FileSystem", "true") +
                         Environment.NewLine +

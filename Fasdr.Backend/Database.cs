@@ -40,7 +40,7 @@ namespace Fasdr.Backend
                 {
 					string fileNameOnly = System.IO.Path.GetFileName(textFile); 
 					string[] fileSplit = fileNameOnly.Split(new char[]{'.'});
-					if (fileSplit==null || fileSplit.Length!=2)
+					if (fileSplit==null || fileSplit.Length!=3)
 					{
 						throw new Exception("Failed to parse config file name '" + fileNameOnly + "'");
 					}

@@ -18,21 +18,60 @@ namespace Fasdr.Backend
 			}
 		}
 
-        public static IEnumerable<string> Matches(IDatabase db,string input,string providerName)
+        public static IEnumerable<string> Matches(IDatabase db, string providerName, params string[] input)
         {
+            // handle empty:
+            if (input == null || input.Length == 0)
+                return new string[] { };
+
             var results = new Dictionary<string,double>();
 
 			// first check - see if we have a direct match:
 			var provider = db.Providers[providerName];
 			IList<int> ids;
-			if (provider.LastEntries.TryGetValue (input.ToLower (), out ids)) 
+            if (provider.LastEntries.TryGetValue (input[input.Length-1].ToLower(), out ids)) 
 			{
 				var list = new SortedList<double,string>(new DescComparer<double>());
-				foreach (var i in ids) 
+				foreach (var id in ids) 
 				{
-					var e = provider.Entries [i];
-					list.Add (e.Weight, e.FullPath);
+					var e = provider.Entries[id];
+
+                    bool addPath = input.Length == 1;
+                    if (!addPath)
+                    {
+                        var pathSplit = e.FullPath.Split(new char[] {'\\'},StringSplitOptions.RemoveEmptyEntries);
+                        addPath = pathSplit.Length >= input.Length;
+                        if (addPath)
+                        {
+                            int j = pathSplit.Length - 2;
+                            // reverse iterate through elements to see if they match in order:
+                            for (int i = input.Length - 2; i >= 0; i--)
+                            {
+                                bool foundInput = false;
+                                for (; j >= 0; j--)
+                                {
+                                    if (String.Compare(pathSplit[j], input[i], true) == 0)
+                                    {
+                                        foundInput = true;
+                                        break;
+                                    }
+                                }
+                                
+                                // input element wasn't found; don't add to results
+                                if (!foundInput)
+                                {
+                                    addPath = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (addPath)
+                        list.Add (e.Weight, e.FullPath);
 				}
+
+                
 
 				return list.Values;
 			}
@@ -41,7 +80,7 @@ namespace Fasdr.Backend
             var opts = new List<FuzzyStringComparisonOptions>{ FuzzyStringComparisonOptions.UseLevenshteinDistance};
 			foreach (var e in provider.Entries)
             {
-				if (ComparisonMetrics.ApproximatelyEquals(input, e.Value.FullPath, opts, FuzzyStringComparisonTolerance.Weak))
+				if (ComparisonMetrics.ApproximatelyEquals(input[input.Length-1], e.Value.FullPath, opts, FuzzyStringComparisonTolerance.Weak))
 					results.Add(e.Value.FullPath,e.Value.Weight);
             }
 

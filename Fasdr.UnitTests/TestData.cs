@@ -17,8 +17,9 @@ namespace Fasdr.UnitTests
 		public static string GetMatchFilesystem()
 		{
 			var sb = new StringBuilder ();
-			sb.AppendLine (string.Join ("" + Provider.Separator, @"c:\dir1\testStr", "101.0","true"));			
-			sb.AppendLine (string.Join ("" + Provider.Separator, @"c:\testStr", "10.0", "false"));
+			sb.AppendLine(string.Join("" + Provider.Separator, @"c:\dir1\dir2\testStr", "110.0","true"));
+            sb.AppendLine(string.Join("" + Provider.Separator, @"c:\dir1\testStr", "101.0", "true"));
+            sb.AppendLine(string.Join("" + Provider.Separator, @"c:\testStr", "10.0", "false"));
 			return sb.ToString ();
 		}
 	}

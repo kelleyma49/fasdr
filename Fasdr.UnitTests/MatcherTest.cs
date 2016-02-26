@@ -27,13 +27,30 @@ namespace Fasdr.UnitTests
 		}
 
         [Test]
-        public void TestMatch()
+        public void TestSingleElementMatch()
         {
 			var db = SetupMatchSimple ();
 
-            var matches = Matcher.Matches(db, "testStr", "FileSystem");
-            Assert.AreEqual(2, matches.Count());
-            CollectionAssert.AreEqual(new List<string>{@"c:\dir1\testStr", @"c:\testStr"},matches);
+            var matches = Matcher.Matches(db, "FileSystem", "testStr");
+            CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"},matches);
+        }
+
+        [Test]
+        public void TestDoubleElementMatch()
+        {
+            var db = SetupMatchSimple();
+
+            var matches = Matcher.Matches(db, "FileSystem", "dir1", "testStr");
+            CollectionAssert.AreEqual(new List<string> { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr" }, matches);
+        }
+
+        [Test]
+        public void TestDoubleElementNoMatch()
+        {
+            var db = SetupMatchSimple();
+
+            var matches = Matcher.Matches(db, "FileSystem", "NotThere", "testStr");
+            CollectionAssert.AreEqual(new List<string> {}, matches);
         }
     }
 }

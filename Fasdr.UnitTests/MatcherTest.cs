@@ -14,7 +14,6 @@ namespace Fasdr.UnitTests
 
      	private IDatabase SetupMatchSimple ()
 		{
-			Console.WriteLine ("test1");
 			var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
 				{  
 					FileSystemConfigPath,new MockFileData( TestData.GetMatchFilesystem())
@@ -22,7 +21,6 @@ namespace Fasdr.UnitTests
 			});
 			var db = new Database(mfs);
 			db.Load();
-			Console.WriteLine("test2");
 			return db;
 		}
 

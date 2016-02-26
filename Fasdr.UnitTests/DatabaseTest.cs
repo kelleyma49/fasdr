@@ -48,7 +48,7 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
             db.Load();
 
-            Assert.AreEqual(0, db.ProviderEntries.Count);
+            Assert.AreEqual(0, db.Providers.Count);
         }
 
         [Test]

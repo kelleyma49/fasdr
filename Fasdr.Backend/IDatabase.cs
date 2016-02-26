@@ -8,6 +8,6 @@ namespace Fasdr.Backend
 {
     public interface IDatabase
     {
-		Dictionary<string,Dictionary<string, Entry>>  ProviderEntries { get; }
+		Dictionary<string,Provider>  Providers { get; }
     }
 }

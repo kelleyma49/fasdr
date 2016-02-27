@@ -72,9 +72,9 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
 				{   FileSystemConfigPath, 
 					new MockFileData(
-                        string.Join("" + Provider.Separator,@"c:\dir1\", "101.0", "true") +
+						(new Entry(@"c:\dir1\",1,DateTime.Now,false)).ToString() + 
                         Environment.NewLine +
-                        string.Join("" + Provider.Separator,@"c:\dir1\file2", "10.0", "false") +
+						(new Entry(@"c:\dir1\file2",10,DateTime.Now,true)).ToString() +
                         Environment.NewLine) }
             });
 
@@ -106,19 +106,19 @@ namespace Fasdr.UnitTests
             var db = new Database(fileSystem);
 			var fsp = new Provider("FileSystem");
 			db.Providers.Add ("FileSystem", fsp);
-            fsp.Add(@"c:\dir1\", false, 12.0);
-            fsp.Add(@"c:\dir1\file2", true, 34.0);
+			var e1 = new Entry (@"c:\dir1\", 12, DateTime.Now, false);
+			var e2 = new Entry (@"c:\dir1\file2", 34, DateTime.Now, true);
+
+			fsp.Add(e1);
+			fsp.Add(e2);
             db.Save();
 
 			var fsFileName = System.IO.Path.Combine (Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
 			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
             Assert.AreEqual(
-				string.Join("" + Provider.Separator, @"c:\dir1\", "12", "False") +
-                    Environment.NewLine +
-                    string.Join("" + Provider.Separator, @"c:\dir1\file2", "34", "True") +
-                    Environment.NewLine, 
-                   fileSystem.File.ReadAllText(fsFileName));
+				string.Join(Environment.NewLine,e1.ToString(),e2.ToString()),
+			    fileSystem.File.ReadAllText(fsFileName));
         }
 
     }

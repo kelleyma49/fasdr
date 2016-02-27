@@ -68,7 +68,7 @@ namespace Fasdr.Backend
                     }
 
                     if (addPath)
-                        list.Add (e.Weight, e.FullPath);
+						list.Add (e.CalculateFrecency(), e.FullPath);
 				}
 
                 
@@ -81,7 +81,7 @@ namespace Fasdr.Backend
 			foreach (var e in provider.Entries)
             {
 				if (ComparisonMetrics.ApproximatelyEquals(input[input.Length-1], e.Value.FullPath, opts, FuzzyStringComparisonTolerance.Weak))
-					results.Add(e.Value.FullPath,e.Value.Weight);
+					results.Add(e.Value.FullPath,e.Value.CalculateFrecency());
             }
 
             List<KeyValuePair<string, double>> myList = results.ToList();

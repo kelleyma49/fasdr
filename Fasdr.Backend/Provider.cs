@@ -35,11 +35,13 @@ namespace Fasdr.Backend
 				double weight;
 				if (!Double.TryParse(split[1], out weight))
 				{
+					throw new Exception ("Failed to parse weight");
 				}
 
 				bool isLeaf;
 				if (!Boolean.TryParse(split[2], out isLeaf))
 				{
+					throw new Exception ("Failed to parse isLeaf flag");
 				}
 
 				Add (path, isLeaf, weight);

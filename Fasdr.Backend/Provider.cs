@@ -41,6 +41,7 @@ namespace Fasdr.Backend
 
 		public void Add(Entry e)
 		{
+			FullPathToEntry.Add (e.FullPath.ToLower (), CurrentId);
 			Entries.Add(CurrentId,e);
 			var pathSplit = e.FullPath.Split (new char[]{ '\\'});
 			string lastElement = pathSplit [pathSplit.Length - 1].ToLower();
@@ -51,6 +52,15 @@ namespace Fasdr.Backend
 			}
 			ids.Add (CurrentId);
 			CurrentId = CurrentId + 1;
+		}
+
+		public bool UpdateEntry(string fullPath)
+		{
+			int id;
+			if (!FullPathToEntry.TryGetValue (fullPath.ToLower (), out id))
+				return false;
+
+			return UpdateEntry (id);
 		}
 
 		public bool UpdateEntry(int id)
@@ -65,6 +75,7 @@ namespace Fasdr.Backend
 			
 		public string Name { get; }
 		public Dictionary<int,Entry> Entries { get; } = new Dictionary<int,Entry>();
+		public Dictionary<string,int> FullPathToEntry { get; } = new Dictionary<string,int>();
 		public Dictionary<string,IList<int>> LastEntries { get; } = new Dictionary<string,IList<int>>();
 
 		private int CurrentId { get; set; }

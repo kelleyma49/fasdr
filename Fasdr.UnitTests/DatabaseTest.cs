@@ -16,6 +16,7 @@ namespace Fasdr.UnitTests
         {
             var fileSystem = new MockFileSystem();
             var db = new Database(fileSystem);
+			Assert.IsNotNull (db);
         }
 
         [Test]

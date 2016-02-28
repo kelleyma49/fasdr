@@ -32,19 +32,19 @@ namespace Fasdr.Backend
 			Int64 frequency;
 			if (!Int64.TryParse(split[1], out frequency))
 			{
-				throw new Exception ($"Failed to parse frequency from string {split[1]}");
+				throw new Exception ($"Failed to parse frequency from string '{split[1]}'");
 			}
 
 			Int64 lastAccessTimeUtc;
 			if (!Int64.TryParse(split[2], out lastAccessTimeUtc))
 			{
-				throw new Exception ($"Failed to parse last access time from string {split[2]}");
+				throw new Exception ($"Failed to parse last access time from string '{split[2]}'");
 			}
 
 			bool isLeaf;
 			if (!Boolean.TryParse(split[3], out isLeaf))
 			{
-				throw new Exception ($"Failed to parse isLeaf flag from string {split[3]}");
+				throw new Exception ($"Failed to parse isLeaf flag from string '{split[3]}'");
 			}
 
 			return new Entry (path,frequency,lastAccessTimeUtc,isLeaf);

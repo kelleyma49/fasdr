@@ -11,7 +11,7 @@ namespace Fasdr.UnitTests
 		public void TestCanCreateFromString()
 		{
 			var now = DateTime.UtcNow;
-			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "1", now, false);
+			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "1", now.ToFileTimeUtc(), false);
 			Entry e = Entry.FromString (s);
 			Assert.AreEqual (@"c:\dir1\", e.FullPath);
 		}

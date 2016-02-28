@@ -117,7 +117,7 @@ namespace Fasdr.UnitTests
 
 			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
             Assert.AreEqual(
-				string.Join(Environment.NewLine,e1.ToString(),e2.ToString()),
+				string.Join(Environment.NewLine,e1.ToString(),e2.ToString(),""),
 			    fileSystem.File.ReadAllText(fsFileName));
         }
 

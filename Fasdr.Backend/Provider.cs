@@ -33,7 +33,7 @@ namespace Fasdr.Backend
 			{
 				foreach(var p in Entries)
 				{
-					s.WriteLine(p.ToString());
+					s.WriteLine(p.Value.ToString());
 				}
 			}
 			fileSystem.File.Move(fileName, filePath);

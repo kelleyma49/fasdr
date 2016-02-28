@@ -52,6 +52,16 @@ namespace Fasdr.Backend
 			ids.Add (CurrentId);
 			CurrentId = CurrentId + 1;
 		}
+
+		public bool UpdateEntry(int id)
+		{
+			Entry e;
+			if (!Entries.TryGetValue (id, out e))
+				return false;
+
+			Entries [id] = new Entry (e.FullPath, e.Frequency + 1, DateTime.Now.ToFileTimeUtc (), e.IsLeaf);
+			return true;
+		}
 			
 		public string Name { get; }
 		public Dictionary<int,Entry> Entries { get; } = new Dictionary<int,Entry>();

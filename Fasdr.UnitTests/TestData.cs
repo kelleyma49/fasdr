@@ -9,8 +9,8 @@ namespace Fasdr.UnitTests
 		static readonly Entry Dir1 = new Entry(@"c:\dir1\",101,DateTime.Now,false);
 		static readonly Entry Dir1File2 = new Entry(@"c:\dir1\file2",10,DateTime.Now,true);
 		static readonly Entry Dir1Dir2TestStr = new Entry(@"c:\dir1\dir2\testStr",110,DateTime.Now,true);
-		static readonly Entry Dir1TestStr = new Entry(@"c:\dir1\testStr",101,DateTime.Now,true);
-		static readonly Entry TestStr = new Entry(@"c:\testStr",10,DateTime.Now,true);
+		static readonly Entry Dir1TestStr = new Entry(@"c:\dir1\testStr",101,DateTime.Now.AddDays(-1),true);
+		static readonly Entry TestStr = new Entry(@"c:\testStr",10,DateTime.Now.AddDays(-1),true);
 
 		public static string GetTwoDirFilesystem()
 		{

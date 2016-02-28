@@ -80,6 +80,11 @@ namespace Fasdr.Backend
 		public string[] SplitPath { get; }
 		public Int64 Frequency { get; }
 		public Int64 LastAccessTimeUtc { get; }
+		public DateTime LastAccessTime {
+			get {
+				return DateTime.FromFileTimeUtc(LastAccessTimeUtc);
+			}
+		}
 		public bool IsLeaf { get; }
 	}
 }

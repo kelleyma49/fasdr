@@ -38,6 +38,34 @@ namespace Fasdr.UnitTests
 			Assert.AreEqual(false, p.Entries[@"c:\dir1\file2"].IsLeaf);
 			*/
 		}
+
+		[Test]
+		public void TestUpdateNonExistantEntry()
+		{
+			var p = new Provider ("FileSystem");
+			using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem()))) 
+			{
+				p.Load(new StreamReader(ms));	
+			}
+
+			Assert.AreEqual(false,p.UpdateEntry (-1));
+		}
+
+		[Test]
+		public void TestUpdateEntry() 
+		{
+			var p = new Provider ("FileSystem");
+			using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem()))) 
+			{
+				p.Load(new StreamReader(ms));	
+			}
+
+			var f = p.Entries [0].Frequency;
+			var now = DateTime.UtcNow;
+			Assert.IsTrue(p.UpdateEntry (0));
+			Assert.AreEqual (f + 1, p.Entries [0].Frequency);
+			Assert.Greater (p.Entries [0].LastAccessTime, now);
+		}
 	}
 }
 

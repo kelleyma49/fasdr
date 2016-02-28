@@ -13,6 +13,7 @@ namespace Fasdr.Backend
 		public Entry(string fullPath,Int64 frequency,Int64 lastAccessTimeUtc,bool isLeaf)
 		{
 			FullPath = fullPath;
+			SplitPath = FullPath.Split(new char[] {'\\'},StringSplitOptions.RemoveEmptyEntries);
 			Frequency = frequency;
 			LastAccessTimeUtc = lastAccessTimeUtc;
 			IsLeaf = isLeaf;
@@ -76,6 +77,7 @@ namespace Fasdr.Backend
 		}
 
 		public string FullPath { get; }
+		public string[] SplitPath { get; }
 		public Int64 Frequency { get; }
 		public Int64 LastAccessTimeUtc { get; }
 		public bool IsLeaf { get; }

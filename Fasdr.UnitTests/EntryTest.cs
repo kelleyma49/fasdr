@@ -11,9 +11,10 @@ namespace Fasdr.UnitTests
 		public void TestCanCreateFromString()
 		{
 			var now = DateTime.UtcNow;
-			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "1", now.ToFileTimeUtc(), false);
+			var s = string.Join ("" + Entry.Separator, @"c:\dir1\dir2", "1", now.ToFileTimeUtc(), false);
 			Entry e = Entry.FromString (s);
-			Assert.AreEqual (@"c:\dir1\", e.FullPath);
+			Assert.AreEqual (@"c:\dir1\dir2", e.FullPath);
+			Assert.AreEqual (new string[]{"c:","dir1","dir2"}, e.SplitPath);
 			Assert.AreEqual (1, e.Frequency);
 			Assert.AreEqual (now.ToFileTimeUtc (), e.LastAccessTimeUtc);
 			Assert.AreEqual (false, e.IsLeaf);

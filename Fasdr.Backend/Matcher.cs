@@ -39,7 +39,7 @@ namespace Fasdr.Backend
                     bool addPath = input.Length == 1;
                     if (!addPath)
                     {
-                        var pathSplit = e.FullPath.Split(new char[] {'\\'},StringSplitOptions.RemoveEmptyEntries);
+                        var pathSplit = e.SplitPath;
                         addPath = pathSplit.Length >= input.Length;
                         if (addPath)
                         {

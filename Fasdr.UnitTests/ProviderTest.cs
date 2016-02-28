@@ -59,10 +59,10 @@ namespace Fasdr.UnitTests
 			{
 				p.Load(new StreamReader(ms));	
 			}
-
+				
 			var f = p.Entries [0].Frequency;
 			var now = DateTime.UtcNow;
-			Assert.IsTrue(p.UpdateEntry (0));
+			Assert.IsTrue(p.UpdateEntry (TestData.Dir1.FullPath));
 			Assert.AreEqual (f + 1, p.Entries [0].Frequency);
 			Assert.Greater (p.Entries [0].LastAccessTime, now);
 		}

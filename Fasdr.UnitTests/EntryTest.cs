@@ -21,37 +21,33 @@ namespace Fasdr.UnitTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(Exception))]
 		public void TestFailedParseEmptyString()
 		{
-			Entry.FromString ("");
+			Assert.Throws<Exception>(()=>Entry.FromString (""));
 		}
 
 		[Test]
-		[ExpectedException(typeof(Exception))]
 		public void TestFailedParseFrequency()
 		{
 			var now = DateTime.UtcNow;
 			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "NotANumber", now.ToFileTimeUtc(), false);
-			Entry.FromString (s);
+			Assert.Throws<Exception>(()=>Entry.FromString (s));
 		}
 
 		[Test]
-		[ExpectedException(typeof(Exception))]
 		public void TestFailedParseLastAccessTime()
 		{
 			var now = DateTime.UtcNow;
 			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "1", "NotANumber", false);
-			Entry.FromString (s);
+			Assert.Throws<Exception>(()=>Entry.FromString (s));
 		}
 
 		[Test]
-		[ExpectedException(typeof(Exception))]
 		public void TestFailedParseIsLeaf()
 		{
 			var now = DateTime.UtcNow;
 			var s = string.Join ("" + Entry.Separator, @"c:\dir1\", "1", now.ToFileTimeUtc(), "NotBoolean");
-			Entry.FromString (s);
+			Assert.Throws<Exception>(()=>Entry.FromString (s));
 		}
 	}
 }

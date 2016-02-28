@@ -30,7 +30,6 @@ namespace Fasdr.UnitTests
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void TestConfigLoadFileCorruptedFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
@@ -38,7 +37,7 @@ namespace Fasdr.UnitTests
             });
 
             var db = new Database(fileSystem);
-            db.Load();
+			Assert.Throws<Exception>(()=>db.Load());
         }
 
         [Test]

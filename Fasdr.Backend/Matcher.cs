@@ -10,11 +10,16 @@ namespace Fasdr.Backend
 {
     public static class Matcher
     {
-		private class DescComparer<T> : IComparer<T>
+		public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparable
 		{
-			public int Compare(T x, T y)
+			public int Compare(TKey x, TKey y)
 			{
-				return Comparer<T>.Default.Compare(y, x);
+				int result = y.CompareTo(x);
+
+				if (result == 0)
+					return 1;   // Handle equality as being greater
+				else
+					return result;
 			}
 		}
 
@@ -31,7 +36,7 @@ namespace Fasdr.Backend
 			IList<int> ids;
             if (provider.LastEntries.TryGetValue (input[input.Length-1].ToLower(), out ids)) 
 			{
-				var list = new SortedList<double,string>(new DescComparer<double>());
+				var list = new SortedList<double,string>(new DuplicateKeyComparer<double>());
 				foreach (var id in ids) 
 				{
 					var e = provider.Entries[id];

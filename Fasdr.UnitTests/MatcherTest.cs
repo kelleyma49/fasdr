@@ -50,5 +50,17 @@ namespace Fasdr.UnitTests
             var matches = Matcher.Matches(db, "FileSystem", "NotThere", "testStr");
             CollectionAssert.AreEqual(new List<string> {}, matches);
         }
+
+		[Test]
+		public void TestSingleElementMatchUpdated()
+		{
+			var db = SetupMatchSimple ();
+
+			var matches = Matcher.Matches(db, "FileSystem", "testStr");
+			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"},matches);
+			Assert.IsTrue(db.Providers["FileSystem"].UpdateEntry(@"c:\dir1\testStr"));
+			matches = Matcher.Matches(db, "FileSystem", "testStr");
+			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\testStr", @"c:\dir1\dir2\testStr", @"c:\testStr"},matches);
+		}
     }
 }

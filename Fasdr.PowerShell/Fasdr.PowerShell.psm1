@@ -1,5 +1,7 @@
 # load C# dll for backend:
 $dllPath = Join-Path $PSScriptRoot 'Fasdr.Backend.dll'
+[System.Reflection.Assembly]::LoadFrom($dllPath)
+$dllPath = Join-Path $PSScriptRoot 'System.IO.Abstractions.dll'
 [System.Reflection.Assembly]::LoadFile($dllPath)
 $fasdrDatabase = $null
 
@@ -11,8 +13,7 @@ function Init-Database {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
 	}
 	$fasdrDatabase = New-Object Fasdr.Backend.Database -ArgumentList $fileSystem
-	$fasdrDatabase.Load()
-	$fasdrMatcher = New-Object Fasdr.Backend.Matcher
+	$fasdrDatabase.Load() 
 }
 
 <#
@@ -23,5 +24,8 @@ function Find-Frecent {
 		Init-Database
 	}
 	$providerName = $PWD.Provider.Name
-	return $fasdrMatcher.Matches($fasdrDatabase,$providerName,$args)
+	return [Fasdr.Backend.Matcher]::Matches($fasdrDatabase,$providerName,$args)
 }
+
+
+Export-ModuleMember -Function Find-Frecent

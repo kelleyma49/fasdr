@@ -63,6 +63,9 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-    <Copy Condition="'$(OS)' == 'Windows_NT'" SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)..\Fasdr.PowerShell\" />
+    <CreateItem Include="$(TargetDir)*.dll">
+        <Output TaskParameter="Include" ItemName="DllsToCopy"/>
+    </CreateItem>
+    <Copy Condition="'$(OS)' == 'Windows_NT'" SourceFiles="@(DllsToCopy)" DestinationFolder="$(SolutionDir)..\Fasdr.PowerShell\" />
   </Target>
 </Project>

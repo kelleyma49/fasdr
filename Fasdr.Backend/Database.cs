@@ -65,10 +65,12 @@ namespace Fasdr.Backend
 
         public void Save()
         {
-			foreach (var p in Providers) 
+			using (var sgi = new SingleGlobalInstance (5000)) 
 			{
-				var fileName = System.IO.Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
-				p.Value.Save (fileName,FileSystem);
+				foreach (var p in Providers) {
+					var fileName = System.IO.Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
+					p.Value.Save (fileName, FileSystem);
+				}
 			}
         }
 

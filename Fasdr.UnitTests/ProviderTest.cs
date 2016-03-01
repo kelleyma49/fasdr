@@ -40,7 +40,7 @@ namespace Fasdr.UnitTests
 		}
 
 		[Test]
-		public void TestUpdateNonExistantEntry()
+		public void TestUpdateNonExistentEntry()
 		{
 			var p = new Provider ("FileSystem");
 			using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem()))) 

@@ -13,22 +13,29 @@ namespace Fasdr.Backend
 {
     public class Database : IDatabase
     {
-        public Database(IFileSystem fileSystem)
+        public Database(IFileSystem fileSystem,string configDir=null)
         {
             FileSystem = fileSystem;
+            if (String.IsNullOrEmpty(configDir))
+                ConfigDir = DefaultConfigDir;
+            else
+                ConfigDir = configDir;
+            ConfigPath = System.IO.Path.Combine(ConfigDir, ConfigFileName);
         }
 
         static Database()
         {
-            ConfigDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            ConfigPath = System.IO.Path.Combine(ConfigDir, ConfigFileName);
+
+            DefaultConfigDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        public static readonly string ConfigDir;
-		public static readonly string ConfigFilePrefix = "fasdrConfig";
+        public readonly string ConfigDir;
+        public readonly string ConfigPath;
+
+        public static readonly string DefaultConfigDir;
+        public static readonly string ConfigFilePrefix = "fasdrConfig";
 		public static readonly string ConfigFileName = $"{ConfigFilePrefix}.*.txt";
-        public static readonly string ConfigPath;
-   
+        
 		public void Load()
         {
             try

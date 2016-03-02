@@ -10,7 +10,7 @@ namespace Fasdr.UnitTests
     [TestFixture]
     public class MatcherTest
 	{
-		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+        static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
      	private IDatabase SetupMatchSimple ()
 		{

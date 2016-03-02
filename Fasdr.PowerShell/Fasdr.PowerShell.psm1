@@ -8,11 +8,11 @@ $global:fasdrDatabase = $null
 <#
 #>
 function Init-Database {
-	param([System.IO.Abstractions.IFileSystem] $fileSystem=$null)
+	param([System.IO.Abstractions.IFileSystem] $fileSystem=$null,$defaultDrive=$null)
 	if ($fileSystem -eq $null) {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
 	}
-	$global:fasdrDatabase = New-Object Fasdr.Backend.Database -ArgumentList $fileSystem
+	$global:fasdrDatabase = New-Object Fasdr.Backend.Database -ArgumentList $fileSystem,$defaultDrive
 	$global:fasdrDatabase.Load() 
 }
 
@@ -28,4 +28,5 @@ function Find-Frecent {
 }
 
 
+Export-ModuleMember -Function Init-Database
 Export-ModuleMember -Function Find-Frecent

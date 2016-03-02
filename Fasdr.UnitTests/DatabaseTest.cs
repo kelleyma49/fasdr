@@ -9,7 +9,7 @@ namespace Fasdr.UnitTests
     [TestFixture]
     public class DatabaseTest
     {
-		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+		static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
         [Test]
         public void TestCanConstruct()
@@ -23,7 +23,7 @@ namespace Fasdr.UnitTests
         public void TestConfigLoadFileNotFound()
         {
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(Database.ConfigDir);
+            fileSystem.AddDirectory(Database.DefaultConfigDir);
 
             var db = new Database(fileSystem);
             db.Load();
@@ -101,7 +101,7 @@ namespace Fasdr.UnitTests
         public void TestConfigSimpleDatabase()
         {
 			var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {});
-			fileSystem.AddDirectory (Database.ConfigDir);
+			fileSystem.AddDirectory (Database.DefaultConfigDir);
 
             var db = new Database(fileSystem);
 			var fsp = new Provider("FileSystem");
@@ -113,7 +113,7 @@ namespace Fasdr.UnitTests
 			fsp.Add(e2);
             db.Save();
 
-			var fsFileName = System.IO.Path.Combine (Database.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+			var fsFileName = System.IO.Path.Combine (Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
 			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
             Assert.AreEqual(

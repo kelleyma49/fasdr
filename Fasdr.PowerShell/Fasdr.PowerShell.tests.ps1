@@ -8,8 +8,7 @@ Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1
 Describe "Get-Function" {
 	Context "Function Exists" {
 		It "Should Return" {
-			Import-Module $PsScriptRoot\Fasdr.PowerShell.psm1d
-			Find-Frecent | Should Be $null
+			Find-Frecent "shouldNotBeFound" | Should Be $null
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FuzzyString;
+using DuoVia.FuzzyStrings;
 using System.Collections;
 
 namespace Fasdr.Backend
@@ -81,11 +81,11 @@ namespace Fasdr.Backend
 				return list.Values;
 			}
 
+
 			// if we don't have a direct match, try a fuzzy comparison:
-            var opts = new List<FuzzyStringComparisonOptions>{ FuzzyStringComparisonOptions.UseLevenshteinDistance};
 			foreach (var e in provider.Entries)
             {
-				if (ComparisonMetrics.ApproximatelyEquals(input[input.Length-1], e.Value.FullPath, opts, FuzzyStringComparisonTolerance.Weak))
+				if (input[input.Length-1].FuzzyEquals(e.Value.FullPath))
 					results.Add(e.Value.FullPath,e.Value.CalculateFrecency());
             }
 

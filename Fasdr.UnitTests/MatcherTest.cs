@@ -52,6 +52,15 @@ namespace Fasdr.UnitTests
         }
 
 		[Test]
+		public void TestSingleElementNoMatch()
+		{
+			var db = SetupMatchSimple();
+
+			var matches = Matcher.Matches(db, "FileSystem", "ShouldNotBeThere");
+			CollectionAssert.AreEqual(new List<string> {}, matches);
+		}
+
+		[Test]
 		public void TestSingleElementMatchUpdated()
 		{
 			var db = SetupMatchSimple ();

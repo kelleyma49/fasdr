@@ -2,15 +2,16 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/backend/obj/Debug
-/Fasdr.Backend/obj/Debug
-/Fasdr.UnitTests/obj/Debug
-/Fasdr/packages/System.IO.Abstractions.2.0.0.116
-/Fasdr/packages/NUnit.2.6.4
-/Fasdr/packages/System.IO.Abstractions.TestingHelpers.2.0.0.116
-/Fasdr.UnitTests/bin/Debug
+/backend/obj/*
+/Fasdr.Backend/obj/*
+/Fasdr.UnitTests/obj/*
+/Fasdr/packages/System.IO.Abstractions.*
+/Fasdr/packages/NUnit.*
+/Fasdr/packages/System.IO.Abstractions.TestingHelpers.*
+/Fasdr.UnitTests/bin/*
 /Fasdr/.vs/fasdr/v14
 *.dll
 *.pdb
-/Fasdr/packages/System.IO.Abstractions.2.0.0.124
-/Fasdr/packages/System.IO.Abstractions.TestingHelpers.2.0.0.124
+/Fasdr/packages/System.IO.Abstractions.*
+/Fasdr/packages/System.IO.Abstractions.TestingHelpers.*
+/Fasdr/packages/DuoVia.*

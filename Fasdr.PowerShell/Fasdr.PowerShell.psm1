@@ -7,7 +7,7 @@ $global:fasdrDatabase = $null
 
 <#
 #>
-function Init-Database {
+function Initialize-Database {
 	param([System.IO.Abstractions.IFileSystem] $fileSystem=$null,$defaultDrive=$null)
 	if ($fileSystem -eq $null) {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
@@ -21,12 +21,13 @@ function Init-Database {
 #>
 function Find-Frecent {
 	if ($global:fasdrDatabase -eq $null) {
-		Init-Database
+		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	return [Fasdr.Backend.Matcher]::Matches($fasdrDatabase,$providerName,$args)
+	#return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
+	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
 }
 
 
-Export-ModuleMember -Function Init-Database
+Export-ModuleMember -Function Initialize-Database
 Export-ModuleMember -Function Find-Frecent

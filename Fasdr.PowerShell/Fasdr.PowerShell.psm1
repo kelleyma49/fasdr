@@ -17,17 +17,34 @@ function Initialize-Database {
 }
 
 <#
-	My Function
+	Find-Frecent
 #>
 function Find-Frecent {
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	#return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
+	$provider = $null
+	
+	# add provider if it doesn't currently exist:
+	if (!$global:fasdrDatabase.Providers.TryGetValue($providerName,[ref] $provider)) {
+		$global:fasdrDatabase.Providers[$providerName] = New-Object Fasdr.Backend.Provider $providerName
+	}
+
 	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
 }
 
+<#
+	Add-Frecent
+#>
+function Add-Frecent {
+	param()
+	if ($global:fasdrDatabase -eq $null) {
+		Initialize-Database
+	}
+
+	
+}
 
 Export-ModuleMember -Function Initialize-Database
 Export-ModuleMember -Function Find-Frecent

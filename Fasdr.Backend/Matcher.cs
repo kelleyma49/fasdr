@@ -29,10 +29,13 @@ namespace Fasdr.Backend
             if (input == null || input.Length == 0)
                 return new string[] { };
 
-            var results = new Dictionary<string,double>();
-
 			// first check - see if we have a direct match:
-			var provider = db.Providers[providerName];
+			Provider provider;
+			if (!db.Providers.TryGetValue (providerName, out provider))
+				return new string[] {};
+
+			var results = new Dictionary<string,double>();
+
 			IList<int> ids;
             if (provider.LastEntries.TryGetValue (input[input.Length-1].ToLower(), out ids)) 
 			{

@@ -12,6 +12,12 @@ namespace Fasdr.UnitTests
 	{
         static readonly string FileSystemConfigPath = System.IO.Path.Combine(Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
+		private IDatabase SetupEmptyDatabase ()
+		{
+			var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {});
+			return new Database(mfs);
+		}
+
      	private IDatabase SetupMatchSimple ()
 		{
 			var mfs = new MockFileSystem(new Dictionary<string, MockFileData> {
@@ -23,6 +29,15 @@ namespace Fasdr.UnitTests
 			db.Load();
 			return db;
 		}
+		[Test]
+		public void TestEmptyDatabase()
+		{
+			var db = SetupEmptyDatabase ();
+
+			var matches = Matcher.Matches(db, "FileSystem", "testStr");
+			CollectionAssert.AreEqual(new List<string>{},matches);
+		}
+
 
         [Test]
         public void TestSingleElementMatch()

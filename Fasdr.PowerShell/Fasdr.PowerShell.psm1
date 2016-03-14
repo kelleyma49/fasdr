@@ -57,7 +57,3 @@ function Add-Frecent {
 		
 	Return $provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
 }
-
-Export-ModuleMember -Function Initialize-Database
-Export-ModuleMember -Function Find-Frecent
-Export-ModuleMember -Function Add-Frecent

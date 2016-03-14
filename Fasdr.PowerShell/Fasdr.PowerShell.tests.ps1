@@ -5,7 +5,7 @@
 #
 Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1
 $testData = @"
-c:\dir1\dir2\testStr|101|0|true
+c:\dir1\dir2\testStr|109|0|true
 c:\dir1\dir2|110|0|false
 c:\testStr|110|0|false
 "@
@@ -17,27 +17,55 @@ Describe "Find-Frecent" {
 		
 		Initialize-Database -defaultDrive "$TestDrive"
 	
-		It "Find Nothing" {
+		It "Finds Nothing" {
 			Find-Frecent "shouldNo" | Should Be $null
 		}
 	}
 
-	Context "Function Exists" {
+	Context "Small Database" {
 		$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
 		Set-Content $testDatabase -value $testData
 
 		Initialize-Database -defaultDrive "$TestDrive"
 
-		It "Find Nothing" {
+		It "Finds Nothing" {
 			Find-Frecent "shouldNo" | Should Be $null
 		}
 
-		It "Find Single Item" {
+		It "Finds Single Item" {
 			Find-Frecent "dir2" | Should Be 'c:\dir1\dir2'
 		}
 
-		It "Find Double Items" {
+		It "Finds Double Items" {
 			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
+		}
+	}
+}
+
+
+Describe "Add-Frecent" {
+	Context "Empty Database" {
+		$testFile = "TestDrive:\TestFile1.txt"
+		Set-Content $testFile -value " "
+		
+		Initialize-Database -defaultDrive "$TestDrive"
+	
+		It "Adds File Entry" {
+			Add-Frecent $testFile | Should Be $true
+			Find-Frecent "TestFile1.txt" | Should Be ( $testFile )
+		}
+	}
+
+	Context "Small Database" {
+		$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
+		Set-Content $testDatabase -value $testData
+
+		Initialize-Database -defaultDrive "$TestDrive"
+
+		It "Should Find Different Order" {
+			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
+			Add-Frecent 'c:\dir1\dir2\testStr' | Should Be $true
+			Find-Frecent "testStr" | Should Be ('c:\dir1\dir2\testStr','c:\testStr')
 		}
 	}
 }

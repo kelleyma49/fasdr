@@ -22,6 +22,10 @@ function Initialize-Database {
 	$global:fasdrDatabase.Load() 
 }
 
+function Save-Database {
+	$global:fasdrDatabase.Save() 
+}
+
 <#
 	Find-Frecent
 #>
@@ -51,8 +55,9 @@ function Add-Frecent {
 		$global:fasdrDatabase.Providers[$providerName] = $provider
 	}
 		
-	$provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+	Return $provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
 }
 
 Export-ModuleMember -Function Initialize-Database
 Export-ModuleMember -Function Find-Frecent
+Export-ModuleMember -Function Add-Frecent

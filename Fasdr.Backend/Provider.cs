@@ -36,7 +36,9 @@ namespace Fasdr.Backend
 					s.WriteLine(p.Value.ToString());
 				}
 			}
-			fileSystem.File.Move(fileName, filePath);
+            if (fileSystem.File.Exists(filePath))
+                fileSystem.File.Delete(filePath);
+            fileSystem.File.Move(fileName, filePath);
 		}
 
 		public void Add(Entry e)

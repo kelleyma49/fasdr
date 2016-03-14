@@ -54,13 +54,20 @@ namespace Fasdr.Backend
 			CurrentId = CurrentId + 1;
 		}
 
-		public bool UpdateEntry(string fullPath)
+        public bool UpdateEntry(string fullPath,Predicate<string> checkIsLeaf = null)
 		{
 			int id;
-			if (!FullPathToEntry.TryGetValue (fullPath.ToLower (), out id))
-				return false;
+            string fullPathLower = fullPath.ToLower();
+			if (!FullPathToEntry.TryGetValue (fullPathLower, out id))
+            {
+                if (checkIsLeaf==null) 
+				    return false;
 
-			return UpdateEntry (id);
+                Add(new Entry(fullPathLower, 1, DateTime.Now.ToFileTimeUtc(), checkIsLeaf(fullPath)));
+                return true;
+            }
+
+            return UpdateEntry (id);
 		}
 
 		public bool UpdateEntry(int id)

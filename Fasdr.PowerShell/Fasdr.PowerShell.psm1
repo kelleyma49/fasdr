@@ -12,7 +12,13 @@ function Initialize-Database {
 	if ($fileSystem -eq $null) {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
 	}
+
+	Write-Host "filesystem: $fileSystem"
+	Write-Host "default drive: $defaultDrive"
 	$global:fasdrDatabase = New-Object Fasdr.Backend.Database -ArgumentList $fileSystem,$defaultDrive
+	if ($global:fasdrDatabase -eq $null) {
+		Write-Host 'database is null!'
+	}
 	$global:fasdrDatabase.Load() 
 }
 
@@ -24,13 +30,6 @@ function Find-Frecent {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	$provider = $null
-	
-	# add provider if it doesn't currently exist:
-	if (!$global:fasdrDatabase.Providers.TryGetValue($providerName,[ref] $provider)) {
-		$global:fasdrDatabase.Providers[$providerName] = New-Object Fasdr.Backend.Provider $providerName
-	}
-
 	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
 }
 
@@ -38,12 +37,21 @@ function Find-Frecent {
 	Add-Frecent
 #>
 function Add-Frecent {
-	param()
+	param([string]$providerPath)
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
 
-	
+	$providerName = $PWD.Provider.Name
+	$provider = $null
+
+	# create provider if it doesn't exist:
+	if (!$global:fasdrDatabase.Providers.TryGetValue($providerName,[ref] $provider)) {
+		$provider = New-Object Fasdr.Backend.Provider $providerName
+		$global:fasdrDatabase.Providers[$providerName] = $provider
+	}
+		
+	$provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
 }
 
 Export-ModuleMember -Function Initialize-Database

@@ -10,14 +10,24 @@ c:\dir1\dir2|110|0|false
 c:\testStr|110|0|false
 "@
 
-
 Describe "Find-Frecent" {
-	$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
-	Set-Content $testDatabase -value $testData
-
-	Initialize-Database -defaultDrive "$TestDrive"
+	Context "Empty Database" {
+		#$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
+		#Set-Content $testDatabase -value " "
+		
+		Initialize-Database -defaultDrive "$TestDrive"
 	
+		It "Find Nothing" {
+			Find-Frecent "shouldNo" | Should Be $null
+		}
+	}
+
 	Context "Function Exists" {
+		$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
+		Set-Content $testDatabase -value $testData
+
+		Initialize-Database -defaultDrive "$TestDrive"
+
 		It "Find Nothing" {
 			Find-Frecent "shouldNo" | Should Be $null
 		}
@@ -29,7 +39,5 @@ Describe "Find-Frecent" {
 		It "Find Double Items" {
 			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
 		}
-
-		
 	}
 }

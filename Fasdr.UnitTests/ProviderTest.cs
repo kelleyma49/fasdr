@@ -4,6 +4,7 @@ using Fasdr.Backend;
 using System.IO.Abstractions.TestingHelpers;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Fasdr.UnitTests
@@ -39,19 +40,37 @@ namespace Fasdr.UnitTests
 			*/
 		}
 
-		[Test]
-		public void TestUpdateNonExistentEntry()
-		{
-			var p = new Provider ("FileSystem");
-			using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem()))) 
-			{
-				p.Load(new StreamReader(ms));	
-			}
+        [Test]
+        public void TestUpdateNonExistentEntryShouldFail()
+        {
+            var p = new Provider("FileSystem");
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem())))
+            {
+                p.Load(new StreamReader(ms));
+            }
 
-			Assert.AreEqual(false,p.UpdateEntry (-1));
-		}
+            Assert.AreEqual(false, p.UpdateEntry(-1));
+        }
 
-		[Test]
+        [Test]
+        public void TestUpdateNonExistentEntryShouldSucceed()
+        {
+            var p = new Provider("FileSystem");
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(TestData.GetTwoDirFilesystem())))
+            {
+                p.Load(new StreamReader(ms));
+            }
+
+            var now = DateTime.UtcNow;
+            var newStr = "c:\tree\newEntry";
+            Assert.IsTrue(p.UpdateEntry(newStr,s => s.EndsWith("newentry")));
+            var entry = p.Entries.Values.OfType<Entry>().Where(e => e.FullPath == newStr.ToLower()).First();
+            StringAssert.AreEqualIgnoringCase(newStr, entry.FullPath);
+            Assert.AreEqual(1, entry.Frequency);
+            Assert.GreaterOrEqual(entry.LastAccessTime, now);
+        }
+
+        [Test]
 		public void TestUpdateEntry() 
 		{
 			var p = new Provider ("FileSystem");

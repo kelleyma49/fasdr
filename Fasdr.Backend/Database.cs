@@ -54,9 +54,10 @@ namespace Fasdr.Backend
 
 					var provider = new Provider(fileSplit[1]);
 					Providers.Add(provider.Name,provider);
-					using (var s = FileSystem.File.OpenText(textFile))
+					StreamReader sr;
+					using (OpenFile(textFile, out sr))
 					{
-						provider.Load(s);
+						provider.Load(sr);
 					}
                 }
             }
@@ -80,6 +81,12 @@ namespace Fasdr.Backend
 				}
 			}
         }
+
+		protected virtual IDisposable OpenFile(string textFile,out StreamReader sr)
+		{
+			sr = FileSystem.File.OpenText(textFile);
+			return sr;
+		}
 
 		public Dictionary<string,Provider> Providers { get; } = new Dictionary<string,Provider>();
         public IFileSystem FileSystem { get; }

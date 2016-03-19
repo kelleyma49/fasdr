@@ -53,6 +53,7 @@
     <Compile Include="Provider.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="SingleGlobalInstance.cs" />
+    <Compile Include="DatabaseMemMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

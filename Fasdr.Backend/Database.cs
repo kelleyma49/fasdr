@@ -45,19 +45,8 @@ namespace Fasdr.Backend
 				// find provider files:
                 foreach (var textFile in FileSystem.Directory.GetFiles(ConfigDir, ConfigFileName, SearchOption.TopDirectoryOnly))
                 {
-					string fileNameOnly = System.IO.Path.GetFileName(textFile); 
-					string[] fileSplit = fileNameOnly.Split(new char[]{'.'});
-					if (fileSplit==null || fileSplit.Length!=3)
-					{
-						throw new Exception("Failed to parse config file name '" + fileNameOnly + "'");
-					}
-
-					var provider = new Provider(fileSplit[1]);
+					var provider = LoadProvider(textFile);
 					Providers.Add(provider.Name,provider);
-					using (var s = FileSystem.File.OpenText(textFile))
-					{
-						provider.Load(s);
-					}
                 }
             }
             catch (FileNotFoundException)
@@ -70,12 +59,34 @@ namespace Fasdr.Backend
             }
         }
 
+		private Provider LoadProvider(string textFile)
+		{
+			string fileNameOnly = System.IO.Path.GetFileName(textFile); 
+			string[] fileSplit = fileNameOnly.Split(new char[]{'.'});
+			if (fileSplit==null || fileSplit.Length!=3)
+			{
+				throw new Exception("Failed to parse config file name '" + fileNameOnly + "'");
+			}
+
+			var provider = new Provider(fileSplit[1]);
+			using (var s = FileSystem.File.OpenText(textFile))
+			{
+				provider.Load(s);
+			}
+			return provider;
+		}
+
         public void Save()
         {
 			using (var sgi = new SingleGlobalInstance (5000)) 
 			{
 				foreach (var p in Providers) {
 					var fileName = System.IO.Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
+					if (FileSystem.File.Exists (fileName)) {
+						var currProvider = LoadProvider (fileName);
+						p.Value.Merge (currProvider);
+					}
+
 					p.Value.Save (fileName, FileSystem);
 				}
 			}

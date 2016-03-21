@@ -41,6 +41,23 @@ namespace Fasdr.Backend
             fileSystem.File.Move(fileName, filePath);
 		}
 
+		public void Merge(Provider other)
+		{
+			foreach (var kv in other.FullPathToEntry) {	
+				var theirs = other.Entries [kv.Value];
+				int index;
+				if (!FullPathToEntry.TryGetValue (kv.Key, out index)) {
+					FullPathToEntry.Add (kv.Key, CurrentId);
+					Entries.Add (CurrentId, theirs);
+					CurrentId = CurrentId + 1;
+				} else {
+					var ours = other.Entries [index];
+					long maxFreq = Math.Max (theirs.Frequency, ours.Frequency);
+					other.Entries [index] = new Entry (ours.FullPath, maxFreq, theirs.LastAccessTime, ours.IsLeaf);
+				}
+			}
+		}
+
 		public void Add(Entry e)
 		{
 			FullPathToEntry.Add (e.FullPath.ToLower (), CurrentId);

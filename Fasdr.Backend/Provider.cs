@@ -51,7 +51,7 @@ namespace Fasdr.Backend
 					Entries.Add (CurrentId, theirs);
 					CurrentId = CurrentId + 1;
 				} else {
-					var ours = other.Entries [index];
+					var ours = Entries [index];
 					long maxFreq = Math.Max (theirs.Frequency, ours.Frequency);
 					other.Entries [index] = new Entry (ours.FullPath, maxFreq, theirs.LastAccessTime, ours.IsLeaf);
 				}

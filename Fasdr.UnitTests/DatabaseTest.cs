@@ -137,9 +137,11 @@ namespace Fasdr.UnitTests
 			db.Providers.Add ("FileSystem", fsp);
 			var e1 = new Entry (@"c:\dir1\", 12, DateTime.Now, false);
 			var e2 = new Entry (@"c:\dir1\file2", 34, DateTime.Now, true);
+			var e3 = new Entry(@"c:\dir2\file3",11,DateTime.Now,true);
 
 			fsp.Add(e1);
 			fsp.Add(e2);
+			fsp.Add(e3);
 			db.Save();
 
 			var fsFileName = System.IO.Path.Combine (Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
@@ -148,8 +150,9 @@ namespace Fasdr.UnitTests
 			var configContent = fileSystem.File.ReadAllText (fsFileName);
 			StringAssert.Contains (e1.ToString () + Environment.NewLine, configContent);
 			StringAssert.Contains (e2.ToString () + Environment.NewLine, configContent);
+			StringAssert.Contains (e3.ToString () + Environment.NewLine, configContent);
 			StringAssert.Contains (mockE1.ToString () + Environment.NewLine, configContent);
-			StringAssert.Contains (mockE2.ToString () + Environment.NewLine, configContent);
+			StringAssert.DoesNotContain (mockE2.ToString () + Environment.NewLine, configContent);
 		}
     }
 }

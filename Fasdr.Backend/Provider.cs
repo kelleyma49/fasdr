@@ -53,7 +53,7 @@ namespace Fasdr.Backend
 				} else {
 					var ours = Entries [index];
 					long maxFreq = Math.Max (theirs.Frequency, ours.Frequency);
-					other.Entries [index] = new Entry (ours.FullPath, maxFreq, theirs.LastAccessTime, ours.IsLeaf);
+					other.Entries [index] = new Entry (ours.FullPath, maxFreq, Math.Max(theirs.LastAccessTimeUtc,ours.LastAccessTimeUtc), ours.IsLeaf);
 				}
 			}
 		}

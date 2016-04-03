@@ -88,7 +88,7 @@ namespace Fasdr.Backend
 			// if we don't have a direct match, try a fuzzy comparison:
 			foreach (var e in provider.Entries)
             {
-				if (input[input.Length-1].FuzzyEquals(e.Value.FullPath))
+				if (input[input.Length-1].FuzzyEquals(e.Value.FullPath,0.20))
 					results.Add(e.Value.FullPath,e.Value.CalculateFrecency());
             }
 

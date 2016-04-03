@@ -13,8 +13,6 @@ function Initialize-Database {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
 	}
 
-	Write-Host "filesystem: $fileSystem"
-	Write-Host "default drive: $defaultDrive"
 	$global:fasdrDatabase = New-Object Fasdr.Backend.Database -ArgumentList $fileSystem,$defaultDrive
 	if ($global:fasdrDatabase -eq $null) {
 		Write-Host 'database is null!'
@@ -30,11 +28,12 @@ function Save-Database {
 	Find-Frecent
 #>
 function Find-Frecent {
+	param([string]$ProviderPath)
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$args)
+	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$ProviderPath)
 }
 
 <#
@@ -55,5 +54,22 @@ function Add-Frecent {
 		$global:fasdrDatabase.Providers[$providerName] = $provider
 	}
 		
-	Return $provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+	return $provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+}
+
+<# 
+	Set-Frecent
+#>
+function Set-Frecent {
+	param([string]$Path)
+	Set-Location $Path
+	if ($?) {
+		Add-Frecent $Path
+		Save-Database
+	} 
+}
+
+foreach ($file in dir $PSScriptRoot\*.ArgumentCompleters.ps1)
+{
+    . $file.FullName
 }

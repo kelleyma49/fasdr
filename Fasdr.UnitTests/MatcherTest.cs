@@ -63,6 +63,14 @@ namespace Fasdr.UnitTests
             {
                 get
                 {
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+                        new string[] { "t" },
+                        new string[] { @"c:\tree\", @"c:\tools\" })
+                        .SetName("TestSingleElementMatchSingleChar");
+
+
                     yield return new TestCaseData(TestData.GetMatchFilesystem(),
                         new string[] { "testStr" },
                         new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"  })
@@ -72,6 +80,27 @@ namespace Fasdr.UnitTests
                         new string[] { "dir1", "testStr" },
                         new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" })
                         .SetName("TestSingleElementMatchDir1TestStr");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
+                        new string[] { "TIAT" },
+                        new string[] { @"c:\ThisIsATest\", @"c:\tiat\" })
+                        .SetName("TestSingleElementMatchCamelCase");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
+                        new string[] { "tiat" },
+                        new string[] { @"c:\this is a test\", @"c:\tiat\" })
+                        .SetName("TestSingleElementMatchSeparators");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tiat\", 150, DateTime.Now, false)),
+                        new string[] { "tiat" },
+                        new string[] { @"c:\tiat\", @"c:\this is a test\",  })
+                        .SetName("TestSingleElementMatchSeparatorsFrequencyWins");
                 }
             }
 

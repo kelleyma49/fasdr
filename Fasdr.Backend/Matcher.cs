@@ -39,7 +39,7 @@ namespace Fasdr.Backend
 			var results = new Dictionary<string,double>();
 
             // see if we have a direct match:
-            var lastInputLower = input[input.Length - 1].ToLower();
+            var lastInput = input[input.Length - 1];
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
 
             // if no direct match, loop through and find best match:
@@ -47,9 +47,9 @@ namespace Fasdr.Backend
             {
                 int score;
                     
-                fts.FuzzyMatcher.FuzzyMatch(lastInputLower,kv.Key,out score);
+                fts.FuzzyMatcher.FuzzyMatch(lastInput,kv.Value.Name,out score);
 
-                foreach (var id in kv.Value)
+                foreach (var id in kv.Value.Ids)
                 {
                     // get score from rest of path parts:
                     var entry = provider.Entries[id];
@@ -65,12 +65,12 @@ namespace Fasdr.Backend
                               
                         }
                         int subScore;
-                        fts.FuzzyMatcher.FuzzyMatch(input[i].ToLower(), entryPathSplit[start], out subScore);
+                        fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
                         start--;
                         score += subScore;
                     }
 
-                    if (score > 0)
+                    if (score >= 0)
                         list.Add(score + entry.CalculateFrecency(), entry.FullPath);
                 }
             }

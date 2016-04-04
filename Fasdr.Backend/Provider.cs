@@ -62,14 +62,16 @@ namespace Fasdr.Backend
 		{
 			FullPathToEntry.Add (e.FullPath.ToLower (), CurrentId);
 			Entries.Add(CurrentId,e);
-			var pathSplit = e.FullPath.Split (new char[]{ '\\'});
-			string lastElement = pathSplit [pathSplit.Length - 1].ToLower();
-			IList<int> ids;
-			if (!LastEntries.TryGetValue (lastElement, out ids)) 
+			var pathSplit = e.FullPath.Split (new char[]{ '\\'},StringSplitOptions.RemoveEmptyEntries);
+            string lastElement = pathSplit[pathSplit.Length - 1];
+            string lastElementLower = lastElement.ToLower();
+			LastEntry lastEntry;
+			if (!LastEntries.TryGetValue (lastElementLower, out lastEntry)) 
 			{
-				LastEntries.Add(lastElement,ids = new List<int> ());
+                lastEntry = new LastEntry { Name = lastElement, Ids = new List<int>() };
+                LastEntries.Add(lastElementLower, lastEntry);
 			}
-			ids.Add (CurrentId);
+            lastEntry.Ids.Add(CurrentId);
 			CurrentId = CurrentId + 1;
 		}
 
@@ -102,7 +104,13 @@ namespace Fasdr.Backend
 		public string Name { get; }
 		public Dictionary<int,Entry> Entries { get; } = new Dictionary<int,Entry>();
 		public Dictionary<string,int> FullPathToEntry { get; } = new Dictionary<string,int>();
-		public Dictionary<string,IList<int>> LastEntries { get; } = new Dictionary<string,IList<int>>();
+		public Dictionary<string, LastEntry> LastEntries { get; } = new Dictionary<string, LastEntry>();
+
+        public struct LastEntry
+        {
+            public string Name;
+            public IList<int> Ids;
+        }
 
 		private int CurrentId { get; set; }
 	}

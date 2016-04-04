@@ -1,3 +1,6 @@
 [submodule "fuzzystring"]
 	path = fuzzystring
 	url = https://github.com/msdotnetclr/fuzzystring.git
+[submodule "lib_fts"]
+	path = lib_fts
+	url = https://github.com/kelleyma49/lib_fts

@@ -10,6 +10,8 @@ namespace Fasdr.Backend
 {
     public static class Matcher
     {
+        static readonly int SmallerEntryScorePenalty = -10;
+
 		public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparable
 		{
 			public int Compare(TKey x, TKey y)
@@ -36,72 +38,44 @@ namespace Fasdr.Backend
 
 			var results = new Dictionary<string,double>();
 
-			IList<int> ids;
-            if (provider.LastEntries.TryGetValue (input[input.Length-1].ToLower(), out ids)) 
-			{
-				var list = new SortedList<double,string>(new DuplicateKeyComparer<double>());
-				foreach (var id in ids) 
-				{
-					var e = provider.Entries[id];
+            // see if we have a direct match:
+            var lastInputLower = input[input.Length - 1].ToLower();
+            var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
 
-                    bool addPath = input.Length == 1;
-                    if (!addPath)
+            // if no direct match, loop through and find best match:
+            foreach (var kv in provider.LastEntries)
+            {
+                int score;
+                    
+                fts.FuzzyMatcher.FuzzyMatch(lastInputLower,kv.Key,out score);
+
+                foreach (var id in kv.Value)
+                {
+                    // get score from rest of path parts:
+                    var entry = provider.Entries[id];
+                    var entryPathSplit = entry.SplitPath;
+                    int start = entryPathSplit.Length - 2;
+                    for (int i = input.Length - 2; i >= 0; i--)
                     {
-                        var pathSplit = e.SplitPath;
-                        addPath = pathSplit.Length >= input.Length;
-                        if (addPath)
+                        // if stored string is smaller than input string, apply penalty:
+                        if (start < 0)
                         {
-                            int j = pathSplit.Length - 2;
-                            // reverse iterate through elements to see if they match in order:
-                            for (int i = input.Length - 2; i >= 0; i--)
-                            {
-                                bool foundInput = false;
-                                for (; j >= 0; j--)
-                                {
-                                    if (String.Compare(pathSplit[j], input[i], true) == 0)
-                                    {
-                                        foundInput = true;
-                                        break;
-                                    }
-                                }
-                                
-                                // input element wasn't found; don't add to results
-                                if (!foundInput)
-                                {
-                                    addPath = false;
-                                    break;
-                                }
-                            }
+                            score -= SmallerEntryScorePenalty;
+                            break;
+                              
                         }
+                        int subScore;
+                        fts.FuzzyMatcher.FuzzyMatch(input[i].ToLower(), entryPathSplit[start], out subScore);
+                        start--;
+                        score += subScore;
                     }
 
-                    if (addPath)
-						list.Add (e.CalculateFrecency(), e.FullPath);
-				}
-
-                
-
-				return list.Values;
-			}
-
-
-			// if we don't have a direct match, try a fuzzy comparison:
-			foreach (var e in provider.Entries)
-            {
-				if (input[input.Length-1].FuzzyEquals(e.Value.FullPath,0.20))
-					results.Add(e.Value.FullPath,e.Value.CalculateFrecency());
+                    if (score > 0)
+                        list.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                }
             }
 
-            List<KeyValuePair<string, double>> myList = results.ToList();
-
-            myList.Sort((firstPair, nextPair) =>
-                {
-                    return nextPair.Value.CompareTo(firstPair.Value);
-                }
-            );
-
-            // sort and return:
-            return myList.ConvertAll(new Converter<KeyValuePair<string,double>, string>( p => p.Key));
+            return list.Values;
         }
     }
 }

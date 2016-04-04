@@ -46,6 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\lib_fts\code\fts_fuzzy_match.cs">
+      <Link>fts_fuzzy_match.cs</Link>
+    </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="IDatabase.cs" />
     <Compile Include="Matcher.cs" />

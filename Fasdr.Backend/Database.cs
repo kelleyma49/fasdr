@@ -76,6 +76,19 @@ namespace Fasdr.Backend
 			return provider;
 		}
 
+        public bool AddEntry(string providerName,string path, Predicate<string> checkIsLeaf)
+        {
+            // create provider if it doesn't exist:
+            Provider provider;
+            if (!Providers.TryGetValue(providerName,out provider))
+            {
+                provider = new Provider(providerName);
+                Providers[providerName] = provider;
+            }
+
+            return provider.UpdateEntry(path, checkIsLeaf);
+        }   
+
         public void Save()
         {
 			using (var sgi = new SingleGlobalInstance (5000)) 

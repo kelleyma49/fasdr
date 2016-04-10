@@ -24,35 +24,21 @@ function Save-Database {
 	$global:fasdrDatabase.Save() 
 }
 
-function Set-DatabaseFromJumpList {
-	$dllPath = Join-Path $PSScriptRoot 'JumpList.dll'
+function Import-Recents {
+	if ($global:fasdrDatabase -eq $null) {
+		Initialize-Database
+	}
+
+	$dllPath = Join-Path $PSScriptRoot 'Fasdr.Windows.dll'
 	[System.Reflection.Assembly]::LoadFrom($dllPath)
 	
+	$fileSystemProvider = 'FileSystem'
 	$numEntriesAdded = 0
 	$dirs = @{}
 
-	$fileSystemProvider = 'FileSystem'
-	$autoPath = join-path $env:APPDATA 'Microsoft\Windows\Recent\AutomaticDestinations\'
-	gci -Path $autoPath -Filter *.automaticDestinations-ms | ForEach-Object {
-		$aj = [JumpList.JumpList]::LoadAutoJumplist($_.FullName) 
-		$aj.DestListEntries | ForEach-Object {
-			$path = $_.Path
-			if (Resolve-Path $path -ErrorAction SilentlyContinue) {
-				if  (test-path $path -PathType Leaf) {
-					$path = Split-Path $path -Parent
-				}
-
-				$pathLower = $path.ToLower()
-				if (!$dirs.ContainsKey($pathLower)) {
-					$dirs[$path.ToLower()] = $path
-					if (Add-Frecent $path $FileSystemProvider) {
-						$numEntriesAdded = $numEntriesAdded + 1
-					}
-				}
-			}
-		} 
-	}
-
+	$numEntriesAdded += [Fasdr.Windows.DatabaseExt]::AddFromJumplists($global::fasdrDatabase,$fileSystemProvider)
+	$numEntriesAdded += [Fasdr.Windows.DatabaseExt]::AddFromRecents($global::fasdrDatabase,$fileSystemProvider)
+	
 	Write-Output "Num entries added: $numEntriesAdded"
 	Save-Database
 }
@@ -78,15 +64,8 @@ function Add-Frecent {
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
-	$provider = $null
 
-	# create provider if it doesn't exist:
-	if (!$global:fasdrDatabase.Providers.TryGetValue($providerName,[ref] $provider)) {
-		$provider = New-Object Fasdr.Backend.Provider $providerName
-		$global:fasdrDatabase.Providers[$providerName] = $provider
-	}
-		
-	return $provider.UpdateEntry($providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+	return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf});
 }
 
 <# 

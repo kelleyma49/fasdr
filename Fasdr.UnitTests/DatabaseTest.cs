@@ -67,6 +67,16 @@ namespace Fasdr.UnitTests
 
 
         [Test]
+        public void TestAddEntryNoItemsOrProvider()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
+                {  FileSystemConfigPath, new MockFileData("") }
+            });
+            var db = new Database(fileSystem);
+            Assert.IsTrue(db.AddEntry("FileSystem", @"c:\APath\", p => false));
+        }
+
+        [Test]
         public void TestConfigLoadFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {

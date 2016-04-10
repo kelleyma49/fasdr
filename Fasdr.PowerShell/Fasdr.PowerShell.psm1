@@ -24,6 +24,40 @@ function Save-Database {
 	$global:fasdrDatabase.Save() 
 }
 
+function Set-DatabaseFromJumpList {
+	$dllPath = Join-Path $PSScriptRoot 'JumpList.dll'
+	[System.Reflection.Assembly]::LoadFrom($dllPath)
+	
+	$numEntriesAdded = 0
+	$dirs = @{}
+
+	$fileSystemProvider = 'FileSystem'
+	$autoPath = join-path $env:APPDATA 'Microsoft\Windows\Recent\AutomaticDestinations\'
+	gci -Path $autoPath -Filter *.automaticDestinations-ms | ForEach-Object {
+		$aj = [JumpList.JumpList]::LoadAutoJumplist($_.FullName) 
+		$aj.DestListEntries | ForEach-Object {
+			$path = $_.Path
+			if (Resolve-Path $path -ErrorAction SilentlyContinue) {
+				if  (test-path $path -PathType Leaf) {
+					$path = Split-Path $path -Parent
+				}
+
+				$pathLower = $path.ToLower()
+				if (!$dirs.ContainsKey($pathLower)) {
+					$dirs[$path.ToLower()] = $path
+					if (Add-Frecent $path $FileSystemProvider) {
+						$numEntriesAdded = $numEntriesAdded + 1
+					}
+				}
+			}
+		} 
+	}
+
+	Write-Output "Num entries added: $numEntriesAdded"
+	Save-Database
+}
+
+
 <#
 	Find-Frecent
 #>
@@ -40,12 +74,10 @@ function Find-Frecent {
 	Add-Frecent
 #>
 function Add-Frecent {
-	param([string]$providerPath)
+	param([string]$providerPath,[string]$providerName = $PWD.Provider.Name)
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
-
-	$providerName = $PWD.Provider.Name
 	$provider = $null
 
 	# create provider if it doesn't exist:
@@ -64,8 +96,9 @@ function Set-Frecent {
 	param([string]$Path)
 	Set-Location $Path
 	if ($?) {
-		Add-Frecent $Path
-		Save-Database
+		if (Add-Frecent $Path) {
+			Save-Database
+		}
 	} 
 }
 

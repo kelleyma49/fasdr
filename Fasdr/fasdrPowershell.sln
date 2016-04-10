@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25029.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Backend", "..\Fasdr.Backend\Fasdr.Backend.csproj", "{20F8F9DB-C960-48ED-93E2-FBE95AED3C09}"
 EndProject
@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{C79143
 	EndProjectSection
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Fasdr.PowerShell", "..\Fasdr.PowerShell\Fasdr.PowerShell.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JumpList", "..\JumpList\JumpList\JumpList.csproj", "{9374EAC1-99A2-41BD-9039-E192B08A45BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,22 @@ Global
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|x64.Build.0 = Release|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|x86.Build.0 = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|ARM.Build.0 = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|x64.Build.0 = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{9374EAC1-99A2-41BD-9039-E192B08A45BF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

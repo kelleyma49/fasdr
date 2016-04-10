@@ -32,6 +32,11 @@
       <Project>{20f8f9db-c960-48ed-93e2-fbe95aed3c09}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\JumpList\JumpList\JumpList.csproj">
+      <Name>JumpList</Name>
+      <Project>{9374eac1-99a2-41bd-9039-e192b08a45bf}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fasdr.ArgumentCompleters.ps1" />

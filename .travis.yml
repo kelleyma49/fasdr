@@ -6,3 +6,18 @@ install:
 script:
   - xbuild /p:Configuration=Release Fasdr/fasdr.sln
   - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Fasdr.UnitTests/bin/Release/Fasdr.UnitTests.dll
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "L6Lc7kJYGDOQio3PstFx8DMF7NPR97wlHL+R9INRHjSNivpI6HhjGWaHRiio8WlSBvp05IkNy8vakMzL1GHXcoGn0l88EA6CTeTzlgCbHfAtIvLBzIYqrj0ZJNxsQ/qnCp9pAPz25LkSrbPYY3k0XwwpahAIGOkmoxCoagLqfQffk1sadocuJtCmdgntskmRa/0gDt+zS92naRSTY/emBrhCzJ+8P4ydFJ4Hpn2wXAbCaheMMmxP0osd44jofcSrngrHvD5MsGL7NYHy5WMKu9PyOMzMRxck4+3jqXKmvnRkLob6ABRB520WRdONDoK0SHpIBdm5tMxhzYOLQYR+4y/DZyLRUwqj06BOJ9mJwCmcbwlYytHUQjdamkrfZ8+8Ki7BdUmgh04napPsmC36ktIGvCqj5X+57Cb+ascuIbAOj15ALng37VcH6GX68HX6+TqzwiYLaN6oWm8qvxf4HcMe2am7d2rKGjl9cEGtiQcJqH1B/LDO0Vy1KUcZ2fCcs6vjccBpwV1jAKGAtLNrHPtRdJBCBqIAAF2z7blZOgVIJMGPkzp6UA1tvV+1H3iCbU/nOhRgRhEbM7U+jddkpyLRmqjxx3TpRuyugF9Lyjz/LhuTTe0V0qys11bs6gDDGEb8AvSdOw9kUijxRGfq+prKsmyurtWlALA6B/A1A0Y="
+
+addons:
+  coverity_scan:
+    project:
+      name: "kelleyma49/fasdr"
+      description: "Build submitted via Travis CI"
+    notification_email: michael.a.kelley@gmail.com
+    build_command_prepend: "msbuild /t:Clean"
+    build_command:   "msbuild /t:Rebuild"
+    branch_pattern: coverity_scan

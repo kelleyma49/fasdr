@@ -64,7 +64,7 @@ namespace Fasdr.UnitTests
             var now = DateTime.UtcNow;
             var newStr = "c:\tree\newEntry";
             Assert.IsTrue(p.UpdateEntry(newStr,s => s.EndsWith("newentry")));
-            var entry = p.Entries.Values.OfType<Entry>().Where(e => e.FullPath == newStr.ToLower()).First();
+            var entry = p.Entries.Values.OfType<Entry>().Where(e => e.FullPath == newStr).First();
             StringAssert.AreEqualIgnoringCase(newStr, entry.FullPath);
             Assert.AreEqual(1, entry.Frequency);
             Assert.GreaterOrEqual(entry.LastAccessTime, now);

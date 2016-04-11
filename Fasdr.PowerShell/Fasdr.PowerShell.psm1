@@ -33,13 +33,22 @@ function Import-Recents {
 	[System.Reflection.Assembly]::LoadFrom($dllPath)
 	
 	$fileSystemProvider = 'FileSystem'
-	$numEntriesAdded = 0
-	$dirs = @{}
+	$numAdded = 0
 
-	$numEntriesAdded += [Fasdr.Windows.DatabaseExt]::AddFromJumplists($global::fasdrDatabase,$fileSystemProvider)
-	$numEntriesAdded += [Fasdr.Windows.DatabaseExt]::AddFromRecents($global::fasdrDatabase,$fileSystemProvider)
-	
-	Write-Output "Num entries added: $numEntriesAdded"
+
+	$paths = @{}
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateJumpLists)
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateRecents)
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateSpecialFolders)
+
+	$pred = [System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf}
+	$paths.Values | ForEach-Object {
+		if ($global:fasdrDatabase.AddEntry($providerName,$_,$pred)) {
+			$numAdded += 1	
+		}
+	}	
+
+	Write-Output "Num entries added: $numAdded"
 	Save-Database
 }
 
@@ -53,7 +62,9 @@ function Find-Frecent {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	return [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$ProviderPath)
+	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$ProviderPath)
+	if ($result -isnot [system.array]) { $result = @($result)}
+	$result
 }
 
 <#
@@ -65,7 +76,7 @@ function Add-Frecent {
 		Initialize-Database
 	}
 
-	return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf});
+	return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
 }
 
 <# 
@@ -73,11 +84,26 @@ function Add-Frecent {
 #>
 function Set-Frecent {
 	param([string]$Path)
+
+	# if it's not a valid path from tab completion or input,
+	# find the last result:
+	if (!(Resolve-Path $Path -ErrorAction SilentlyContinue)) {
+		$results = Find-Frecent $Path
+		if ($results -ne $null)  {
+			write-host $results
+			if ($result -isnot [system.array]) { 
+				$Path = $results
+			} else {
+				$Path = $results[0]
+			}
+ 			Write-Host $Path
+		}
+	}
 	Set-Location $Path
 	if ($?) {
-		if (Add-Frecent $Path) {
-			Save-Database
-		}
+		$Path = (Get-Item -Path ".\" -Verbose).FullName
+		Add-Frecent $Path
+		Save-Database
 	} 
 }
 

@@ -17,7 +17,7 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Fasdr.PowerShell", "..\Fasd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JumpList", "..\JumpList\JumpList\JumpList.csproj", "{9374EAC1-99A2-41BD-9039-E192B08A45BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Windows", "Fasdr.Windows\Fasdr.Windows.csproj", "{1E961F3A-47F8-4580-BE67-1C9E95027015}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Windows", "..\Fasdr.Windows\Fasdr.Windows.csproj", "{1E961F3A-47F8-4580-BE67-1C9E95027015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

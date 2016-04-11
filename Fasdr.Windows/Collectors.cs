@@ -1,5 +1,6 @@
 ﻿using Fasdr.Backend;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,11 +12,12 @@ namespace Fasdr.Windows
     public static class Collectors
     {
         //this Database database,, string providerName
-        public static IDictionary<string,string> CollectPaths(IDictionary<string, string> paths,IEnumerable<string> pathsEnumerator)
+        public static Hashtable CollectPaths(Hashtable paths,IEnumerable<string> pathsEnumerator)
         {
             foreach (var p in pathsEnumerator)
             {
-                paths[p.ToLower()] = p;
+                if (!String.IsNullOrEmpty(p))
+                    paths[p.ToLower()] = p;
             }
             return paths;
         }

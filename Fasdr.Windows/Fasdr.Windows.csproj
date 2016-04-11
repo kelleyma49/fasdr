@@ -45,11 +45,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Fasdr.Backend\Fasdr.Backend.csproj">
+    <ProjectReference Include="..\Fasdr.Backend\Fasdr.Backend.csproj">
       <Project>{20f8f9db-c960-48ed-93e2-fbe95aed3c09}</Project>
       <Name>Fasdr.Backend</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\JumpList\JumpList\JumpList.csproj">
+    <ProjectReference Include="..\JumpList\JumpList\JumpList.csproj">
       <Project>{9374eac1-99a2-41bd-9039-e192b08a45bf}</Project>
       <Name>JumpList</Name>
     </ProjectReference>
@@ -70,7 +70,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <CreateItem Include="$(TargetDir)*.dll">
+      <Output TaskParameter="Include" ItemName="DllsToCopy" />
+    </CreateItem>
+    <Copy Condition="'$(OS)' == 'Windows_NT'" SourceFiles="@(DllsToCopy)" DestinationFolder="$(SolutionDir)..\Fasdr.PowerShell\" />
+  </Target>
 </Project>

@@ -84,7 +84,7 @@ namespace Fasdr.Backend
                 if (checkIsLeaf==null) 
 				    return false;
 
-                Add(new Entry(fullPathLower, 1, DateTime.Now.ToFileTimeUtc(), checkIsLeaf(fullPath)));
+                Add(new Entry(fullPath, 1, DateTime.Now.ToFileTimeUtc(), checkIsLeaf(fullPath)));
                 return true;
             }
 

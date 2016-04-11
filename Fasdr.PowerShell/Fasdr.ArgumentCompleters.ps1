@@ -4,9 +4,13 @@
 function FasdrCompletion {
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
 
-	Find-Frecent "$wordToComplete*" |
+	switch($commandName)
+	{
+		'Set-Frecent' { $filterContainers = $false; $filterLeaves = $true}
+	}
+	Find-Frecent "$wordToComplete*" $filterContainers $filterLeaves |
         ForEach-Object {
-			New-CompletionResult -CompletionText $_
+			New-CompletionResult -CompletionText "$_"
         }   
 }
 

@@ -37,13 +37,14 @@ function Import-Recents {
 
 
 	$paths = @{}
-	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateJumpLists)
-	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateRecents)
-	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateSpecialFolders)
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateJumpLists())
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateRecents())
+	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateSpecialFolders())
 
 	$pred = [System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf}
 	$paths.Values | ForEach-Object {
-		if ($global:fasdrDatabase.AddEntry($providerName,$_,$pred)) {
+		$path = $_
+		if ((test-path $path) -and $global:fasdrDatabase.AddEntry($fileSystemProvider,$_,$pred)) {
 			$numAdded += 1	
 		}
 	}	
@@ -57,12 +58,12 @@ function Import-Recents {
 	Find-Frecent
 #>
 function Find-Frecent {
-	param([string]$ProviderPath)
+	param([string]$ProviderPath,[bool]$FilterContainers=$false,[bool]$FilterLeaves=$false)
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$ProviderPath)
+	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$ProviderPath)
 	if ($result -isnot [system.array]) { $result = @($result)}
 	$result
 }
@@ -87,16 +88,14 @@ function Set-Frecent {
 
 	# if it's not a valid path from tab completion or input,
 	# find the last result:
-	if (!(Resolve-Path $Path -ErrorAction SilentlyContinue)) {
-		$results = Find-Frecent $Path
+	if (!(Resolve-Path "$Path" -ErrorAction SilentlyContinue)) {
+		$results = Find-Frecent "$Path" $false $true
 		if ($results -ne $null)  {
-			write-host $results
 			if ($result -isnot [system.array]) { 
 				$Path = $results
 			} else {
 				$Path = $results[0]
 			}
- 			Write-Host $Path
 		}
 	}
 	Set-Location $Path

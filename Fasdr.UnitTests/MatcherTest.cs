@@ -42,7 +42,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupEmptyDatabase();
 
-            var matches = Matcher.Matches(db, "FileSystem", "testStr");
+            var matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
             CollectionAssert.AreEqual(new List<string> { }, matches);
         }
 
@@ -52,7 +52,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, patterns);
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -115,6 +115,50 @@ namespace Fasdr.UnitTests
                         .SetName("TestElementNoMatchDouble");
                 }
             }
+
+            public static IEnumerable TestFilterTypes
+            {
+                get
+                {
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\TestDir\AName", 101, DateTime.Now, false),
+                        new Entry(@"c:\TestFile\AName", 100, DateTime.Now, true)),
+                        new string[] { "AName" },
+                        new string[] { @"c:\TestDir\AName", @"c:\TestFile\AName" },
+                        false, false)
+                        .SetName("TestNoFilters");
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\TestDir\AName", 101, DateTime.Now, false),
+                        new Entry(@"c:\TestFile\AName", 100, DateTime.Now, true)),
+                        new string[] { "AName" },
+                        new string[] { @"c:\TestDir\AName" },
+                        false, true)
+                        .SetName("TestFilterLeaves");
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\TestDir\AName", 101, DateTime.Now, false),
+                        new Entry(@"c:\TestFile\AName", 100, DateTime.Now, true)),
+                        new string[] { "AName" },
+                        new string[] { @"c:\TestFile\AName" },
+                        true, false)
+                        .SetName("TestFilterContainers");
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\TestDir\AName", 101, DateTime.Now, false),
+                        new Entry(@"c:\TestFile\AName", 100, DateTime.Now, true)),
+                        new string[] { "AName" },
+                        new string[] {},
+                        true, true)
+                        .SetName("TestFilterContainersAndLeaves");
+                }
+            }
+        }
+
+        [Test, TestCaseSource(typeof(MyFactoryClass), "TestFilterTypes")]
+        public void TestFilterByTypes(string configFileContents, string[] patterns, string[] expected,bool filterContainers,bool filterLeaves)
+        {
+            var db = SetupMatchSimple(configFileContents);
+
+            var actual = Matcher.Matches(db, "FileSystem", filterContainers, filterLeaves, patterns);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test, TestCaseSource(typeof(MyFactoryClass), "TestSingleElementNoMatchCases")]
@@ -122,7 +166,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, patterns);
             CollectionAssert.AreEqual(new List<string> {}, actual);
         }
 
@@ -131,10 +175,10 @@ namespace Fasdr.UnitTests
 		{
 			var db = SetupMatchSimple ();
 
-			var matches = Matcher.Matches(db, "FileSystem", "testStr");
+			var matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"},matches);
 			Assert.IsTrue(db.Providers["FileSystem"].UpdateEntry(@"c:\dir1\testStr"));
-			matches = Matcher.Matches(db, "FileSystem", "testStr");
+			matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\testStr", @"c:\dir1\dir2\testStr", @"c:\testStr"},matches);
 		}
     }

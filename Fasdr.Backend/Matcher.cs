@@ -25,13 +25,12 @@ namespace Fasdr.Backend
 			}
 		}
 
-        public static IEnumerable<string> Matches(IDatabase db, string providerName, params string[] input)
+        public static IEnumerable<string> Matches(IDatabase db, string providerName, bool filterContainers, bool filterLeaves,  params string[] input)
         {
             // handle empty:
             if (input == null || input.Length == 0)
                 return new string[] { };
 
-			// first check - see if we have a direct match:
 			Provider provider;
 			if (!db.Providers.TryGetValue (providerName, out provider))
 				return new string[] {};
@@ -53,6 +52,12 @@ namespace Fasdr.Backend
                 {
                     // get score from rest of path parts:
                     var entry = provider.Entries[id];
+                    if (entry.IsLeaf && filterLeaves)
+                        continue;
+                    else if (!entry.IsLeaf && filterContainers)
+                        continue;
+                    //Console.WriteLine($"entry: {entry.FullPath} leaf: {entry.IsLeaf}");
+
                     var entryPathSplit = entry.SplitPath;
                     int start = entryPathSplit.Length - 2;
                     for (int i = input.Length - 2; i >= 0; i--)
@@ -75,7 +80,7 @@ namespace Fasdr.Backend
                 }
             }
 
-            return list.Values;
+            return list.Values.ToArray();
         }
     }
 }

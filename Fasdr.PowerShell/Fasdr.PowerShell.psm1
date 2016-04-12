@@ -49,7 +49,7 @@ function Import-Recents {
 		}
 	}	
 
-	Write-Output "Num entries added: $numAdded"
+	Write-Output "imported $numAdded paths into $fileSystemProvider database"
 	Save-Database
 }
 
@@ -106,7 +106,19 @@ function Set-Frecent {
 	} 
 }
 
+
 foreach ($file in dir $PSScriptRoot\*.ArgumentCompleters.ps1)
 {
     . $file.FullName
+}
+
+if ($global:fasdrDatabase -eq $null) {
+	Initialize-Database
+}
+
+# import recents into database on first load:
+$providerName = "FileSystem"
+$location = $global:fasdrDatabase.GetProviderDatabaseLocation($providerName)
+if (!(Test-Path $location)) {
+	Import-Recents
 }

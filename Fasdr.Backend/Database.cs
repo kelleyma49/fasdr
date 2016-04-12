@@ -25,7 +25,6 @@ namespace Fasdr.Backend
 
         static Database()
         {
-
             DefaultConfigDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
@@ -36,6 +35,11 @@ namespace Fasdr.Backend
         public static readonly string ConfigFilePrefix = "fasdrConfig";
 		public static readonly string ConfigFileName = $"{ConfigFilePrefix}.*.txt";
         
+        public string GetProviderDatabaseLocation(string providerName)
+        {
+            return System.IO.Path.Combine(ConfigDir, ConfigFileName.Replace("*", providerName));
+        }
+
 		public void Load()
         {
             try

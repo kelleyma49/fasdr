@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
@@ -17,3 +17,5 @@
 /Fasdr/packages/DuoVia.*
 /Fasdr/Fasdr.Windows/obj/Debug
 /Fasdr.Windows/obj/Debug
+Fasdr/fasdr.userprefs
+Fasdr.Windows/obj/

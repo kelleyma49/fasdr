@@ -24,25 +24,26 @@ namespace Fasdr.Windows
 
         public static IEnumerable<string> EnumerateJumpLists()
         {
+            var paths = new List<string>();
             var jumpListPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), @"Microsoft\Windows\Recent\AutomaticDestinations\");
             foreach (var f in Directory.EnumerateFiles(jumpListPath, "*.automaticDestinations-ms"))
             {
-                foreach (var entry in JumpList.JumpList.LoadAutoJumplist(f).DestListEntries)
+                // the jump list parsing may have problems, so catch and continue if we see a problem:
+                try
                 {
-                    string fullPath = null;
-                    try
+                    foreach (var entry in JumpList.JumpList.LoadAutoJumplist(f).DestListEntries)
                     {
-                        fullPath = Path.GetFullPath(entry.Path);
+                        var path = Path.GetFullPath(entry.Path);
+                        paths.Add(path);
                     }
-                    catch (Exception)
-                    {
+                }
+                catch (Exception)
+                {
 
-                    }
-
-                    if (fullPath != null)
-                        yield return fullPath;
-               }
+                }
             }
+
+            return paths;
         }
 
         public static IEnumerable<string> EnumerateRecents()

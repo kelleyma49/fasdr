@@ -37,14 +37,28 @@ function Import-Recents {
 
 
 	$paths = @{}
+	$totalItems = 4
+	Write-Progress -Activity "Importing recents into Fasdr database" -Status "Progress->" -PercentComplete 0
+	Write-Progress -ParentId 1 -Activity "Importing from jump lists" -Status "0% Complete" -PercentComplete 0
 	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateJumpLists())
+	$percentComplete = 100/$totalItems
+	Write-Progress -Activity "Importing recents into Fasdr database" -Status "Progress->" -PercentComplete $percentComplete
+	Write-Progress -ParentId 1 -Activity "Importing from recents" -Status "Progress" -PercentComplete 0
 	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateRecents())
+	$percentComplete = 200/$totalItems
+	Write-Progress -Activity "Importing recents into Fasdr database" -Status "Progress->" -PercentComplete $percentComplete
+	Write-Progress -ParentId 1 -Activity "Importing from special folders" -Status "Progress" -PercentComplete 0
 	$paths = [Fasdr.Windows.Collectors]::CollectPaths($paths,[fasdr.Windows.Collectors]::EnumerateSpecialFolders())
 
+	$percentComplete = 300/$totalItems
+	Write-Progress -Activity "Importing recents into Fasdr database" -Status "Progress->" -PercentComplete $percentComplete
 	$pred = [System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf}
+	$numPaths = $paths.Values.Count
 	$paths.Values | ForEach-Object {
 		$path = $_
-		if ((test-path $path) -and $global:fasdrDatabase.AddEntry($fileSystemProvider,$_,$pred)) {
+		if ((test-path $path) -and $global:fasdrDatabase.AddEntry($fileSystemProvider,$path,$pred)) {
+			$subPercentComplete = ($numAdded*100)/$numPaths
+			Write-Progress -ParentId 1 -Activity "Adding $path" -Status "Progress" -PercentComplete $subPercentComplete
 			$numAdded += 1	
 		}
 	}	

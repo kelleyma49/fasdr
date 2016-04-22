@@ -98,8 +98,17 @@ namespace Fasdr.UnitTests
 		public void TestRemoveEntry(string configFileContents, string fullPathToRemove, bool expected)
 		{
 			var p = SetupMatchSimple (configFileContents);
+			int id = -1;
+			if (expected) {
+				id = p.FullPathToEntry [fullPathToRemove.ToLower ()];
+			}
 			Assert.AreEqual(expected,p.Remove (fullPathToRemove));
 			Assert.IsFalse(p.FullPathToEntry.ContainsKey(fullPathToRemove));
+			if (expected) {
+				Assert.IsFalse(p.Entries.ContainsKey(id));
+				Assert.IsFalse(p.LastEntries[
+					Provider.GetLastElement(fullPathToRemove).ToLower()].Ids.Contains(id));
+			}
 		}
 
 		public class MyFactoryClass

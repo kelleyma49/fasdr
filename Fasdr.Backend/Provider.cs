@@ -58,13 +58,18 @@ namespace Fasdr.Backend
 			}
 		}
 
+		public static string GetLastElement(string path)
+		{
+			var pathSplit = path.Split (new char[]{ '\\'},StringSplitOptions.RemoveEmptyEntries);
+			return pathSplit[pathSplit.Length - 1];
+		}
+
 		public void Add(Entry e)
 		{
 			FullPathToEntry.Add (e.FullPath.ToLower (), CurrentId);
 			Entries.Add(CurrentId,e);
-			var pathSplit = e.FullPath.Split (new char[]{ '\\'},StringSplitOptions.RemoveEmptyEntries);
-            string lastElement = pathSplit[pathSplit.Length - 1];
-            string lastElementLower = lastElement.ToLower();
+			string lastElement = GetLastElement(e.FullPath);
+			string lastElementLower = lastElement.ToLower();
 			LastEntry lastEntry;
 			if (!LastEntries.TryGetValue (lastElementLower, out lastEntry)) 
 			{
@@ -73,6 +78,31 @@ namespace Fasdr.Backend
 			}
             lastEntry.Ids.Add(CurrentId);
 			CurrentId = CurrentId + 1;
+		}
+
+		public bool Remove(string fullPath)
+		{
+			var fullPathLower = fullPath.ToLower ();
+			int id;
+			if (!FullPathToEntry.TryGetValue(fullPathLower,out id))
+			{
+				return false;
+			}
+
+			bool removed = false;
+
+			// remove last path:
+			string lastElement = GetLastElement(fullPath);
+			string lastElementLower = lastElement.ToLower();
+			LastEntry lastEntry;
+			if (LastEntries.TryGetValue (lastElementLower, out lastEntry)) 
+			{
+				removed = lastEntry.Ids.Remove (id);
+			}
+
+			removed = Entries.Remove (id);
+			removed = FullPathToEntry.Remove(fullPath) && removed;
+			return removed;
 		}
 
         public bool UpdateEntry(string fullPath,Predicate<string> checkIsLeaf = null)

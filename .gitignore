@@ -9,7 +9,7 @@
 /Fasdr/packages/NUnit.*
 /Fasdr/packages/System.IO.Abstractions.TestingHelpers.*
 /Fasdr.UnitTests/bin/*
-/Fasdr/.vs/fasdr/v14
+/Fasdr/.vs/*
 *.dll
 *.pdb
 /Fasdr/packages/System.IO.Abstractions.*

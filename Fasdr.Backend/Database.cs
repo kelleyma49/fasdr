@@ -100,6 +100,8 @@ namespace Fasdr.Backend
 				foreach (var p in Providers) {
 					var fileName = System.IO.Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
 					if (FileSystem.File.Exists (fileName)) {
+						// merge with currently saved file in case another shell instance
+						// saved out after our initial load.
 						var currProvider = LoadProvider (fileName);
 						p.Value.Merge (currProvider);
 					}

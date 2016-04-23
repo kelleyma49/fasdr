@@ -35,8 +35,6 @@ namespace Fasdr.Backend
 			if (!db.Providers.TryGetValue (providerName, out provider))
 				return new string[] {};
 
-			var results = new Dictionary<string,double>();
-
             // see if we have a direct match:
             var lastInput = input[input.Length - 1];
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
@@ -52,7 +50,7 @@ namespace Fasdr.Backend
                 {
                     // get score from rest of path parts:
                     var entry = provider.Entries[id];
-                    if (entry.IsLeaf && filterLeaves)
+					if (!entry.IsValid || (entry.IsLeaf && filterLeaves))
                         continue;
                     else if (!entry.IsLeaf && filterContainers)
                         continue;

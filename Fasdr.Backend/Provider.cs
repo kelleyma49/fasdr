@@ -31,9 +31,10 @@ namespace Fasdr.Backend
 			var fileName = System.IO.Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
 			using (var s = fileSystem.File.CreateText(fileName))
 			{
-				foreach(var p in Entries)
+				foreach(var p in Entries.Values)
 				{
-					s.WriteLine(p.Value.ToString());
+					if (p.IsValid)
+						s.WriteLine(p.ToString());
 				}
 			}
             if (fileSystem.File.Exists(filePath))
@@ -52,8 +53,18 @@ namespace Fasdr.Backend
 					CurrentId = CurrentId + 1;
 				} else {
 					var ours = Entries [index];
+
+					// check to see if we've removed an entry, unless we recently 
+					// updated the entry:
 					long maxFreq = Math.Max (theirs.Frequency, ours.Frequency);
-					other.Entries [index] = new Entry (ours.FullPath, maxFreq, Math.Max(theirs.LastAccessTimeUtc,ours.LastAccessTimeUtc), ours.IsLeaf);
+					if (!theirs.IsValid && theirs.LastAccessTime > ours.LastAccessTime) {
+						maxFreq = Entry.cInvalid;
+					}
+					else if (!ours.IsValid && ours.LastAccessTime > theirs.LastAccessTime) {
+						maxFreq = Entry.cInvalid;
+					}
+
+					Entries [index] = new Entry (ours.FullPath, maxFreq, Math.Max(theirs.LastAccessTimeUtc,ours.LastAccessTimeUtc), ours.IsLeaf);
 				}
 			}
 		}
@@ -89,20 +100,7 @@ namespace Fasdr.Backend
 				return false;
 			}
 
-			bool removed = false;
-
-			// remove last path:
-			string lastElement = GetLastElement(fullPath);
-			string lastElementLower = lastElement.ToLower();
-			LastEntry lastEntry;
-			if (LastEntries.TryGetValue (lastElementLower, out lastEntry)) 
-			{
-				removed = lastEntry.Ids.Remove (id);
-			}
-
-			removed = Entries.Remove (id);
-			removed = FullPathToEntry.Remove(fullPath) && removed;
-			return removed;
+			return UpdateEntry (id, remove: true);
 		}
 
         public bool UpdateEntry(string fullPath,Predicate<string> checkIsLeaf = null)
@@ -121,13 +119,14 @@ namespace Fasdr.Backend
             return UpdateEntry (id);
 		}
 
-		public bool UpdateEntry(int id)
+		public bool UpdateEntry(int id,bool remove=false)
 		{
 			Entry e;
-			if (!Entries.TryGetValue (id, out e))
+			if (!Entries.TryGetValue (id, out e) || !e.IsValid)
 				return false;
 
-			Entries [id] = new Entry (e.FullPath, e.Frequency + 1, DateTime.Now.ToFileTimeUtc (), e.IsLeaf);
+			Int64 newFrequency = remove ? -1 : e.Frequency + 1;
+			Entries [id] = new Entry (e.FullPath, newFrequency, DateTime.Now.ToFileTimeUtc (), e.IsLeaf);
 			return true;
 		}
 			

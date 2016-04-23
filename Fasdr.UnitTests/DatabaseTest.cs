@@ -136,7 +136,11 @@ namespace Fasdr.UnitTests
 		{
 			var mockE1 = new Entry (@"c:\dir2\", 1, DateTime.Now, false);
 			var mockE2 = new Entry(@"c:\dir2\file3",10,DateTime.Now,true);
-			var mockContent = String.Join (Environment.NewLine, mockE1.ToString (), mockE2.ToString ());
+			var mockE3 = new Entry(@"c:\dir3\file1",101,DateTime.Now,true);
+			var mockContent = String.Join (Environment.NewLine, 
+				mockE1.ToString (), 
+				mockE2.ToString (), 
+				mockE3.ToString ());
 			
 			var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
 				{   FileSystemConfigPath, new MockFileData(mockContent) }
@@ -148,10 +152,13 @@ namespace Fasdr.UnitTests
 			var e1 = new Entry (@"c:\dir1\", 12, DateTime.Now, false);
 			var e2 = new Entry (@"c:\dir1\file2", 34, DateTime.Now, true);
 			var e3 = new Entry(@"c:\dir2\file3",11,DateTime.Now,true);
+			var e4 = new Entry(@"c:\dir3\file1",11,DateTime.Now,true);
 
 			fsp.Add(e1);
 			fsp.Add(e2);
 			fsp.Add(e3);
+			fsp.Add(e4);
+			Assert.IsTrue(fsp.Remove(e4.FullPath));
 			db.Save();
 
 			var fsFileName = System.IO.Path.Combine (Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
@@ -163,6 +170,7 @@ namespace Fasdr.UnitTests
 			StringAssert.Contains (e3.ToString () + Environment.NewLine, configContent);
 			StringAssert.Contains (mockE1.ToString () + Environment.NewLine, configContent);
 			StringAssert.DoesNotContain (mockE2.ToString () + Environment.NewLine, configContent);
+			StringAssert.DoesNotContain (mockE3.ToString () + Environment.NewLine, configContent);
 		}
     }
 }

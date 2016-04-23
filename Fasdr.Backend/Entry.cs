@@ -86,6 +86,10 @@ namespace Fasdr.Backend
 			}
 		}
 		public bool IsLeaf { get; }
+
+		public static readonly Int64 cInvalid = -1;
+
+		public bool IsValid { get { return Frequency >= 0; } }
 	}
 }
 

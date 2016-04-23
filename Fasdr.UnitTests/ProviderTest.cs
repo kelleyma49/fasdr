@@ -103,11 +103,8 @@ namespace Fasdr.UnitTests
 				id = p.FullPathToEntry [fullPathToRemove.ToLower ()];
 			}
 			Assert.AreEqual(expected,p.Remove (fullPathToRemove));
-			Assert.IsFalse(p.FullPathToEntry.ContainsKey(fullPathToRemove));
 			if (expected) {
-				Assert.IsFalse(p.Entries.ContainsKey(id));
-				Assert.IsFalse(p.LastEntries[
-					Provider.GetLastElement(fullPathToRemove).ToLower()].Ids.Contains(id));
+				Assert.IsFalse(p.Entries[id].IsValid);
 			}
 		}
 

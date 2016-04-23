@@ -17,7 +17,8 @@ namespace Fasdr.UnitTests
 			Assert.AreEqual (new string[]{"c:","dir1","dir2"}, e.SplitPath);
 			Assert.AreEqual (1, e.Frequency);
 			Assert.AreEqual (now.ToFileTimeUtc (), e.LastAccessTimeUtc);
-			Assert.AreEqual (false, e.IsLeaf);
+			Assert.IsFalse (e.IsLeaf);
+			Assert.IsTrue (e.IsValid);
 		}
 
 		[Test]

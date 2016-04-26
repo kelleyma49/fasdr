@@ -108,6 +108,16 @@ namespace Fasdr.UnitTests
 			}
 		}
 
+
+		[Test, TestCaseSource(typeof(MyFactoryClass),"TestCanGetAllEntriesCases")]
+		public void TestCanGetAllEntries(string configFileContents, 
+			string[] expected)
+		{
+			var p = SetupMatchSimple (configFileContents);
+			CollectionAssert.AreEqual (expected, p.GetAllEntries ());
+		}
+
+
 		public class MyFactoryClass
 		{
 			public static IEnumerable TestRemoveEntryCases 
@@ -128,6 +138,28 @@ namespace Fasdr.UnitTests
 						new Entry(@"c:\tree\", 102, DateTime.Now, false)), 
 						@"c:\tree\", true)
 							.SetName("TestRemoveFromProvider");
+				}
+			}
+
+			public static IEnumerable TestCanGetAllEntriesCases
+			{
+				get 
+				{
+					yield return new TestCaseData ("", new string[]{})
+						.SetName("TestGetAllEntriesEmptyDatabase");
+
+					yield return new TestCaseData (
+						String.Join(Environment.NewLine,
+							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+						new string[] {@"c:\tree\"})
+							.SetName("TestGetAllEntriesOneItem");
+					
+					yield return new TestCaseData (
+						String.Join(Environment.NewLine,
+							new Entry(@"c:\tools\", 101, DateTime.Now, false),
+							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+						new string[] {@"c:\tools\",@"c:\tree\"})
+							.SetName("TestGetAllEntriesTwoItems");
 				}
 			}
 		}

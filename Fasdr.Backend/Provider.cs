@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO;
+using System.Linq;
 
 namespace Fasdr.Backend
 {
@@ -128,6 +129,13 @@ namespace Fasdr.Backend
 			Int64 newFrequency = remove ? -1 : e.Frequency + 1;
 			Entries [id] = new Entry (e.FullPath, newFrequency, DateTime.Now.ToFileTimeUtc (), e.IsLeaf);
 			return true;
+		}
+
+		public IEnumerable<string> GetAllEntries()
+		{
+			return from pair in Entries
+				orderby pair.Value.CalculateFrecency()
+					select pair.Value.FullPath;
 		}
 			
 		public string Name { get; }

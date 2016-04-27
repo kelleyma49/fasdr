@@ -134,9 +134,10 @@ namespace Fasdr.UnitTests
 		[Test]
 		public void TestConfigCanMerge()
 		{
-			var mockE1 = new Entry (@"c:\dir2\", 1, DateTime.Now, false);
-			var mockE2 = new Entry(@"c:\dir2\file3",10,DateTime.Now,true);
-			var mockE3 = new Entry(@"c:\dir3\file1",101,DateTime.Now,true);
+			var now = DateTime.Now;
+			var mockE1 = new Entry (@"c:\dir2\", 1, now, false);
+			var mockE2 = new Entry(@"c:\dir2\file3",10,now,true);
+			var mockE3 = new Entry(@"c:\dir3\file1",101,now,true);
 			var mockContent = String.Join (Environment.NewLine, 
 				mockE1.ToString (), 
 				mockE2.ToString (), 
@@ -149,10 +150,11 @@ namespace Fasdr.UnitTests
 			var db = new Database(fileSystem);
 			var fsp = new Provider("FileSystem");
 			db.Providers.Add ("FileSystem", fsp);
-			var e1 = new Entry (@"c:\dir1\", 12, DateTime.Now, false);
-			var e2 = new Entry (@"c:\dir1\file2", 34, DateTime.Now, true);
-			var e3 = new Entry(@"c:\dir2\file3",11,DateTime.Now,true);
-			var e4 = new Entry(@"c:\dir3\file1",11,DateTime.Now,true);
+			now = now.AddSeconds (1);
+			var e1 = new Entry (@"c:\dir1\", 12, now, false);
+			var e2 = new Entry (@"c:\dir1\file2", 34, now, true);
+			var e3 = new Entry(@"c:\dir2\file3",11,now,true);
+			var e4 = new Entry(@"c:\dir3\file1",11,now,true);
 
 			fsp.Add(e1);
 			fsp.Add(e2);

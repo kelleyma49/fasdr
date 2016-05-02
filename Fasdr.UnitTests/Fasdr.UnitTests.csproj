@@ -35,9 +35,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <HintPath>..\Fasdr\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System.IO.Abstractions, Version=2.0.0.124, Culture=neutral, PublicKeyToken=d480b5b72fb413da">
       <HintPath>..\Fasdr\packages\System.IO.Abstractions.2.0.0.124\lib\net40\System.IO.Abstractions.dll</HintPath>
     </Reference>
@@ -46,6 +43,9 @@
     </Reference>
     <Reference Include="DuoVia.FuzzyStrings">
       <HintPath>..\Fasdr\packages\DuoVia.FuzzyStrings.1.0.1\lib\net40\DuoVia.FuzzyStrings.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\Fasdr\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>

@@ -42,17 +42,17 @@ namespace Fasdr.UnitTests
         {
             var db = SetupEmptyDatabase();
 
-            var matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
+            var matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
             CollectionAssert.AreEqual(new List<string> { }, matches);
         }
 
 
         [Test, TestCaseSource(typeof(MyFactoryClass),"TestSingleElementMatchCases")]
-        public void TestSingleElementMatch(string configFileContents, string[] patterns, string[] expected)
+        public void TestSingleElementMatch(string configFileContents, string[] patterns, string[] expected, bool matchAllIfEmpty)
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", false, false, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, false, patterns);
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -67,39 +67,45 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\tools\", 101, DateTime.Now, false),
                         new Entry(@"c:\tree\", 102, DateTime.Now, false)),
                         new string[] { "t" },
-                        new string[] { @"c:\tree\", @"c:\tools\" })
+                        new string[] { @"c:\tree\", @"c:\tools\" },
+                        false)
                         .SetName("TestSingleElementMatchSingleChar");
 
 
                     yield return new TestCaseData(TestData.GetMatchFilesystem(),
                         new string[] { "testStr" },
-                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"  })
+                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"  },
+                        false)
                         .SetName("TestSingleElementMatchTestStr");
 
                     yield return new TestCaseData(TestData.GetMatchFilesystem(),
                         new string[] { "dir1", "testStr" },
-                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" })
+                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" },
+                        false)
                         .SetName("TestSingleElementMatchDir1TestStr");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\ThisIsATest\", @"c:\tiat\" })
+                        new string[] { @"c:\ThisIsATest\", @"c:\tiat\" },
+                        false)
                         .SetName("TestSingleElementMatchCamelCase");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\this is a test\", @"c:\tiat\" })
+                        new string[] { @"c:\this is a test\", @"c:\tiat\" },
+                        false)
                         .SetName("TestSingleElementMatchSeparators");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 150, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\tiat\", @"c:\this is a test\",  })
+                        new string[] { @"c:\tiat\", @"c:\this is a test\",  },
+                        false)
                         .SetName("TestSingleElementMatchSeparatorsFrequencyWins");
                 }
             }
@@ -157,7 +163,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", filterContainers, filterLeaves, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", filterContainers, filterLeaves, false, patterns);
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -166,7 +172,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", false, false, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, false, patterns);
             CollectionAssert.AreEqual(new List<string> {}, actual);
         }
 
@@ -175,10 +181,10 @@ namespace Fasdr.UnitTests
 		{
 			var db = SetupMatchSimple ();
 
-			var matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
+			var matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"},matches);
 			Assert.IsTrue(db.Providers["FileSystem"].UpdateEntry(@"c:\dir1\testStr"));
-			matches = Matcher.Matches(db, "FileSystem", false, false, "testStr");
+			matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\testStr", @"c:\dir1\dir2\testStr", @"c:\testStr"},matches);
 		}
     }

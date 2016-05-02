@@ -24,8 +24,8 @@ namespace Fasdr.Backend
 					return result;
 			}
 		}
-			
-        public static IEnumerable<string> Matches(IDatabase db, string providerName, bool filterContainers, bool filterLeaves,  params string[] input)
+		
+        public static string[] Matches(IDatabase db, string providerName, bool filterContainers, bool filterLeaves,  bool matchAllOnEmptyInput, params string[] input)
         {
             // handle empty:
             if (input == null || input.Length == 0)
@@ -35,6 +35,11 @@ namespace Fasdr.Backend
 			if (!db.Providers.TryGetValue (providerName, out provider))
 				return new string[] {};
 
+            if (matchAllOnEmptyInput && (input == null || input.Length == 0 || String.IsNullOrWhiteSpace(input[0])))
+            {
+                return provider.GetAllEntries().ToArray();
+            }
+   
             // see if we have a direct match:
             var lastInput = input[input.Length - 1];
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());

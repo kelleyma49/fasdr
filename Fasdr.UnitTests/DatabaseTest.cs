@@ -163,7 +163,7 @@ namespace Fasdr.UnitTests
 			Assert.IsTrue(fsp.Remove(e4.FullPath));
 			db.Save();
 
-			var fsFileName = System.IO.Path.Combine (Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
+			var fsFileName = System.IO.Path.Combine (db.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
 			Assert.IsTrue(fileSystem.FileExists(FileSystemConfigPath));
 			var configContent = fileSystem.File.ReadAllText (fsFileName);
@@ -173,6 +173,7 @@ namespace Fasdr.UnitTests
 			StringAssert.Contains (mockE1.ToString () + Environment.NewLine, configContent);
 			StringAssert.DoesNotContain (mockE2.ToString () + Environment.NewLine, configContent);
 			StringAssert.DoesNotContain (mockE3.ToString () + Environment.NewLine, configContent);
-		}
+            StringAssert.DoesNotContain(e4.ToString() + Environment.NewLine, configContent);
+        }
     }
 }

@@ -77,8 +77,8 @@ function Find-Frecent {
 		Initialize-Database
 	}
 	$providerName = $PWD.Provider.Name
-	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$ProviderPath)
-	if ($result -isnot [system.array]) { $result = @($result)}
+	$matchAll = $true
+	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$matchAll,$ProviderPath)
 	$result
 }
 
@@ -104,13 +104,7 @@ function Set-Frecent {
 	# find the last result:
 	if (!(Resolve-Path "$Path" -ErrorAction SilentlyContinue)) {
 		$results = Find-Frecent "$Path" $false $true
-		if ($results -ne $null)  {
-			if ($result -isnot [system.array]) { 
-				$Path = $results
-			} else {
-				$Path = $results[0]
-			}
-		}
+		$Path = $results[0]
 	}
 	Set-Location $Path
 	if ($?) {

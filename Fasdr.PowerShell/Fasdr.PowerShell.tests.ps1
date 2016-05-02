@@ -3,14 +3,13 @@
 # You need a unit test framework such as Pester to run PowerShell Unit tests. 
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
-Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1
+Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1 -ErrorAction Stop
 $testData = @"
 c:\dir1\dir2\testStr|109|0|true
 c:\dir1\dir2|110|0|false
 c:\testStr|110|0|false
 "@
 $testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
-		
 
 Describe "Find-Frecent" {
 	Context "Empty Database" {
@@ -25,6 +24,12 @@ Describe "Find-Frecent" {
 		Set-Content $testDatabase -value $testData
 
 		Initialize-Database -defaultDrive "$TestDrive"
+
+		It "Finds All With Empty Input" {
+			$expected = $testData.Split("`n")
+			$i = 0
+			Find-Frecent "" | % { $_ | Should Be $expected[$i].Split('|')[0] ; $i++ }
+		}
 
 		It "Finds Nothing" {
 			Find-Frecent "shouldNo" | Should Be $null

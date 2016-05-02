@@ -58,10 +58,10 @@ namespace Fasdr.Backend
 					// check to see if we've removed an entry, unless we recently 
 					// updated the entry:
 					long maxFreq = Math.Max (theirs.Frequency, ours.Frequency);
-					if (!theirs.IsValid && theirs.LastAccessTime > ours.LastAccessTime) {
+					if (!theirs.IsValid && theirs.LastAccessTime >= ours.LastAccessTime) {
 						maxFreq = Entry.cInvalid;
 					}
-					else if (!ours.IsValid && ours.LastAccessTime > theirs.LastAccessTime) {
+					else if (!ours.IsValid && ours.LastAccessTime >= theirs.LastAccessTime) {
 						maxFreq = Entry.cInvalid;
 					}
 

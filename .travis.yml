@@ -5,7 +5,8 @@ install:
   - nuget install NUnit.Runners -Version 3.2.1 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release Fasdr/fasdr.sln
-  - mono ./testrunner/NUnit.Runners.3.2.1/tools/nunit-console.exe ./Fasdr.UnitTests/bin/Release/Fasdr.UnitTests.dll
+  # refrain from running test runner as it's not available for nunit 3.x yet
+  # mono ./testrunner/NUnit.Runners.3.2.1/tools/nunit-console.exe ./Fasdr.UnitTests/bin/Release/Fasdr.UnitTests.dll
 env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created

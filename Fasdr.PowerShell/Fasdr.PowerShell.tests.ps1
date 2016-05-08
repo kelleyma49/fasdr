@@ -3,6 +3,7 @@
 # You need a unit test framework such as Pester to run PowerShell Unit tests. 
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
+Get-Module Fasdr.PowerShell | Remove-Module
 Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1 -ErrorAction Stop
 $testData = @"
 c:\dir1\dir2\testStr|109|0|true
@@ -68,6 +69,12 @@ Describe "Add-Frecent" {
 			Add-Frecent 'c:\dir1\dir2\testStr' | Should Be $true
 			Find-Frecent "testStr" | Should Be ('c:\dir1\dir2\testStr','c:\testStr')
 		}
+
+		It "Should Find New Entry" {
+			Add-Frecent 'c:\dir1\BrandNewEntry' | Should Be $true
+			Find-Frecent "BrandNewEntry" | Should Be 'c:\dir1\BrandNewEntry'
+		}
+
 	}
 }
 

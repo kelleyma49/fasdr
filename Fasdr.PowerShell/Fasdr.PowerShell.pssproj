@@ -45,9 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fasdr.ArgumentCompleters.ps1" />
-    <Compile Include="Fasdr.PowerShell.psd1" />
-    <Compile Include="Fasdr.PowerShell.psm1" />
-    <Compile Include="Fasdr.PowerShell.tests.ps1" />
+    <Compile Include="Fasdr.psd1" />
+    <Compile Include="Fasdr.psm1" />
+    <Compile Include="Fasdr.tests.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

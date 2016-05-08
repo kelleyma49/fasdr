@@ -3,8 +3,8 @@
 # You need a unit test framework such as Pester to run PowerShell Unit tests. 
 # You can download Pester from http://go.microsoft.com/fwlink/?LinkID=534084
 #
-Get-Module Fasdr.PowerShell | Remove-Module
-Import-Module $PSScriptRoot\Fasdr.PowerShell.psm1 -ErrorAction Stop
+Get-Module Fasdr | Remove-Module
+Import-Module $PSScriptRoot\Fasdr.psm1 -ErrorAction Stop
 $testData = @"
 c:\dir1\dir2\testStr|109|0|true
 c:\dir1\dir2|110|0|false

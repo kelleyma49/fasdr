@@ -5,6 +5,91 @@ $dllPath = Join-Path $PSScriptRoot 'System.IO.Abstractions.dll'
 [System.Reflection.Assembly]::LoadFile($dllPath)
 $global:fasdrDatabase = $null
 
+
+#region TabExpansion
+# Save off the previous tab completion so it can be restored if this module
+# is removed.
+$global:oldTabExpansion = $function:TabExpansion
+$global:oldTabExpansion2 = $function:TabExpansion2
+
+[bool]$updatedTypeData = $false
+
+$MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
+{
+    if ($null -ne $oldTabExpansion)
+    {
+        Set-Item function:\TabExpansion $oldTabExpansion
+    }
+    if ($null -ne $oldTabExpansion2)
+    {
+        Set-Item function:\TabExpansion2 $oldTabExpansion2
+    }
+}
+
+write-host ${function:oldTabExpansion2}
+function global:TabExpansion2
+{
+    [CmdletBinding(DefaultParameterSetName = 'ScriptInputSet')]
+    Param(
+        [Parameter(ParameterSetName = 'ScriptInputSet', Mandatory, Position = 0)]
+        [string] $inputScript,
+
+        [Parameter(ParameterSetName = 'ScriptInputSet', Mandatory, Position = 1)]
+        [int] $cursorColumn,
+
+        [Parameter(ParameterSetName = 'AstInputSet', Mandatory, Position = 0)]
+        [System.Management.Automation.Language.Ast] $ast,
+
+        [Parameter(ParameterSetName = 'AstInputSet', Mandatory, Position = 1)]
+        [System.Management.Automation.Language.Token[]] $tokens,
+
+        [Parameter(ParameterSetName = 'AstInputSet', Mandatory, Position = 2)]
+        [System.Management.Automation.Language.IScriptPosition] $positionOfCursor,
+
+        [Parameter(ParameterSetName = 'ScriptInputSet', Position = 2)]
+        [Parameter(ParameterSetName = 'AstInputSet', Position = 3)]
+        [Hashtable] $options = $null
+    )
+
+	$results = $null
+	if ($oldTabExpansion2 -ne $null -and $oldTabExpansion2.File -ne $null)
+    {
+        $results = (& $oldTabExpansion2 @PSBoundParameters)
+    }
+
+	# if the tab expansion couldn't match, then we check for our special 
+	# word completion:
+	if ($results.CompletionMatches.Count -eq 0)
+	{
+		if ($psCmdlet.ParameterSetName -eq 'ScriptInputSet')
+		{
+			$ast = [System.Management.Automation.Language.Parser]::ParseInput(
+				$inputScript, [ref]$tokens, [ref]$null)
+
+			$text = $ast.Extent.Text
+			if ($text -match '\s::(.*)')
+			{
+				$results.ReplacementIndex = $text.IndexOf(" ::") + 1
+				for ($i=$results.ReplacementIndex;$i -lt $text.Length;$i++) {
+					if ([char]::IsWhiteSpace($text[$i])) {
+						break
+					}
+				}
+				$results.ReplacementLength = $i - $results.ReplacementIndex
+				$currentCompletionText = $matches[1].Trim()
+				Find-Frecent -ProviderPath $currentCompletionText | ForEach-Object {
+					$results.CompletionMatches.Add(
+						(New-Object Management.Automation.CompletionResult $_,$_,"ProviderContainer",$_)
+					)
+				}
+			}
+		}
+	}
+
+	return $results
+}
+#endregion
+
 <#
 #>
 function Initialize-Database {

@@ -78,8 +78,12 @@ function global:TabExpansion2
 				$results.ReplacementLength = $i - $results.ReplacementIndex
 				$currentCompletionText = $matches[1].Trim()
 				Find-Frecent -ProviderPath $currentCompletionText | ForEach-Object {
+					$textCompletion = $_
+					if ($textCompletion -match '\s+') {
+						$textCompletion = "'" + $textCompletion + "'"
+					}
 					$results.CompletionMatches.Add(
-						(New-Object Management.Automation.CompletionResult $_,$_,"ProviderContainer",$_)
+						(New-Object Management.Automation.CompletionResult $textCompletion,$_,"ProviderContainer",$_)
 					)
 				}
 			}

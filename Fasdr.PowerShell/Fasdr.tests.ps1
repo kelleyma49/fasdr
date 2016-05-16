@@ -125,7 +125,7 @@ Describe "Find-WordCompletion" {
 			}
 
 			It 'Unknown Token' {
-				Find-WordCompletion ' :u:' | Should Be $null
+				Find-WordCompletion ' u::' | Should Be $null
 			}
 		}
 
@@ -149,7 +149,7 @@ Describe "Find-WordCompletion" {
 			}
 
 			It 'Find Container (uppercase) Completion with Completion String' {
-				$result = Find-WordCompletion ' :C:Desktop'
+				$result = Find-WordCompletion ' C::Desktop'
 				$result | Should Not Be $null
 				$Result.CompletionText | Should be 'Desktop'
 				$result.CompletionType | Should be 'c'
@@ -158,7 +158,7 @@ Describe "Find-WordCompletion" {
 			}
 
 			It 'Find Container (lowercase) Completion with Completion String' {
-				$result = Find-WordCompletion ' :C:Desktop'
+				$result = Find-WordCompletion ' C::Desktop'
 				$result | Should Not Be $null
 				$Result.CompletionText | Should be 'Desktop'
 				$result.CompletionType | Should be 'c'
@@ -167,7 +167,7 @@ Describe "Find-WordCompletion" {
 			}
 
 			It 'Find Leaf (uppercase) Completion with Completion String' {
-				$result = Find-WordCompletion ' :L:Desktop'
+				$result = Find-WordCompletion ' L::Desktop'
 				$result | Should Not Be $null
 				$Result.CompletionText | Should be 'Desktop'
 				$result.CompletionType | Should be 'l'
@@ -176,7 +176,7 @@ Describe "Find-WordCompletion" {
 			}
 
 			It 'Find Leaf (lowercase) Completion with Completion String' {
-				$result = Find-WordCompletion ' :L:Desktop'
+				$result = Find-WordCompletion ' L::Desktop'
 				$result | Should Not Be $null
 				$Result.CompletionText | Should be 'Desktop'
 				$result.CompletionType | Should be 'l'

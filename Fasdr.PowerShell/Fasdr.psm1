@@ -86,11 +86,24 @@ function global:TabExpansion2
 				}
 				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves | ForEach-Object {
 					$textCompletion = $_
-					if ($textCompletion -match '\s+') {
-						$textCompletion = "'" + $textCompletion + "'"
+
+					# taken from https://github.com/lzybkr/TabExpansionPlusPlus/blob/master/TabExpansionPlusPlus.psm1
+					# Add single quotes for the caller in case they are needed.
+					# We use the parser to robustly determine how it will treat
+					# the argument.  If we end up with too many tokens, or if
+					# the parser found something expandable in the results, we
+					# know quotes are needed.
+					$tokens = $null
+					$null = [System.Management.Automation.Language.Parser]::ParseInput("echo $textCompletion", [ref]$tokens, [ref]$null)
+					if ($tokens.Length -ne 3 -or
+						($tokens[1] -is [System.Management.Automation.Language.StringExpandableToken] -and
+						 $tokens[1].Kind -eq [System.Management.Automation.Language.TokenKind]::Generic))
+					{
+						$textCompletion = "'$textCompletion'"
 					}
+				
 					$results.CompletionMatches.Add(
-						(New-Object Management.Automation.CompletionResult $textCompletion,$_,"ProviderContainer",$_)
+						(New-Object Management.Automation.CompletionResult $textCompletion,$_,"Text",$_)
 					)
 				}
 			}
@@ -103,7 +116,7 @@ function global:TabExpansion2
 function Find-WordCompletion {
 	param([string]$text)
 
-	$foundToken = $text -match '(\s):(\w|:):(.*)' 
+	$foundToken = $text -match '(\s)(\w|:)::(.*)' 
 	if ($foundToken)
 	{
 		$space = $matches[1]
@@ -114,7 +127,7 @@ function Find-WordCompletion {
 		}
 
 		# find bounds of text to replace:
-		$searchStr = '{0}:{1}:' -f $space,$compType
+		$searchStr = '{0}{1}::' -f $space,$compType
 		$index = $text.ToLower().IndexOf($searchStr) + 1
 		for ($i=$index;$i -lt $text.Length;$i++) {
 			if ([char]::IsWhiteSpace($text[$i])) {

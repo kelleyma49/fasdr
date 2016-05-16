@@ -119,10 +119,13 @@ Describe "Find-WordCompletion" {
 			It 'Whitespace Only' {
 				Find-WordCompletion ' ' | Should Be $null
 			}
-
 			
 			It 'Single Colon' {
 				Find-WordCompletion ' :' | Should Be $null
+			}
+
+			It 'Unknown Token' {
+				Find-WordCompletion ' :u:' | Should Be $null
 			}
 		}
 
@@ -131,9 +134,54 @@ Describe "Find-WordCompletion" {
 				$result = Find-WordCompletion ' :::'
 				$result | Should Not Be $null
 				$Result.CompletionText | Should be ''
-				$result.CompletionType | Should be ''
+				$result.CompletionType | Should be ':'
 				$result.ReplacementIndex | Should be 1
-				$result.ReplacementLength | Should be 2
+				$result.ReplacementLength | Should be (':::'.Length)
+			}
+
+			It 'Find All Completion with Completion String' {
+				$result = Find-WordCompletion ' :::Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be ':'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+			}
+
+			It 'Find Container (uppercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' :C:Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'c'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+			}
+
+			It 'Find Container (lowercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' :C:Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'c'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+			}
+
+			It 'Find Leaf (uppercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' :L:Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'l'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+			}
+
+			It 'Find Leaf (lowercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' :L:Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'l'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
 			}
 		}
 	}

@@ -74,18 +74,17 @@ function global:TabExpansion2
 			$ast = [System.Management.Automation.Language.Parser]::ParseInput(
 				$inputScript, [ref]$tokens, [ref]$null)
 
-			$text = $ast.Extent.Text
-			if ($text -match '\s::(.*)')
-			{
-				$results.ReplacementIndex = $text.IndexOf(" ::") + 1
-				for ($i=$results.ReplacementIndex;$i -lt $text.Length;$i++) {
-					if ([char]::IsWhiteSpace($text[$i])) {
-						break
-					}
+			$findWord = Find-WordCompletion $ast.Extent.Text
+			if ($findWord -ne $null) {
+				$results.ReplacementIndex = $findWord.ReplacementIndex
+				$results.ReplacementLength = $findWord.ReplacementLength
+				switch ($findWord.CompletionType) 
+				{
+					':' { $FilterContainers = $FilterLeaves = $false }
+					'c' { $FilterContainers = $false; $FilterLeaves = $true }
+					'l' { $FilterContainers = $true; $FilterLeaves = $false }
 				}
-				$results.ReplacementLength = $i - $results.ReplacementIndex
-				$currentCompletionText = $matches[1].Trim()
-				Find-Frecent -ProviderPath $currentCompletionText | ForEach-Object {
+				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves | ForEach-Object {
 					$textCompletion = $_
 					if ($textCompletion -match '\s+') {
 						$textCompletion = "'" + $textCompletion + "'"
@@ -102,18 +101,13 @@ function global:TabExpansion2
 }
 
 function Find-WordCompletion {
-	param([string]$text,
-		[ref][string]$currentCompletionText,
-		[ref][string]$completionType,
-		[ref][int]$replacementIndex,
-		[ref][int]$replacementLength
-	)
+	param([string]$text)
 
-	$foundToken = $text -match '(\s):(\w??):(.*)' 
+	$foundToken = $text -match '(\s):(\w|:):(.*)' 
 	if ($foundToken)
 	{
 		$space = $matches[1]
-		$compType = $matches[2].Trim()
+		$compType = $matches[2].Trim().ToLower()
 		$compText = $matches[3].Trim()
 		if ($compText -eq $null) {
 			$compText = ''
@@ -121,7 +115,7 @@ function Find-WordCompletion {
 
 		# find bounds of text to replace:
 		$searchStr = '{0}:{1}:' -f $space,$compType
-		$index = $text.IndexOf($searchStr) + 1
+		$index = $text.ToLower().IndexOf($searchStr) + 1
 		for ($i=$index;$i -lt $text.Length;$i++) {
 			if ([char]::IsWhiteSpace($text[$i])) {
 				break

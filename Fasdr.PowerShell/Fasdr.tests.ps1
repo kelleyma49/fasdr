@@ -107,3 +107,34 @@ Describe "Save-Database" {
 		}
 	}
 }
+
+
+Describe "Find-WordCompletion" {
+	InModuleScope Fasdr {
+		Context "No Token" {
+			It 'Empty Text' {
+				Find-WordCompletion '' | Should Be $null
+			}
+
+			It 'Whitespace Only' {
+				Find-WordCompletion ' ' | Should Be $null
+			}
+
+			
+			It 'Single Colon' {
+				Find-WordCompletion ' :' | Should Be $null
+			}
+		}
+
+		Context "Token Found" {
+			It 'Find All Completion' {
+				$result = Find-WordCompletion ' :::'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be ''
+				$result.CompletionType | Should be ''
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be 2
+			}
+		}
+	}
+}

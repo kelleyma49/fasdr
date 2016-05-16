@@ -26,7 +26,15 @@ $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
     }
 }
 
-write-host ${function:oldTabExpansion2}
+Add-Type -TypeDefinition @"
+   public enum WordCompletionType
+   {
+		All,
+		Container,
+		Leaf
+   }
+"@
+
 function global:TabExpansion2
 {
     [CmdletBinding(DefaultParameterSetName = 'ScriptInputSet')]
@@ -92,6 +100,54 @@ function global:TabExpansion2
 
 	return $results
 }
+
+function Find-WordCompletion {
+	param([string]$text,
+		[ref][string]$currentCompletionText,
+		[ref][string]$completionType,
+		[ref][int]$replacementIndex,
+		[ref][int]$replacementLength
+	)
+
+	$foundToken = $text -match '(\s):(\w??):(.*)' 
+	if ($foundToken)
+	{
+		$space = $matches[1]
+		$compType = $matches[2].Trim()
+		$compText = $matches[3].Trim()
+		if ($compText -eq $null) {
+			$compText = ''
+		}
+
+		# find bounds of text to replace:
+		$searchStr = '{0}:{1}:' -f $space,$compType
+		$index = $text.IndexOf($searchStr) + 1
+		for ($i=$index;$i -lt $text.Length;$i++) {
+			if ([char]::IsWhiteSpace($text[$i])) {
+				break
+			}
+		}		
+
+		# make sure that we have an acceptable token:
+		switch ($compType) {
+			':'    { break } # all values
+			'c'   { break } # container
+			'l'   { break } # leaves
+ 			default { $foundToken = $false }
+		}
+
+		if ($foundToken) {
+			return New-Object PsObject -Property @{
+				CompletionText=$compText ; 
+				CompletionType=$compType ;
+				ReplacementIndex=$index
+				ReplacementLength=$i-$index}
+		}
+	}		
+
+	return $null
+}
+
 #endregion
 
 <#

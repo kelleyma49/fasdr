@@ -8,7 +8,7 @@ function FasdrCompletion {
 	{
 		'Set-Frecent' { $filterContainers = $false; $filterLeaves = $true}
 	}
-	Find-Frecent "$wordToComplete*" $filterContainers $filterLeaves |
+	Find-Frecent "$wordToComplete" $filterContainers $filterLeaves |
         ForEach-Object {
 			New-CompletionResult -CompletionText "$_"
         }   

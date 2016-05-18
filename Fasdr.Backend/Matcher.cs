@@ -42,14 +42,17 @@ namespace Fasdr.Backend
    
             // see if we have a direct match:
             var lastInput = input[input.Length - 1];
+            var listExact = new SortedList<double, string>(new DuplicateKeyComparer<double>());
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
 
             // if no direct match, loop through and find best match:
             foreach (var kv in provider.LastEntries)
             {
-                int score;
-                    
-                fts.FuzzyMatcher.FuzzyMatch(lastInput,kv.Value.Name,out score);
+                int score = 0;
+
+                bool exact = String.Compare(lastInput, kv.Value.Name,true) == 0;
+                if (!exact)
+                    fts.FuzzyMatcher.FuzzyMatch(lastInput,kv.Value.Name,out score);
 
                 foreach (var id in kv.Value.Ids)
                 {
@@ -72,18 +75,22 @@ namespace Fasdr.Backend
                             break;
                               
                         }
-                        int subScore;
-                        fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
+                        int subScore = 0;
+                        exact = exact && String.Compare(input[i], entryPathSplit[start], true) == 0;
+                        if (!exact)
+                            fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
                         start--;
                         score += subScore;
                     }
 
-                    if (score >= 0)
+                    if (exact)
+                        listExact.Add(score + entry.CalculateFrecency(),entry.FullPath);
+                    else if (score >= 0)
                         list.Add(score + entry.CalculateFrecency(), entry.FullPath);
                 }
             }
 
-            return list.Values.ToArray();
+            return listExact.Values.Concat(list.Values).ToArray();
         }
     }
 }

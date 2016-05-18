@@ -88,7 +88,15 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\ThisIsATest\", @"c:\tiat\" },
+                        new string[] { @"c:\tiat\",@"c:\ThisIsATest\"  },
+                        false)
+                        .SetName("TestSingleElementMatchCaseInsensitive");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tat\", 101, DateTime.Now, false)),
+                        new string[] { "TIAT" },
+                        new string[] { @"c:\ThisIsATest\", @"c:\tat\" },
                         false)
                         .SetName("TestSingleElementMatchCamelCase");
 
@@ -96,7 +104,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\this is a test\", @"c:\tiat\" },
+                        new string[] { @"c:\tiat\", @"c:\this is a test\"  },
                         false)
                         .SetName("TestSingleElementMatchSeparators");
 

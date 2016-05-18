@@ -8,35 +8,35 @@ $global:fasdrDatabase = $null
 
 #region prompt
 $global:oldPrompt = $function:prompt
-$script:prevLocation = $null
+$global:fasdrPrevLocation = $null
 
 function FindPathsInLastCommand
 {
 	param([string]$PrevLocation = $null)
-	if ($PrevLocation -ne $null) {
-		$script:prevLocation = $PrevLocation
+	if (-not [string]::IsNullOrWhiteSpace($PrevLocation)) {
+        $global:fasdrPrevLocation = $PrevLocation
 	}
-	if ($null -ne $script:prevLocation) {
-		$lastHistory = Get-History -Count 1
+	if ($global:fasdrPrevLocation -ne $null) {
+        $lastHistory = Get-History -Count 1
 		$lastCommand = $lastHistory.CommandLine   
 
 		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) |
 			Where-Object {$_.type -eq "commandargument"} | foreach-object {
 				$path = $_.Content
-				if (Split-Path $path -IsAbsolute) {
-					$pathInfo = gci $path 
-					Add-Frecent $pathInfo.FullName $pathInfo.PSProvider.Name | out-null
+        		if (Split-Path $path -IsAbsolute) {
+					$pathInfo = Get-Item $path
+        			Add-Frecent $pathInfo.FullName $pathInfo.PSProvider.Name | out-null
 				} else {
 					# attempt to find the path in the prev directory:
-					$fullPath = gci (Join-Path $script:prevLocation.Path $path) -ErrorAction SilentlyContinue
-					if ($null -ne $fullPath) {
-						Add-Frecent $fullPath.FullName $script:prevLocation.Provider.Name | out-null
+                    $fullPath = Get-Item (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue
+        			if ($null -ne $fullPath) {
+                        Add-Frecent $fullPath.FullName $fullPath.PSProvider.Name | out-null
 					}
 				}
 			}
 	}
 
-	$script:prevLocation = Get-Location
+	$global:fasdrPrevLocation = (Get-Location).Path
 }
 
 function global:prompt
@@ -287,8 +287,8 @@ function Add-Frecent {
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-Database
 	}
-
-	return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+    
+    return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
 }
 
 <# 

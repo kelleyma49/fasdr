@@ -6,34 +6,67 @@ $dllPath = Join-Path $PSScriptRoot 'System.IO.Abstractions.dll'
 $global:fasdrDatabase = $null
 
 
+#region prompt
+$global:oldPrompt = $function:prompt
+$script:prevLocation = $null
+
+function FindPathsInLastCommand
+{
+	param([string]$PrevLocation = $null)
+	if ($PrevLocation -ne $null) {
+		$script:prevLocation = $PrevLocation
+	}
+	"in FindPathsInLastCommand" >> C:\Users\michael\log.txt
+	if ($null -ne $script:prevLocation) {
+		$lastHistory = Get-History -Count 1
+		$lastCommand = $lastHistory.CommandLine   
+
+		"before parse" >> C:\Users\michael\log.txt
+		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) | % { $_ >> C:\users\michael\log.txt ; $_} |
+			Where-Object {$_.type -eq "commandargument"} | foreach-object {
+				$path = $_.Content
+				"check $path" >> C:\Users\michael\log.txt
+				if (Split-Path $path -IsAbsolute) {
+					$pathInfo = gci $path 
+					"adding relative $pathInfo" >> C:\Users\michael\log.txt
+					Add-Frecent $pathInfo.FullName $pathInfo.PSProvider.Name | out-null
+				} else {
+					# attempt to find the path in the prev directory:
+					$fullPath = gci (Join-Path $script:prevLocation.Path $path) -ErrorAction SilentlyContinue
+					if ($null -ne $fullPath) {
+						"adding relative $fullPath" >> C:\Users\michael\log.txt
+						Add-Frecent $fullPath.FullName $script:prevLocation.Provider.Name | out-null
+					}
+				}
+			}
+	}
+
+	$script:prevLocation = Get-Location
+}
+
+function global:prompt
+{
+	# parse history; attempt to find paths for leaves and directories:
+	try 
+	{
+		FindPathsInLastCommand		
+	}
+	catch
+	{
+		# ignore errors
+	}
+	finally
+	{
+		(& $oldPrompt @PSBoundParameters)
+	}
+}
+#endregion
+
 #region TabExpansion
 # Save off the previous tab completion so it can be restored if this module
 # is removed.
 $global:oldTabExpansion = $function:TabExpansion
 $global:oldTabExpansion2 = $function:TabExpansion2
-
-[bool]$updatedTypeData = $false
-
-$MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
-{
-    if ($null -ne $oldTabExpansion)
-    {
-        Set-Item function:\TabExpansion $oldTabExpansion
-    }
-    if ($null -ne $oldTabExpansion2)
-    {
-        Set-Item function:\TabExpansion2 $oldTabExpansion2
-    }
-}
-
-Add-Type -TypeDefinition @"
-   public enum WordCompletionType
-   {
-		All,
-		Container,
-		Leaf
-   }
-"@
 
 function global:TabExpansion2
 {
@@ -156,6 +189,23 @@ function Find-WordCompletion {
 }
 
 #endregion
+
+$MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
+{
+    if ($null -ne $oldTabExpansion)
+    {
+        Set-Item function:\TabExpansion $oldTabExpansion
+    }
+    if ($null -ne $oldTabExpansion2)
+    {
+        Set-Item function:\TabExpansion2 $oldTabExpansion2
+    }
+
+	if ($null -ne $oldPrompt)
+	{
+		Set-Item Function:\prompt $oldPrompt
+	}
+}
 
 <#
 #>

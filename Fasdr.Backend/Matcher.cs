@@ -42,6 +42,11 @@ namespace Fasdr.Backend
    
             // see if we have a direct match:
             var lastInput = input[input.Length - 1];
+            bool endOfMatchOnly = lastInput[lastInput.Length - 1] == '$';
+            if (endOfMatchOnly)
+            {
+                lastInput = lastInput.Substring(0, lastInput.Length - 1); // remove '$'
+            }
             var listExact = new SortedList<double, string>(new DuplicateKeyComparer<double>());
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
 
@@ -50,9 +55,22 @@ namespace Fasdr.Backend
             {
                 int score = 0;
 
-                bool exact = String.Compare(lastInput, kv.Value.Name,true) == 0;
-                if (!exact)
-                    fts.FuzzyMatcher.FuzzyMatch(lastInput,kv.Value.Name,out score);
+                var name = kv.Value.Name;
+                bool exact = false;
+                if (endOfMatchOnly)
+                {
+                    if (name.Length >= lastInput.Length)
+                        exact = string.Compare(lastInput, name.Substring(name.Length - lastInput.Length)) == 0;
+                    if (!exact)
+                        score = -1; // prevent entries that don't match
+                }
+                else
+                {
+                    exact = String.Compare(lastInput, name, true) == 0;
+                    if (!exact)
+                        fts.FuzzyMatcher.FuzzyMatch(lastInput, name, out score);
+                }
+                    
 
                 foreach (var id in kv.Value.Ids)
                 {
@@ -62,8 +80,7 @@ namespace Fasdr.Backend
                         continue;
                     else if (!entry.IsLeaf && filterContainers)
                         continue;
-                    //Console.WriteLine($"entry: {entry.FullPath} leaf: {entry.IsLeaf}");
-
+                    
                     var entryPathSplit = entry.SplitPath;
                     int start = entryPathSplit.Length - 2;
                     for (int i = input.Length - 2; i >= 0; i--)

@@ -115,6 +115,15 @@ namespace Fasdr.UnitTests
                         new string[] { @"c:\tiat\", @"c:\this is a test\",  },
                         false)
                         .SetName("TestSingleElementMatchSeparatorsFrequencyWins");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                        new Entry(@"c:\test\", 101, DateTime.Now, false),
+                        new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                        new string[] { "test$" },
+                        new string[] { @"c:\test\" },
+                        false)
+                        .SetName("TestElementAtEndOfLine");
                 }
             }
 

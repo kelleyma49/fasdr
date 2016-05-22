@@ -319,10 +319,11 @@ function Set-Frecent {
 	} 
 }
 
-
-foreach ($file in dir $PSScriptRoot\*.ArgumentCompleters.ps1)
-{
-    . $file.FullName
+if (((Get-Module TabExpansionPlusPlus) -ne $null) -or ($PSVersionTable.PsVersion.Major -ge 5)) {
+	foreach ($file in dir $PSScriptRoot\*.ArgumentCompleters.ps1)
+	{
+		. $file.FullName
+	}
 }
 
 if ($global:fasdrDatabase -eq $null) {

@@ -1,8 +1,33 @@
+version: 1.0.{build}
+before_build:
+- cmd: >-
+    git submodule update --init --recursive
+
+    nuget restore Fasdr\fasdrPowershell.sln
+build:
+  project: Fasdr/fasdrPowershell.sln
+  parallel: true
+  verbosity: minimal
 test_script:
-    - ps: |
-        $testResultsFile = ".\TestsResults.xml"
-        $res = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -PassThru
-        (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
-        if ($res.FailedCount -gt 0) { 
-            throw "$($res.FailedCount) tests failed."
-        }
+- ps: |
+    $testResultsFile = ".\TestsResults.xml"
+    $res = Invoke-Pester -Script .\Fasdr.Powershell\Fasdr.tests.ps1 -OutputFormat NUnitXml -OutputFile $testResultsFile -PassThru
+    (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
+    if ($res.FailedCount -gt 0) { 
+        throw "$($res.FailedCount) tests failed."
+    }
+after_build:
+- cmd: >-
+    7z a Fasdr.zip %APPVEYOR_BUILD_FOLDER%\fasdr.PowerShell\*.dll %APPVEYOR_BUILD_FOLDER%\fasdr.PowerShell\*.psm1 %APPVEYOR_BUILD_FOLDER%\fasdr.PowerShell\*.psd1 %APPVEYOR_BUILD_FOLDER%\fasdr.PowerShell\Fasdr.ArgumentCompleters.ps1
+
+    appveyor PushArtifact Fasdr.zip
+artifacts:
+- path: fasdr\fasdr.PowerShell\*.*
+  name: fasd_module
+notifications:
+- provider: Email
+  to:
+  - michael.a.kelley@gmail.com
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true

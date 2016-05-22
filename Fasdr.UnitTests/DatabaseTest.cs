@@ -77,6 +77,36 @@ namespace Fasdr.UnitTests
         }
 
         [Test]
+        public void TestRemoveEntryNoItemsOrProvider()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
+                {  FileSystemConfigPath, new MockFileData("") }
+            });
+            var db = new Database(fileSystem);
+            Assert.IsFalse(db.RemoveEntry("FileSystem", @"c:\APath\"));
+        }
+
+        [Test]
+        public void TestCanRemoveEntries()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {
+                {   FileSystemConfigPath,
+                    new MockFileData(
+                        (new Entry(@"c:\dir1\",1,DateTime.Now,false)).ToString() +
+                        Environment.NewLine +
+                        (new Entry(@"c:\dir1\file2",10,DateTime.Now,true)).ToString() +
+                        Environment.NewLine) }
+            });
+
+            var db = new Database(fileSystem);
+            db.Load();
+
+            Assert.IsTrue(db.RemoveEntry("FileSystem", @"c:\dir1\"));
+            Assert.IsFalse(db.RemoveEntry("FileSystem", @"c:\dir1\"));
+            Assert.IsTrue(db.RemoveEntry("FileSystem", @"c:\dir1\file2"));
+        }
+
+        [Test]
         public void TestConfigLoadFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> {

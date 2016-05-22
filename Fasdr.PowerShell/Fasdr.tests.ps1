@@ -55,7 +55,7 @@ Describe "Add-Frecent" {
 		Initialize-Database -defaultDrive "$TestDrive"
 	
 		It "Adds File Entry That Does Not Exist in Database" {
-			Add-Frecent $testFile | Should Be $true
+			{ Add-Frecent $testFile } | Should Not Throw
 			Find-Frecent "TestFile1.txt" | Should Be ( $testFile )
 		}
 	}
@@ -66,21 +66,57 @@ Describe "Add-Frecent" {
 
 		It "Should Find Different Order" {
 			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
-			Add-Frecent 'c:\dir1\dir2\testStr' | Should Be $true
+			{ Add-Frecent 'c:\dir1\dir2\testStr' } | Should Not Throw
 			Find-Frecent "testStr" | Should Be ('c:\dir1\dir2\testStr','c:\testStr')
 		}
 
 		It "Should Find New Entry" {
-			Add-Frecent 'c:\dir1\BrandNewEntry' | Should Be $true
+			{ Add-Frecent 'c:\dir1\BrandNewEntry' } | Should Not Throw
 			Find-Frecent "BrandNewEntry" | Should Be 'c:\dir1\BrandNewEntry'
 		}
 
 		It "Should Find Entries Set By Array" {
 			New-Item -ItemType Directory "$TestDrive\AddFrecent1"
 			New-Item -ItemType Directory "$TestDrive\AddFrecent2"
-			gci "$TestDrive\AddFrecent*" | Add-Frecent
+			{ gci "$TestDrive\AddFrecent*" | Add-Frecent } | Should Not Throw
 			Find-Frecent "AddFrecent1" | Should Be ("$TestDrive\AddFrecent1","$TestDrive\AddFrecent2")
 			Find-Frecent "AddFrecent2" | Should Be ("$TestDrive\AddFrecent2","$TestDrive\AddFrecent1")
+		}
+	}
+}
+
+Describe "Remove-Frecent" {
+	Context "Empty Database" {
+		$testFile = "TestDrive:\TestFile1.txt"
+		Set-Content $testFile -value " "
+		
+		Initialize-Database -defaultDrive "$TestDrive"
+	
+		It "Removes File Entry That Does Not Exist in Database" {
+			{ Remove-Frecent $testFile } | Should Throw
+		}
+	}
+
+	Context "Small Database" {
+		Set-Content $testDatabase -value $testData
+		Initialize-Database -defaultDrive "$TestDrive"
+
+		It "Should Find Entry Removed" {
+			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
+			Remove-Frecent 'c:\dir1\dir2\testStr' 
+			{ Remove-Frecent 'c:\dir1\dir2\testStr'}  | Should Throw
+			Find-Frecent "testStr" | Should Be ('c:\testStr')
+		}
+	}
+
+	Context "Small Database" {
+		Set-Content $testDatabase -value $testData
+		Initialize-Database -defaultDrive "$TestDrive"
+
+		It "Should Remove Entries By Array" {
+			@('c:\testStr','c:\dir1\dir2\testStr') | Remove-Frecent
+			Find-Frecent "testStr" | Should Be $null
+			{ @('c:\testStr','c:\dir1\dir2\testStr') | Remove-Frecent } | Should Throw
 		}
 	}
 }
@@ -93,7 +129,7 @@ Describe "Save-Database" {
 		Initialize-Database -defaultDrive "$TestDrive"
 	
 		It "Save From Empty Database" {
-			Add-Frecent $testFile | Should Be $true
+			{ Add-Frecent $testFile } | Should Not Throw
 			Save-Database 
 			$testDatabase | Should Exist	
 			$testDatabase | Should Contain "$testFile|1|.*|true".Replace('\','\\')

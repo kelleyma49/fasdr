@@ -80,7 +80,16 @@ namespace Fasdr.Backend
 			return provider;
 		}
 
-        public bool AddEntry(string providerName,string path, Predicate<string> checkIsLeaf)
+        public bool RemoveEntry(string providerName, string fullPath)
+        {
+            Provider provider;
+            if (!Providers.TryGetValue(providerName, out provider))
+                return false;
+
+            return provider.Remove(fullPath);
+        }
+
+        public bool AddEntry(string providerName,string fullPath, Predicate<string> checkIsLeaf)
         {
             // create provider if it doesn't exist:
             Provider provider;
@@ -90,7 +99,7 @@ namespace Fasdr.Backend
                 Providers[providerName] = provider;
             }
 
-            return provider.UpdateEntry(path, checkIsLeaf);
+            return provider.UpdateEntry(fullPath, checkIsLeaf);
         }   
 
         public void Save()

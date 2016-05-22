@@ -295,7 +295,35 @@ function Add-Frecent {
 	}
 	
     Process {
-		$global:fasdrDatabase.AddEntry($ProviderName,$FullName,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+		if (!$global:fasdrDatabase.AddEntry($ProviderName,$FullName,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})) {
+			throw ("Failed to add '{0}' for provider '{1}'" -f $FullName,$ProviderName)
+		}
+	}
+}
+
+<#
+	Remove-Frecent
+#>
+function Remove-Frecent {
+	param(
+		[parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)]
+		[string]$FullName,
+		[string]$ProviderName = $PWD.Provider.Name)
+
+	Begin {
+		$errors = @()
+		if ($global:fasdrDatabase -eq $null) {
+			Initialize-Database
+		}
+	}
+	
+    Process {
+		if (!$global:fasdrDatabase.RemoveEntry($ProviderName,$FullName)) {
+			throw ("Failed to remove '{0}' for provider '{1}'" -f $FullName,$ProviderName)
+		}
+	}
+
+	End {
 	}
 }
 

@@ -283,12 +283,20 @@ function Find-Frecent {
 	Add-Frecent
 #>
 function Add-Frecent {
-	param([string]$providerPath,[string]$providerName = $PWD.Provider.Name)
-	if ($global:fasdrDatabase -eq $null) {
-		Initialize-Database
+	param(
+		[parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)]
+		[string]$FullName,
+		[string]$ProviderName = $PWD.Provider.Name)
+
+	Begin {
+		if ($global:fasdrDatabase -eq $null) {
+			Initialize-Database
+		}
 	}
-    
-    return $global:fasdrDatabase.AddEntry($providerName,$providerPath,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+	
+    Process {
+		$global:fasdrDatabase.AddEntry($ProviderName,$FullName,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})
+	}
 }
 
 <# 

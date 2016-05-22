@@ -75,6 +75,13 @@ Describe "Add-Frecent" {
 			Find-Frecent "BrandNewEntry" | Should Be 'c:\dir1\BrandNewEntry'
 		}
 
+		It "Should Find Entries Set By Array" {
+			New-Item -ItemType Directory "$TestDrive\AddFrecent1"
+			New-Item -ItemType Directory "$TestDrive\AddFrecent2"
+			gci "$TestDrive\AddFrecent*" | Add-Frecent
+			Find-Frecent "AddFrecent1" | Should Be ("$TestDrive\AddFrecent1","$TestDrive\AddFrecent2")
+			Find-Frecent "AddFrecent2" | Should Be ("$TestDrive\AddFrecent2","$TestDrive\AddFrecent1")
+		}
 	}
 }
 

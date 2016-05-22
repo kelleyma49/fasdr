@@ -1,9 +1,13 @@
 version: 1.0.{build}
 before_build:
 - cmd: >-
-    git submodule update --init --recursive
+  git submodule update --init --recursive
 
-    nuget restore Fasdr\fasdrPowershell.sln
+  nuget restore Fasdr\fasdrPowershell.sln
+	
+  echo Installing pester...
+  cinst.exe pester
+
 build:
   project: Fasdr/fasdrPowershell.sln
   parallel: true

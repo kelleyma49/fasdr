@@ -365,4 +365,4 @@ if (!(Test-Path $location)) {
 	Import-Recents
 }
 
-Export-ModuleMember Find-Frecent,Initialize-Database,Add-Frecent,Set-Frecent,Import-Recents
+Export-ModuleMember Find-Frecent,Initialize-Database,Add-Frecent,Set-Frecent,Remove-Frecent,Save-Database,Import-Recents

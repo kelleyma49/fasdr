@@ -364,3 +364,5 @@ $location = $global:fasdrDatabase.GetProviderDatabaseLocation($providerName)
 if (!(Test-Path $location)) {
 	Import-Recents
 }
+
+Export-ModuleMember Find-Frecent,Initialize-Database,Add-Frecent,Set-Frecent,Import-Recents

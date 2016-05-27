@@ -5,6 +5,10 @@ $dllPath = Join-Path $PSScriptRoot 'System.IO.Abstractions.dll'
 [System.Reflection.Assembly]::LoadFile($dllPath)
 $global:fasdrDatabase = $null
 
+# configuration vars
+$global:Fasdr = @{
+	MaxResults = 50
+}
 
 #region prompt
 $global:oldPrompt = $function:prompt
@@ -119,7 +123,8 @@ function global:TabExpansion2
 					'c' { $FilterContainers = $false; $FilterLeaves = $true }
 					'l' { $FilterContainers = $true; $FilterLeaves = $false }
 				}
-				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves | ForEach-Object {
+				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves | 
+					Select-Object -First $global:Fasdr.MaxResults | ForEach-Object {
 					$textCompletion = $_
 
 					# taken from https://github.com/lzybkr/TabExpansionPlusPlus/blob/master/TabExpansionPlusPlus.psm1

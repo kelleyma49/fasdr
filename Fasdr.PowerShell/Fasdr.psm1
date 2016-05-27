@@ -346,12 +346,25 @@ function Set-Frecent {
 		$results = Find-Frecent "$Path" $false $true
 		$Path = $results[0]
 	}
+	
+	# if it's a file, goto the file's parent directory:
+	if (Test-Path $Path -PathType Leaf) {
+		$Path = Split-Path $Path -Parent
+	}
+
 	Set-Location $Path
 	if ($?) {
 		$Path = (Get-Item -Path ".\" -Verbose).FullName
 		Add-Frecent $Path
 		Save-Database
 	} 
+}
+
+<# This exists only for tab completion purposes #>
+function Set-FrecentFromLeaf {
+	param([string]$Path)
+
+	Set-Frecent $Path
 }
 
 if (((Get-Module TabExpansionPlusPlus) -ne $null) -or ($PSVersionTable.PsVersion.Major -ge 5)) {
@@ -372,4 +385,16 @@ if (!(Test-Path $location)) {
 	Import-Recents
 }
 
-Export-ModuleMember Find-Frecent,Initialize-Database,Add-Frecent,Set-Frecent,Remove-Frecent,Save-Database,Import-Recents
+New-Alias j Set-Frecent
+New-Alias jl Set-FrecentFromLeaf
+
+Export-ModuleMember -Function   Find-Frecent,`
+								Initialize-Database,`
+								Add-Frecent,`
+								Set-Frecent,`
+								Set-FrecentFromLeaf,`
+								Remove-Frecent,`
+								Save-Database,`
+								Import-Recents
+
+Export-ModuleMember -Alias      j,jl

@@ -267,18 +267,21 @@ Describe "FindPathsInLastCommand" {
 		Context "Multiple File Paths" {
 			$cmd = 'copy-item -Path {0} -Destination "{1}"' -f $env:windir,$env:ProgramData
 			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
-			$script:actualProviderPath = @(); $script:actualProviderName = @()
-			Mock Add-Frecent { $script:actualProviderPath += $FullName ; $script:actualProviderName += $ProviderName }
+			Mock Add-Frecent {}
 			It "Processes '$cmd' correctly" {
 				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:windir" -and $ProviderName -eq 'FileSystem'}
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:ProgramData" -and $ProviderName -eq 'FileSystem'}
-				
-				$script:actualProviderName[0] | Should Be 'FileSystem'
-				$script:actualProviderPath[0] | Should Be $env:windir
-				
-				$script:actualProviderName[1] | Should Be 'FileSystem'
-				$script:actualProviderPath[1] | Should Be $env:ProgramData				
+			}
+		}
+
+		Context "Multiple File Paths With Non-Path Arg" {
+			$cmd = 'copy-item -Path {0} -Destination "{1}"' -f "::NotAPath::",$env:ProgramData
+			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
+			Mock Add-Frecent {}
+			It "Processes '$cmd' correctly" {
+				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
+				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:ProgramData" -and $ProviderName -eq 'FileSystem'}
 			}
 		}
 	}

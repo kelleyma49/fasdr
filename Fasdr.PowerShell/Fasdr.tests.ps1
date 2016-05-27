@@ -235,22 +235,50 @@ Describe "FindPathsInLastCommand" {
 	InModuleScope Fasdr {
 		Context "Blank Line" {
 			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value ''; return $l }
-			Mock Add-Frecent { throw "Should never get here" }
+			Mock Add-Frecent {}
 			It 'Processes empty history line' {
 				{ FindPathsInLastCommand -PrevLocation "$env:TEMP" } | Should Not Throw
-				Assert-VerifiableMocks
+				Assert-MockCalled Add-Frecent -Exactly 0
 			}
 		}
 
-		Context "Cd Command" {
+		Context "Cd Command Absolute Path" {
 			$cmd = 'cd {0}' -f $env:windir
 			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
-			$script:actualProviderPath = $null; $actualProviderName = $null
-			Mock Add-Frecent { $script:actualProviderPath = $FullName ; $script:actualProviderName = $ProviderName }
+			Mock Add-Frecent {}
 			It 'Processes correctly' {
 				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
-				$script:actualProviderPath | Should Be $env:windir
-				$script:actualProviderName | Should Be 'FileSystem'
+				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq $env:windir ; $ProviderName -eq 'FileSystem'}
+			}
+		}
+
+		'.\windows', 'windows' | Foreach-Object { 
+			Context "Cd Command Relative Path $_" {
+					$cmd = 'cd {0}' -f $_
+					Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
+					Mock Add-Frecent {}
+					It "Processes '$cmd' correctly" {
+						{ FindPathsInLastCommand -PrevLocation "$env:SYSTEMDRIVE\" } | Should Not Throw
+						Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:SYSTEMDRIVE\windows" -and $ProviderName -eq 'FileSystem'}
+					}
+			}
+		}
+
+		Context "Multiple File Paths" {
+			$cmd = 'copy-item -Path {0} -Destination "{1}"' -f $env:windir,$env:ProgramData
+			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
+			$script:actualProviderPath = @(); $script:actualProviderName = @()
+			Mock Add-Frecent { $script:actualProviderPath += $FullName ; $script:actualProviderName += $ProviderName }
+			It "Processes '$cmd' correctly" {
+				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
+				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:windir" -and $ProviderName -eq 'FileSystem'}
+				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:ProgramData" -and $ProviderName -eq 'FileSystem'}
+				
+				$script:actualProviderName[0] | Should Be 'FileSystem'
+				$script:actualProviderPath[0] | Should Be $env:windir
+				
+				$script:actualProviderName[1] | Should Be 'FileSystem'
+				$script:actualProviderPath[1] | Should Be $env:ProgramData				
 			}
 		}
 	}

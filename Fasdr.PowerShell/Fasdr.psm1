@@ -23,23 +23,24 @@ function FindPathsInLastCommand
 		$lastCommand = $lastHistory.CommandLine   
 
 		$foundArgs = @()
+
 		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) |
-			Where-Object {$_.type -eq "commandargument"} | foreach-object {
+			Where-Object {$_.type -eq "commandargument" -or $_.type -eq "string"} | foreach-object {
 				$path = $_.Content
         		if (Split-Path $path -IsAbsolute) {
-					$foundPath = Get-Item $path -ErrorAction SilentlyContinue
+					$foundPath = Resolve-Path $path -ErrorAction SilentlyContinue
  				} else {
 					# attempt to find the path in the prev directory:
-                    $foundPath = Get-Item (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue	
+                    $foundPath = Resolve-Path (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue	
 				}
 
 				if ($null -ne $foundPath) {
-					Add-Frecent $foundPath.FullName $foundPath.PSProvider.Name | out-null
+					Add-Frecent $foundPath.Path $foundPath.Provider.Name | out-null
 					$foundArgs += $foundPath
 				}
 			}
 
-			$global:fasdrPrevArgs = $foundArgs + $global:fasdrPrevArgs[0..8]
+			#$global:fasdrPrevArgs = $foundArgs + $global:fasdrPrevArgs[0..8]
 	}
 
 	$global:fasdrPrevLocation = (Get-Location).Path

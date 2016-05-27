@@ -9,8 +9,7 @@ function FasdrCompletion {
 		'Set-Frecent'         { $filterContainers = $false; $filterLeaves = $true}
 		'Set-FrecentFromLeaf' { $filterContainers = $true; $filterLeaves = $false}
 	}
-	$MaxToReturn = 50
-	Find-Frecent "$wordToComplete" $filterContainers $filterLeaves | Select-Object -First $MaxToReturn |
+	Find-Frecent "$wordToComplete" $filterContainers $filterLeaves | Select-Object -First $global:Fasdr.MaxResults |
         ForEach-Object {
 			New-CompletionResult -CompletionText "$_"
         }   

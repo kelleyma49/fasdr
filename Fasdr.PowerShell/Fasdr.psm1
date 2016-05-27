@@ -9,10 +9,12 @@ $global:fasdrDatabase = $null
 #region prompt
 $global:oldPrompt = $function:prompt
 $global:fasdrPrevLocation = $null
+$global:fasdrPrevArgs = @(@(),@(),@(),@(),@(),@(),@(),@(),@(),@())
 
 function FindPathsInLastCommand
 {
 	param([string]$PrevLocation = $null)
+
 	if (-not [string]::IsNullOrWhiteSpace($PrevLocation)) {
         $global:fasdrPrevLocation = $PrevLocation
 	}
@@ -20,20 +22,24 @@ function FindPathsInLastCommand
         $lastHistory = Get-History -Count 1
 		$lastCommand = $lastHistory.CommandLine   
 
+		$foundArgs = @()
 		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) |
 			Where-Object {$_.type -eq "commandargument"} | foreach-object {
 				$path = $_.Content
         		if (Split-Path $path -IsAbsolute) {
-					$pathInfo = Get-Item $path
-        			Add-Frecent $pathInfo.FullName $pathInfo.PSProvider.Name | out-null
-				} else {
+					$foundPath = Get-Item $path -ErrorAction SilentlyContinue
+ 				} else {
 					# attempt to find the path in the prev directory:
-                    $fullPath = Get-Item (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue
-        			if ($null -ne $fullPath) {
-                        Add-Frecent $fullPath.FullName $fullPath.PSProvider.Name | out-null
-					}
+                    $foundPath = Get-Item (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue	
+				}
+
+				if ($null -ne $foundPath) {
+					Add-Frecent $foundPath.FullName $foundPath.PSProvider.Name | out-null
+					$foundArgs += $foundPath
 				}
 			}
+
+			$global:fasdrPrevArgs = $foundArgs + $global:fasdrPrevArgs[0..8]
 	}
 
 	$global:fasdrPrevLocation = (Get-Location).Path

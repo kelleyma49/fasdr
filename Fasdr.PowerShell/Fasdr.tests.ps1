@@ -231,29 +231,27 @@ Describe "Find-WordCompletion" {
 }
 
 
-<#
 Describe "FindPathsInLastCommand" {
 	InModuleScope Fasdr {
 		Context "Blank Line" {
-			Mock Get-History { param([int]$Count) ; $l = New-Object  –TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -NotePropertyName CommandLine -NotePropertyValue ''; return $l } -Verifiable -ParameterFilter { $Count -eq 1}
+			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value ''; return $l }
 			Mock Add-Frecent { throw "Should never get here" }
 			It 'Processes empty history line' {
-				FindPathsInLastCommand -PrevLocation "$env:TEMP" | Should Not Throw
+				{ FindPathsInLastCommand -PrevLocation "$env:TEMP" } | Should Not Throw
 				Assert-VerifiableMocks
 			}
 		}
 
 		Context "Cd Command" {
 			$cmd = 'cd {0}' -f $env:windir
-			Mock Get-History { param([int]$Count) ; $l = New-Object  –TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -NotePropertyName CommandLine -NotePropertyValue $cmd ; return $l }
-			$actualProviderPath = $null; $actualProviderName = $null
-			Mock Add-Frecent { param([string]$providerPath,[string]$providerName); $providerPath = $pp ; $providerName = $pn }
+			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
+			$script:actualProviderPath = $null; $actualProviderName = $null
+			Mock Add-Frecent { $script:actualProviderPath = $FullName ; $script:actualProviderName = $ProviderName }
 			It 'Processes correctly' {
-				FindPathsInLastCommand -PrevLocation $env:TEMP | Should Not Throw
-				$actualProviderPath | Should Be $env:windir
-				$actualProviderName | Should Be 'FileSystem'
+				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
+				$script:actualProviderPath | Should Be $env:windir
+				$script:actualProviderName | Should Be 'FileSystem'
 			}
 		}
 	}
 }
-#>

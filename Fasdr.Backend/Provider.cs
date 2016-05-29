@@ -27,15 +27,18 @@ namespace Fasdr.Backend
 			}
 		}
 
-		public void Save(string filePath,IFileSystem fileSystem)
+		public void Save(string filePath,IFileSystem fileSystem,int maxEntries)
 		{
 			var fileName = System.IO.Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
 			using (var s = fileSystem.File.CreateText(fileName))
 			{
-				foreach(var p in Entries.Values)
+                var sortedEntries = (from pair in Entries
+                                           orderby pair.Value.CalculateFrecency()
+                                           select pair).Take(maxEntries);
+                foreach (var p in sortedEntries)
 				{
-					if (p.IsValid)
-						s.WriteLine(p.ToString());
+					if (p.Value.IsValid)
+						s.WriteLine(p.Value.ToString());
 				}
 			}
             if (fileSystem.File.Exists(filePath))

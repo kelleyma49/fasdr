@@ -132,9 +132,25 @@ namespace Fasdr.UnitTests
             var fileSystem = new MockFileSystem();
           
             var db = new Database(fileSystem);
-            db.Save();
+            db.Save(100);
 
             Assert.IsTrue(!fileSystem.FileExists(FileSystemConfigPath));
+        }
+
+        [Test]
+        public void TestSaveMaxEntries()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+            fileSystem.AddDirectory(Database.DefaultConfigDir);
+            var db = new Database(fileSystem);
+            var fsp = new Provider("FileSystem");
+            db.Providers.Add("FileSystem", fsp);
+            fsp.Add(new Entry(@"c:\dir1\", 12, DateTime.Now, false));
+            fsp.Add(new Entry(@"c:\dir1\file2", 34, DateTime.Now, true));    
+            db.Save(1);
+            db.Load();
+
+            Assert.AreEqual(1,db.Providers["FileSystem"].Entries.Count);
         }
 
         [Test]
@@ -151,7 +167,7 @@ namespace Fasdr.UnitTests
 
 			fsp.Add(e1);
 			fsp.Add(e2);
-            db.Save();
+            db.Save(100);
 
 			var fsFileName = System.IO.Path.Combine (Database.DefaultConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 
@@ -191,7 +207,7 @@ namespace Fasdr.UnitTests
 			fsp.Add(e3);
 			fsp.Add(e4);
 			Assert.IsTrue(fsp.Remove(e4.FullPath));
-			db.Save();
+			db.Save(100);
 
 			var fsFileName = System.IO.Path.Combine (db.ConfigDir,$"{Database.ConfigFilePrefix}.FileSystem.txt");
 

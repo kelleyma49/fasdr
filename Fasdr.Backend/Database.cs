@@ -102,7 +102,7 @@ namespace Fasdr.Backend
             return provider.UpdateEntry(fullPath, checkIsLeaf);
         }   
 
-        public void Save()
+        public void Save(int maxEntries)
         {
 			using (var sgi = new SingleGlobalInstance (5000)) 
 			{
@@ -115,7 +115,7 @@ namespace Fasdr.Backend
 						p.Value.Merge (currProvider);
 					}
 
-					p.Value.Save (fileName, FileSystem);
+					p.Value.Save (fileName, FileSystem, maxEntries);
 				}
 			}
         }

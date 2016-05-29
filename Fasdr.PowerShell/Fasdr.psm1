@@ -7,7 +7,8 @@ $global:fasdrDatabase = $null
 
 # configuration vars
 $global:Fasdr = @{
-	MaxResults = 50
+	MaxResults = 50;
+	MaxEntries = 10000
 }
 
 #region prompt
@@ -230,7 +231,7 @@ function Initialize-Database {
 }
 
 function Save-Database {
-	$global:fasdrDatabase.Save() 
+	$global:fasdrDatabase.Save($global:Fasdr.MaxEntries) 
 }
 
 function Import-Recents {

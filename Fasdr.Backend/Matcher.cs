@@ -42,8 +42,14 @@ namespace Fasdr.Backend
    
             // see if we have a direct match:
             var lastInput = input[input.Length - 1];
-            bool endOfMatchOnly = lastInput[lastInput.Length - 1] == '$';
-            if (endOfMatchOnly)
+
+            bool tryPrefixMatch = lastInput.Length > 1 && lastInput[0] == '^';
+            if (tryPrefixMatch)
+            {
+                lastInput = lastInput.Substring(1); // remove '^'
+            }
+            bool trySuffixMatch = lastInput.Length > 1 && lastInput[lastInput.Length - 1] == '$';            
+            if (trySuffixMatch)
             {
                 lastInput = lastInput.Substring(0, lastInput.Length - 1); // remove '$'
             }
@@ -57,14 +63,22 @@ namespace Fasdr.Backend
 
                 var name = kv.Value.Name;
                 bool exact = false;
-                if (endOfMatchOnly)
+                if (tryPrefixMatch)
                 {
                     if (name.Length >= lastInput.Length)
-                        exact = string.Compare(lastInput, name.Substring(name.Length - lastInput.Length)) == 0;
+                        exact = string.Compare(lastInput, name.Substring(0,lastInput.Length)) == 0;
                     if (!exact)
                         score = -1; // prevent entries that don't match
                 }
-                else
+                if (trySuffixMatch)
+                {
+                    if (name.Length >= lastInput.Length)
+                        exact = (!tryPrefixMatch || exact) && string.Compare(lastInput, name.Substring(name.Length - lastInput.Length)) == 0;
+                    if (!exact)
+                        score = -1; // prevent entries that don't match
+                }
+
+                if (!tryPrefixMatch && !trySuffixMatch)
                 {
                     exact = String.Compare(lastInput, name, true) == 0;
                     if (!exact)

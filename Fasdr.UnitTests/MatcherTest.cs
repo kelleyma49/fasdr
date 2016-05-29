@@ -123,7 +123,53 @@ namespace Fasdr.UnitTests
                         new string[] { "test$" },
                         new string[] { @"c:\test" },
                         false)
-                        .SetName("TestElementAtEndOfLine");
+                        .SetName("TestSuffixMatches");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                        new Entry(@"c:\test\", 101, DateTime.Now, false),
+                        new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                        new string[] { "" },
+                        new string[] { },
+                        false)
+                        .SetName("TestOnlySuffixToken");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                       new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                       new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
+                       new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                       new string[] { "^test" },
+                       new string[] { @"c:\test this is" },
+                       false)
+                       .SetName("TestPrefixMatches");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                        new Entry(@"c:\test\", 101, DateTime.Now, false),
+                        new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                        new string[] { "^" },
+                        new string[] { },
+                        false)
+                        .SetName("TestOnlyPrefixToken");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                      new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                      new Entry(@"c:\test\", 101, DateTime.Now, false),
+                      new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                      new string[] { "^$" },
+                      new string[] { },
+                      false)
+                      .SetName("TestPrefixAndSuffixButNoStringToMatch");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                      new Entry(@"c:\test this is", 150, DateTime.Now, false),
+                      new Entry(@"c:\test", 101, DateTime.Now, false),
+                      new Entry(@"c:\te", 101, DateTime.Now, false),
+                      new Entry(@"c:\this is test", 150, DateTime.Now, false)),
+                      new string[] { "^test$" },
+                      new string[] { @"c:\test" },
+                      false)
+                      .SetName("TestPrefixAndSuffix");
                 }
             }
 

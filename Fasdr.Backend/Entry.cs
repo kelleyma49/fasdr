@@ -12,7 +12,7 @@ namespace Fasdr.Backend
 
 		public Entry(string fullPath,Int64 frequency,Int64 lastAccessTimeUtc,bool isLeaf)
 		{
-			FullPath = fullPath;
+			FullPath = fullPath.TrimEnd(new char[] { '\\', '/' });
 			SplitPath = FullPath.Split(new char[] {'\\'},StringSplitOptions.RemoveEmptyEntries);
 			Frequency = frequency;
 			LastAccessTimeUtc = lastAccessTimeUtc;
@@ -28,7 +28,7 @@ namespace Fasdr.Backend
 				throw new Exception("Failed to parse line '" + line + "'");
 			}
 
-			var path = split[0];
+			var path = split[0].TrimEnd(new char[] { '\\', '/' });
 
 			Int64 frequency;
 			if (!Int64.TryParse(split[1], out frequency))

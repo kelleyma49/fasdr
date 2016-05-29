@@ -94,13 +94,24 @@ namespace Fasdr.UnitTests
 			Assert.GreaterOrEqual(p.Entries [0].LastAccessTime, now);
 		}
 
-		[Test, TestCaseSource(typeof(MyFactoryClass),"TestRemoveEntryCases")]
+        [Test]
+        public void TestUpdateEntryHandlesPathWithSlash()
+        {
+            var p = new Provider("FileSystem");
+            Assert.AreEqual(0, p.Entries.Count);
+            Assert.IsTrue(p.UpdateEntry(@"c:\dir1", s => false));
+            Assert.AreEqual(1, p.Entries.Count);
+            Assert.IsTrue(p.UpdateEntry(@"c:\dir1\", s => false));
+            Assert.AreEqual(1, p.Entries.Count);
+        }
+
+        [Test, TestCaseSource(typeof(MyFactoryClass),"TestRemoveEntryCases")]
 		public void TestRemoveEntry(string configFileContents, string fullPathToRemove, bool expected)
 		{
 			var p = SetupMatchSimple (configFileContents);
 			int id = -1;
 			if (expected) {
-				id = p.FullPathToEntry [fullPathToRemove.ToLower ()];
+				id = p.FullPathToEntry [fullPathToRemove.ToLower().TrimEnd(new char[] { '\\', '/' })];
 			}
 			Assert.AreEqual(expected,p.Remove (fullPathToRemove));
 			if (expected) {
@@ -136,7 +147,7 @@ namespace Fasdr.UnitTests
 					yield return new TestCaseData (String.Join(Environment.NewLine,
 						new Entry(@"c:\tools\", 101, DateTime.Now, false),
 						new Entry(@"c:\tree\", 102, DateTime.Now, false)), 
-						@"c:\tree\", true)
+						@"c:\tree", true)
 							.SetName("TestRemoveFromProvider");
 				}
 			}
@@ -151,14 +162,14 @@ namespace Fasdr.UnitTests
 					yield return new TestCaseData (
 						String.Join(Environment.NewLine,
 							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
-						new string[] {@"c:\tree\"})
+						new string[] {@"c:\tree"})
 							.SetName("TestGetAllEntriesOneItem");
 					
 					yield return new TestCaseData (
 						String.Join(Environment.NewLine,
 							new Entry(@"c:\tools\", 101, DateTime.Now, false),
 							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
-						new string[] {@"c:\tools\",@"c:\tree\"})
+						new string[] {@"c:\tools",@"c:\tree"})
 							.SetName("TestGetAllEntriesTwoItems");
 				}
 			}

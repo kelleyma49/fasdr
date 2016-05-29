@@ -97,7 +97,7 @@ namespace Fasdr.Backend
 
 		public bool Remove(string fullPath)
 		{
-			var fullPathLower = fullPath.ToLower ();
+			var fullPathLower = fullPath.ToLower ().TrimEnd(new char[] { '\\', '/' });
 			int id;
 			if (!FullPathToEntry.TryGetValue(fullPathLower,out id))
 			{
@@ -110,6 +110,7 @@ namespace Fasdr.Backend
         public bool UpdateEntry(string fullPath,Predicate<string> checkIsLeaf = null)
 		{
 			int id;
+            fullPath = fullPath.TrimEnd(new char[] { '\\', '/' });
             string fullPathLower = fullPath.ToLower();
 			if (!FullPathToEntry.TryGetValue (fullPathLower, out id))
             {

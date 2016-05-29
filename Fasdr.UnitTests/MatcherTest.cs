@@ -67,7 +67,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\tools\", 101, DateTime.Now, false),
                         new Entry(@"c:\tree\", 102, DateTime.Now, false)),
                         new string[] { "t" },
-                        new string[] { @"c:\tree\", @"c:\tools\" },
+                        new string[] { @"c:\tree", @"c:\tools" },
                         false)
                         .SetName("TestSingleElementMatchSingleChar");
 
@@ -88,7 +88,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\tiat\",@"c:\ThisIsATest\"  },
+                        new string[] { @"c:\tiat",@"c:\ThisIsATest"  },
                         false)
                         .SetName("TestSingleElementMatchCaseInsensitive");
 
@@ -96,7 +96,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\ThisIsATest\", @"c:\tat\" },
+                        new string[] { @"c:\ThisIsATest", @"c:\tat" },
                         false)
                         .SetName("TestSingleElementMatchCamelCase");
 
@@ -104,7 +104,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\tiat\", @"c:\this is a test\"  },
+                        new string[] { @"c:\tiat", @"c:\this is a test"  },
                         false)
                         .SetName("TestSingleElementMatchSeparators");
 
@@ -112,7 +112,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 150, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\tiat\", @"c:\this is a test\",  },
+                        new string[] { @"c:\tiat", @"c:\this is a test",  },
                         false)
                         .SetName("TestSingleElementMatchSeparatorsFrequencyWins");
 
@@ -121,7 +121,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\test\", 101, DateTime.Now, false),
                         new Entry(@"c:\te\", 150, DateTime.Now, false)),
                         new string[] { "test$" },
-                        new string[] { @"c:\test\" },
+                        new string[] { @"c:\test" },
                         false)
                         .SetName("TestElementAtEndOfLine");
                 }

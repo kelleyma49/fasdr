@@ -25,7 +25,14 @@ namespace Fasdr.Backend
 			}
 		}
 		
-        public static string[] Matches(IDatabase db, string providerName, bool filterContainers, bool filterLeaves,  bool matchAllOnEmptyInput, params string[] input)
+        public static string[] Matches(
+            IDatabase db, 
+            string providerName, 
+            bool filterContainers, 
+            bool filterLeaves,  
+            bool matchAllOnEmptyInput, 
+            string basePathMatch,
+            params string[] input)
         {
             // handle empty:
             if (input == null || input.Length == 0)
@@ -39,9 +46,17 @@ namespace Fasdr.Backend
             {
                 return provider.GetAllEntries().ToArray();
             }
-   
-            // see if we have a direct match:
+
             var lastInput = input[input.Length - 1];
+
+            bool matchBasePath = !string.IsNullOrWhiteSpace(basePathMatch) && lastInput.StartsWith("**");
+            string[] basePathMatchSplit = null;
+            if (matchBasePath)
+            {
+                basePathMatchSplit = basePathMatch.Split(new char[] { '\\', '/' },StringSplitOptions.RemoveEmptyEntries);
+                lastInput = lastInput.Substring("**".Length);
+            }
+
 
             bool tryPrefixMatch = lastInput.Length > 1 && lastInput[0] == '^';
             if (tryPrefixMatch)
@@ -85,39 +100,66 @@ namespace Fasdr.Backend
                         fts.FuzzyMatcher.FuzzyMatch(lastInput, name, out score);
                 }
                     
-
                 foreach (var id in kv.Value.Ids)
                 {
                     // get score from rest of path parts:
                     var entry = provider.Entries[id];
-					if (!entry.IsValid || (entry.IsLeaf && filterLeaves))
+                    if (!entry.IsValid || (entry.IsLeaf && filterLeaves))
                         continue;
                     else if (!entry.IsLeaf && filterContainers)
                         continue;
-                    
-                    var entryPathSplit = entry.SplitPath;
-                    int start = entryPathSplit.Length - 2;
-                    for (int i = input.Length - 2; i >= 0; i--)
-                    {
-                        // if stored string is smaller than input string, apply penalty:
-                        if (start < 0)
-                        {
-                            score -= SmallerEntryScorePenalty;
-                            break;
-                              
-                        }
-                        int subScore = 0;
-                        exact = exact && String.Compare(input[i], entryPathSplit[start], true) == 0;
-                        if (!exact)
-                            fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
-                        start--;
-                        score += subScore;
-                    }
 
-                    if (exact)
-                        listExact.Add(score + entry.CalculateFrecency(),entry.FullPath);
-                    else if (score >= 0)
-                        list.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                    var entryPathSplit = entry.SplitPath;
+
+                    // match going forward if we match the base path:
+                    if (matchBasePath)
+                    {
+                        bool addEntry = true;
+                        if (basePathMatchSplit.Length <= entryPathSplit.Length - 1)
+                        {
+                            // -1 as we already compared the last entry:
+                            for (int i = 0; i < entryPathSplit.Length - 1; i++)
+                            {
+                                addEntry = String.Compare(basePathMatchSplit[i], entryPathSplit[i], true) == 0;
+                                if (!addEntry)
+                                    break;
+                            }
+                        }
+
+                        // only add it the base path matches:
+                        if (addEntry)
+                        {
+                            if (exact)
+                                listExact.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                            else if (score >= 0)
+                                list.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                        }
+                    }
+                    else
+                    { 
+                        int start = entryPathSplit.Length - 2;
+                        for (int i = input.Length - 2; i >= 0; i--)
+                        {
+                            // if stored string is smaller than input string, apply penalty:
+                            if (start < 0)
+                            {
+                                score -= SmallerEntryScorePenalty;
+                                break;
+
+                            }
+                            int subScore = 0;
+                            exact = exact && String.Compare(input[i], entryPathSplit[start], true) == 0;
+                            if (!exact)
+                                fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
+                            start--;
+                            score += subScore;
+                        }
+
+                        if (exact)
+                            listExact.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                        else if (score >= 0)
+                            list.Add(score + entry.CalculateFrecency(), entry.FullPath);
+                    }
                 }
             }
 

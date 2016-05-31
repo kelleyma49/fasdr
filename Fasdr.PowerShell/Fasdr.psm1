@@ -288,7 +288,7 @@ function Find-Frecent {
 	}
 	$providerName = $PWD.Provider.Name
 	$matchAll = $true
-	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$matchAll,$ProviderPath)
+	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$matchAll,$PWD.Path,$ProviderPath)
 	$result
 }
 

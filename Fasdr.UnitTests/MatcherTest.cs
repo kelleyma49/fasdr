@@ -42,17 +42,26 @@ namespace Fasdr.UnitTests
         {
             var db = SetupEmptyDatabase();
 
-            var matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
+            var matches = Matcher.Matches(db, "FileSystem", false, false, false, null, "testStr");
             CollectionAssert.AreEqual(new List<string> { }, matches);
         }
 
 
         [Test, TestCaseSource(typeof(MyFactoryClass),"TestSingleElementMatchCases")]
-        public void TestSingleElementMatch(string configFileContents, string[] patterns, string[] expected, bool matchAllIfEmpty)
+        public void TestSingleElementMatch(string configFileContents, string[] patterns, string[] expected)
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", false, false, false, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, false, null, patterns);
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test, TestCaseSource(typeof(MyFactoryClass), "TestSingleElementWithBasePathCases")]
+        public void TestSingleElementMatchWithBasePath(string configFileContents, string[] patterns, string[] expected,string basePath)
+        {
+            var db = SetupMatchSimple(configFileContents);
+
+            var actual = Matcher.Matches(db, "FileSystem", false, false, false, basePath, patterns);
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -67,53 +76,46 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\tools\", 101, DateTime.Now, false),
                         new Entry(@"c:\tree\", 102, DateTime.Now, false)),
                         new string[] { "t" },
-                        new string[] { @"c:\tree", @"c:\tools" },
-                        false)
+                        new string[] { @"c:\tree", @"c:\tools" })
                         .SetName("TestSingleElementMatchSingleChar");
 
 
                     yield return new TestCaseData(TestData.GetMatchFilesystem(),
                         new string[] { "testStr" },
-                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"  },
-                        false)
+                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" })
                         .SetName("TestSingleElementMatchTestStr");
 
                     yield return new TestCaseData(TestData.GetMatchFilesystem(),
                         new string[] { "dir1", "testStr" },
-                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" },
-                        false)
+                        new string[] { @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr" })
                         .SetName("TestSingleElementMatchDir1TestStr");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\tiat",@"c:\ThisIsATest"  },
-                        false)
+                        new string[] { @"c:\tiat", @"c:\ThisIsATest" })
                         .SetName("TestSingleElementMatchCaseInsensitive");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\ThisIsATest\", 101, DateTime.Now, false),
                         new Entry(@"c:\tat\", 101, DateTime.Now, false)),
                         new string[] { "TIAT" },
-                        new string[] { @"c:\ThisIsATest", @"c:\tat" },
-                        false)
+                        new string[] { @"c:\ThisIsATest", @"c:\tat" })
                         .SetName("TestSingleElementMatchCamelCase");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 101, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\tiat", @"c:\this is a test"  },
-                        false)
+                        new string[] { @"c:\tiat", @"c:\this is a test" })
                         .SetName("TestSingleElementMatchSeparators");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                         new Entry(@"c:\tiat\", 150, DateTime.Now, false)),
                         new string[] { "tiat" },
-                        new string[] { @"c:\tiat", @"c:\this is a test",  },
-                        false)
+                        new string[] { @"c:\tiat", @"c:\this is a test", })
                         .SetName("TestSingleElementMatchSeparatorsFrequencyWins");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -121,8 +123,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\test\", 101, DateTime.Now, false),
                         new Entry(@"c:\te\", 150, DateTime.Now, false)),
                         new string[] { "test$" },
-                        new string[] { @"c:\test" },
-                        false)
+                        new string[] { @"c:\test" })
                         .SetName("TestSuffixMatches");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -130,8 +131,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\test\", 101, DateTime.Now, false),
                         new Entry(@"c:\te\", 150, DateTime.Now, false)),
                         new string[] { "" },
-                        new string[] { },
-                        false)
+                        new string[] { })
                         .SetName("TestOnlySuffixToken");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -139,8 +139,7 @@ namespace Fasdr.UnitTests
                        new Entry(@"c:\this is a test\", 101, DateTime.Now, false),
                        new Entry(@"c:\te\", 150, DateTime.Now, false)),
                        new string[] { "^test" },
-                       new string[] { @"c:\test this is" },
-                       false)
+                       new string[] { @"c:\test this is" })
                        .SetName("TestPrefixMatches");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -148,8 +147,7 @@ namespace Fasdr.UnitTests
                         new Entry(@"c:\test\", 101, DateTime.Now, false),
                         new Entry(@"c:\te\", 150, DateTime.Now, false)),
                         new string[] { "^" },
-                        new string[] { },
-                        false)
+                        new string[] { })
                         .SetName("TestOnlyPrefixToken");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -157,8 +155,7 @@ namespace Fasdr.UnitTests
                       new Entry(@"c:\test\", 101, DateTime.Now, false),
                       new Entry(@"c:\te\", 150, DateTime.Now, false)),
                       new string[] { "^$" },
-                      new string[] { },
-                      false)
+                      new string[] { })
                       .SetName("TestPrefixAndSuffixButNoStringToMatch");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
@@ -167,9 +164,59 @@ namespace Fasdr.UnitTests
                       new Entry(@"c:\te", 101, DateTime.Now, false),
                       new Entry(@"c:\this is test", 150, DateTime.Now, false)),
                       new string[] { "^test$" },
-                      new string[] { @"c:\test" },
-                      false)
+                      new string[] { @"c:\test" })
                       .SetName("TestPrefixAndSuffix");
+                }
+            }
+
+            public static IEnumerable TestSingleElementWithBasePathCases
+            {
+                get
+                {
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\d1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
+                        new string[] { "**d1" },
+                        new string[] { @"c:\tools\d1" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesDepth1");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\d1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\d1d2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
+                        new string[] { "**d2$" },
+                        new string[] { @"c:\tools\d1d2" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchSuffix");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\d1d2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\d2d1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
+                        new string[] { "**^d2" },
+                        new string[] { @"c:\tools\d2d1" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefix");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\d1d2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\d2d1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\d2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false),
+                        new Entry(@"c:\tree\d2", 102, DateTime.Now, false)),
+                        new string[] { "**^d2$" },
+                        new string[] { @"c:\tools\d2" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefixAndSuffix");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+                        new string[] { "**t" },
+                        new string[] { @"c:\tree", @"c:\tools" },
+                        @"c:\")
+                        .SetName("TestSingleElementMatchWithBasePathCasesSingleChar");
                 }
             }
 
@@ -226,7 +273,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", filterContainers, filterLeaves, false, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", filterContainers, filterLeaves, false, null, patterns);
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -235,7 +282,7 @@ namespace Fasdr.UnitTests
         {
             var db = SetupMatchSimple(configFileContents);
 
-            var actual = Matcher.Matches(db, "FileSystem", false, false, false, patterns);
+            var actual = Matcher.Matches(db, "FileSystem", false, false, false, null, patterns);
             CollectionAssert.AreEqual(new List<string> {}, actual);
         }
 
@@ -244,10 +291,10 @@ namespace Fasdr.UnitTests
 		{
 			var db = SetupMatchSimple ();
 
-			var matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
+			var matches = Matcher.Matches(db, "FileSystem", false, false, false, null, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\dir2\testStr", @"c:\dir1\testStr", @"c:\testStr"},matches);
 			Assert.IsTrue(db.Providers["FileSystem"].UpdateEntry(@"c:\dir1\testStr"));
-			matches = Matcher.Matches(db, "FileSystem", false, false, false, "testStr");
+			matches = Matcher.Matches(db, "FileSystem", false, false, false, null, "testStr");
 			CollectionAssert.AreEqual(new List<string>{ @"c:\dir1\testStr", @"c:\dir1\dir2\testStr", @"c:\testStr"},matches);
 		}
     }

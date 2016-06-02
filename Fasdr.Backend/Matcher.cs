@@ -114,11 +114,11 @@ namespace Fasdr.Backend
                     // match going forward if we match the base path:
                     if (matchBasePath)
                     {
-                        bool addEntry = true;
-                        if (basePathMatchSplit.Length <= entryPathSplit.Length - 1)
+                        bool addEntry = basePathMatchSplit.Length <= entryPathSplit.Length - 1;
+                        if (addEntry)
                         {
                             // -1 as we already compared the last entry:
-                            for (int i = 0; i < entryPathSplit.Length - 1; i++)
+                            for (int i = 0; i < basePathMatchSplit.Length; i++)
                             {
                                 addEntry = String.Compare(basePathMatchSplit[i], entryPathSplit[i], true) == 0;
                                 if (!addEntry)

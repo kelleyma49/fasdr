@@ -217,6 +217,22 @@ namespace Fasdr.UnitTests
                         new string[] { @"c:\tree", @"c:\tools" },
                         @"c:\")
                         .SetName("TestSingleElementMatchWithBasePathCasesSingleChar");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\dir1\dir2\final3", 101, DateTime.Now, false),
+                        new Entry(@"c:\otherdir1\otherdir2\final3", 102, DateTime.Now, false)),
+                        new string[] { "**final3" },
+                        new string[] { @"c:\dir1\dir2\final3" },
+                        @"c:\dir1")
+                        .SetName("TestSingleElementMatchWithBasePathCasesDeeperTreeHierarchy");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\dir1\dir2\final3", 101, DateTime.Now, false),
+                        new Entry(@"c:\otherdir1\otherdir2\final3", 102, DateTime.Now, false)),
+                        new string[] { "**final3" },
+                        new string[] { },
+                        @"c:\dir1\dir2\final3")
+                        .SetName("TestSingleElementMatchWithBasePathCasesShouldFail");
                 }
             }
 

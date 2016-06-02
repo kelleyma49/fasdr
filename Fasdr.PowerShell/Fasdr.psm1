@@ -217,7 +217,7 @@ $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
 
 <#
 #>
-function Initialize-Database {
+function Initialize-FasdrDatabase {
 	param([System.IO.Abstractions.IFileSystem] $fileSystem=$null,$defaultDrive=$null)
 	if ($fileSystem -eq $null) {
 		$fileSystem = New-Object System.IO.Abstractions.FileSystem
@@ -230,13 +230,13 @@ function Initialize-Database {
 	$global:fasdrDatabase.Load() 
 }
 
-function Save-Database {
+function Save-FasdrDatabase {
 	$global:fasdrDatabase.Save($global:Fasdr.MaxEntries) 
 }
 
-function Import-Recents {
+function Import-FasdrRecents {
 	if ($global:fasdrDatabase -eq $null) {
-		Initialize-Database
+		Initialize-FasdrDatabase
 	}
 
 	$dllPath = Join-Path $PSScriptRoot 'Fasdr.Windows.dll'
@@ -274,7 +274,7 @@ function Import-Recents {
 	}	
 
 	Write-Output "imported $numAdded paths into $fileSystemProvider database"
-	Save-Database
+	Save-FasdrDatabase
 }
 
 
@@ -284,7 +284,7 @@ function Import-Recents {
 function Find-Frecent {
 	param([string]$ProviderPath,[bool]$FilterContainers=$false,[bool]$FilterLeaves=$false)
 	if ($global:fasdrDatabase -eq $null) {
-		Initialize-Database
+		Initialize-FasdrDatabase
 	}
 	$providerName = $PWD.Provider.Name
 	$matchAll = $true
@@ -303,7 +303,7 @@ function Add-Frecent {
 
 	Begin {
 		if ($global:fasdrDatabase -eq $null) {
-			Initialize-Database
+			Initialize-FasdrDatabase
 		}
 	}
 	
@@ -326,7 +326,7 @@ function Remove-Frecent {
 	Begin {
 		$errors = @()
 		if ($global:fasdrDatabase -eq $null) {
-			Initialize-Database
+			Initialize-FasdrDatabase
 		}
 	}
 	
@@ -362,7 +362,7 @@ function Set-Frecent {
 	if ($?) {
 		$Path = (Get-Item -Path ".\" -Verbose).FullName
 		Add-Frecent $Path
-		Save-Database
+		Save-FasdrDatabase
 	} 
 }
 
@@ -381,26 +381,26 @@ if (((Get-Module TabExpansionPlusPlus) -ne $null) -or ($PSVersionTable.PsVersion
 }
 
 if ($global:fasdrDatabase -eq $null) {
-	Initialize-Database
+	Initialize-FasdrDatabase
 }
 
 # import recents into database on first load:
 $providerName = "FileSystem"
 $location = $global:fasdrDatabase.GetProviderDatabaseLocation($providerName)
 if (!(Test-Path $location)) {
-	Import-Recents
+	Import-FasdrRecents
 }
 
 New-Alias j Set-Frecent
 New-Alias jl Set-FrecentFromLeaf
 
 Export-ModuleMember -Function   Find-Frecent,`
-								Initialize-Database,`
+								Initialize-FasdrDatabase,`
 								Add-Frecent,`
 								Set-Frecent,`
 								Set-FrecentFromLeaf,`
 								Remove-Frecent,`
-								Save-Database,`
-								Import-Recents
+								Save-FasdrDatabase,`
+								Import-FasdrRecents
 
 Export-ModuleMember -Alias      j,jl

@@ -66,7 +66,7 @@ Description = 'TBD'
 # NestedModules = @()
 
 # Functions to export from this module
-# FunctionsToExport = 'Find-Frecent,Initialize-Database,Add-Frecent,Set-Frecent,Import-Recents'
+# FunctionsToExport = 'Find-Frecent,Initialize-FasdrDatabase,Add-Frecent,Set-Frecent,Import-FasdrRecents'
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'

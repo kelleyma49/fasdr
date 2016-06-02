@@ -14,7 +14,7 @@ $testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
 
 Describe "Find-Frecent" {
 	Context "Empty Database" {
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 	
 		It "Finds Nothing" {
 			Find-Frecent "shouldNo" | Should Be $null
@@ -24,7 +24,7 @@ Describe "Find-Frecent" {
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
 
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 
 		It "Finds All With Empty Input" {
 			$expected = $testData.Split("`n")
@@ -52,7 +52,7 @@ Describe "Add-Frecent" {
 		$testFile = "TestDrive:\TestFile1.txt"
 		Set-Content $testFile -value " "
 		
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 	
 		It "Adds File Entry That Does Not Exist in Database" {
 			{ Add-Frecent $testFile } | Should Not Throw
@@ -62,7 +62,7 @@ Describe "Add-Frecent" {
 
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 
 		It "Should Find Different Order" {
 			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
@@ -90,7 +90,7 @@ Describe "Remove-Frecent" {
 		$testFile = "TestDrive:\TestFile1.txt"
 		Set-Content $testFile -value " "
 		
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 	
 		It "Removes File Entry That Does Not Exist in Database" {
 			{ Remove-Frecent $testFile } | Should Throw
@@ -99,7 +99,7 @@ Describe "Remove-Frecent" {
 
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 
 		It "Should Find Entry Removed" {
 			Find-Frecent "testStr" | Should Be ('c:\testStr','c:\dir1\dir2\testStr')
@@ -111,7 +111,7 @@ Describe "Remove-Frecent" {
 
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 
 		It "Should Remove Entries By Array" {
 			@('c:\testStr','c:\dir1\dir2\testStr') | Remove-Frecent
@@ -121,16 +121,16 @@ Describe "Remove-Frecent" {
 	}
 }
 
-Describe "Save-Database" {
+Describe "Save-FasdrDatabase" {
 	Context "Empty Database" {
 		$testFile = "TestDrive:\TestFile1.txt"
 		Set-Content $testFile -value " "
 		
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 	
 		It "Save From Empty Database" {
 			{ Add-Frecent $testFile } | Should Not Throw
-			Save-Database 
+			Save-FasdrDatabase 
 			$testDatabase | Should Exist	
 			$testDatabase | Should Contain "$testFile|1|.*|true".Replace('\','\\')
 		}
@@ -138,10 +138,10 @@ Describe "Save-Database" {
 
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
-		Initialize-Database -defaultDrive "$TestDrive"
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
 	
 		It "Save From Small Database" {
-			Save-Database 
+			Save-FasdrDatabase 
 			$testDatabase | Should Exist	
 			$testData.Split('`n') | ForEach-Object {
 				$testDatabase | Should Contain $_.Replace('\','\\')

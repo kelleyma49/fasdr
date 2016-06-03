@@ -21,7 +21,7 @@ Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching
 | Token      | Match type         | Description                     |
 | ---------- | -----------------  | ------------------------------- |
 | `^notepad` | prefix exact match | Items that start with `notepad` |
-| `^.cpp$`   | suffix exact match | Items that end with `.cpp`      |
+| `.cpp$`    | suffix exact match | Items that end with `.cpp`      |
 
 # Word Completion
 Fasdr has special tokens that can be used for tab completion from any command.

@@ -49,7 +49,7 @@ Accept wildcard characters: False
 The input type is the type of the objects that you can pipe to the cmdlet.
 
 ###System.String
-You can pipe a string that contains a path to Get-ChildItem.
+You can pipe a string that contains a path to Remove-Frecent.
 
 ## OUTPUTS
 

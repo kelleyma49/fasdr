@@ -24,7 +24,7 @@ This parameter is used to specify the path to a new working location.
 ```yaml
 Type: string
 Parameter Sets: (All)
-Aliases: j
+Aliases:
 
 Required: True
 Position: Named

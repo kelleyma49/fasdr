@@ -14,8 +14,10 @@ Fasdr allows you to open files or change directories by using accessing its data
 # Installation
 Fasdr is available on the [PowerShell Gallery](https://www.powershellgallery.com/packages/Fasdr). Note that it will hook into the current prompt and tab completion functions for proper support of word completion mode.
 
+Fasdr has only been tested on PowerShell 5.0.
+
 # Matching
-Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching).  Exact matches between the search string and the last element of items stored in the database are returned first; then fuzzy matches are returned.
+Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching).  Exact matches between the search string and the last element of items stored in the database are returned first, followed by fuzzy matches.
 
 # Search Syntax
 Fasdr's search syntax supports prefix, suffix, and current directory searches.
@@ -29,14 +31,23 @@ Fasdr's search syntax supports prefix, suffix, and current directory searches.
 # Word Completion
 Fasdr has special tokens that can be used for tab completion from any command.
 
-| Token Example         | Match type                      | Description                        |
-| ------------- | --------------------------------------  | ---------------------------------- | 
-| `:::Windows`  | containers and leaves                   | Items that contain Windows         |
-| `c::Windows`  | containers only                         | Containers that contain  `Windows` |
-| `l::txt`      | leaves only                             | Leaves that contain `txt`          |
+| Token Example | Match type                              | Description                         |
+| ------------- | --------------------------------------  | ----------------------------------- | 
+| `:::Windows`  | containers and leaves                   | Items that contain Windows          |
+| `c::Windows`  | containers only                         | Containers that contain  `Windows`  |
+| `l::txt`      | leaves only                             | Leaves that contain `txt`           |
+| `d::Windows`  | directories only                        | Directories that contain  `Windows` |
+| `f::txt`      | files only                              | Files that contain `txt`            |
 
 
 # Global Settings
-TBD
+
+Global settings can be set dynamically by accessing the global hashtable `$global:Fasdr`.
+
+| Setting       | Description                                               | Default Value                       |
+| ------------- | --------------------------------------------------------  | ----------------------------------- | 
+| `MaxResults`  | maximum results that `Find-Frecent` returns               | `50`                                |
+| `MaxEntries`  | maximum number of entries saved in each provider database | `10000`                             |
+
 
 Reference: https://github.com/clvv/fasd ; https://github.com/hugows/hf ; https://github.com/junegunn/fzf

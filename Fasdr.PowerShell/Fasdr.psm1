@@ -118,13 +118,17 @@ function global:TabExpansion2
 			if ($findWord -ne $null) {
 				$results.ReplacementIndex = $findWord.ReplacementIndex
 				$results.ReplacementLength = $findWord.ReplacementLength
+				$providerOverride = $null
 				switch ($findWord.CompletionType) 
 				{
 					':' { $FilterContainers = $FilterLeaves = $false }
 					'c' { $FilterContainers = $false; $FilterLeaves = $true }
 					'l' { $FilterContainers = $true; $FilterLeaves = $false }
+					'd' { $FilterContainers = $false; $FilterLeaves = $true }
+					'f' { $FilterContainers = $true; $FilterLeaves = $false }
 				}
-				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves | 
+				$providerOverride = $findWord.ProviderOverride
+				Find-Frecent -ProviderPath $findWord.CompletionText -FilterContainers $FilterContainers -FilterLeaves $FilterLeaves -ProviderName $providerOverride | 
 					Select-Object -First $global:Fasdr.MaxResults | ForEach-Object {
 					$textCompletion = $_
 
@@ -176,11 +180,14 @@ function Find-WordCompletion {
 			}
 		}		
 
+		$providerOverride = $null
 		# make sure that we have an acceptable token:
 		switch ($compType) {
 			':'    { break } # all values
-			'c'   { break } # container
+			'c'   { break } # containers
 			'l'   { break } # leaves
+			'f'   { $providerOverride = 'FileSystem' ; break } # files
+			'd'   { $providerOverride = 'FileSystem' ; break } # directories
  			default { $foundToken = $false }
 		}
 
@@ -188,8 +195,10 @@ function Find-WordCompletion {
 			return New-Object PsObject -Property @{
 				CompletionText=$compText ; 
 				CompletionType=$compType ;
-				ReplacementIndex=$index
-				ReplacementLength=$i-$index}
+				ReplacementIndex=$index ; 
+				ReplacementLength=$i-$index ;
+				ProviderOverride=$providerOverride
+			}
 		}
 	}		
 
@@ -282,11 +291,14 @@ function Import-FasdrRecents {
 	Find-Frecent
 #>
 function Find-Frecent {
-	param([string]$ProviderPath,[bool]$FilterContainers=$false,[bool]$FilterLeaves=$false)
+	param([string]$ProviderPath,[bool]$FilterContainers=$false,[bool]$FilterLeaves=$false,[string]$ProviderName=$PWD.Provider.Name)
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-FasdrDatabase
 	}
-	$providerName = $PWD.Provider.Name
+
+	if ($null -eq $ProviderName) {
+		$ProviderName = $PWD.Provider.Name
+	}
 	$matchAll = $true
 	$result = [Fasdr.Backend.Matcher]::Matches($global:fasdrDatabase,$providerName,$FilterContainers,$FilterLeaves,$matchAll,$PWD.Path,$ProviderPath)
 	$result

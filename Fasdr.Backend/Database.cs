@@ -21,18 +21,24 @@ namespace Fasdr.Backend
             else
                 ConfigDir = configDir;
             ConfigPath = System.IO.Path.Combine(ConfigDir, ConfigFileName);
+            if (!Directory.Exists(ConfigDir))
+            {
+                Directory.CreateDirectory(ConfigDir);
+            }
         }
 
         static Database()
         {
-            DefaultConfigDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            DefaultConfigDir = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                ".fasdr");
         }
 
         public readonly string ConfigDir;
         public readonly string ConfigPath;
 
         public static readonly string DefaultConfigDir;
-        public static readonly string ConfigFilePrefix = "fasdrConfig";
+        public static readonly string ConfigFilePrefix = "db";
 		public static readonly string ConfigFileName = $"{ConfigFilePrefix}.*.txt";
         
         public string GetProviderDatabaseLocation(string providerName)

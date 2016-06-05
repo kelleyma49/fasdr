@@ -10,7 +10,7 @@ c:\dir1\dir2\testStr|109|0|true
 c:\dir1\dir2|110|0|false
 c:\testStr|110|0|false
 "@
-$testDatabase = "TestDrive:\fasdrConfig.FileSystem.txt"
+$testDatabase = "TestDrive:\db.FileSystem.txt"
 
 Describe "Find-Frecent" {
 	Context "Empty Database" {
@@ -180,6 +180,7 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be ':'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length)
+				$result.ProviderOverride | Should be $null
 			}
 
 			It 'Find All Completion with Completion String' {
@@ -189,6 +190,7 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be ':'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be $null
 			}
 
 			It 'Find Container (uppercase) Completion with Completion String' {
@@ -198,6 +200,7 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be 'c'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be $null
 			}
 
 			It 'Find Container (lowercase) Completion with Completion String' {
@@ -207,6 +210,7 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be 'c'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be $null
 			}
 
 			It 'Find Leaf (uppercase) Completion with Completion String' {
@@ -216,6 +220,7 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be 'l'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be $null
 			}
 
 			It 'Find Leaf (lowercase) Completion with Completion String' {
@@ -225,6 +230,48 @@ Describe "Find-WordCompletion" {
 				$result.CompletionType | Should be 'l'
 				$result.ReplacementIndex | Should be 1
 				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be $null
+			}
+
+			# FileSystem provider specific
+			It 'Find Directory (uppercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' D::Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'd'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be 'FileSystem'
+			}
+
+			It 'Find Directory (lowercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' D::Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'd'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be 'FileSystem'
+			}
+
+			It 'Find File (uppercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' F::Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'f'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be 'FileSystem'
+			}
+
+			It 'Find File (lowercase) Completion with Completion String' {
+				$result = Find-WordCompletion ' F::Desktop'
+				$result | Should Not Be $null
+				$Result.CompletionText | Should be 'Desktop'
+				$result.CompletionType | Should be 'f'
+				$result.ReplacementIndex | Should be 1
+				$result.ReplacementLength | Should be (':::'.Length + 'Desktop'.Length)
+				$result.ProviderOverride | Should be 'FileSystem'
 			}
 		}
 	}

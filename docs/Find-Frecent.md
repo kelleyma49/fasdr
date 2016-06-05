@@ -9,7 +9,7 @@ Attempts to find paths in the Fasdr database based on a string argument.
 ## SYNTAX
 
 ```
-Find-Frecent [-ProviderPath] <string> [-FilterContainers] [-FilterLeaves]
+Find-Frecent [-ProviderPath] <string> [-FilterContainers] [-FilterLeaves] [-ProviderName <string>]
 ```
 
 ## DESCRIPTION
@@ -57,6 +57,20 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProviderName
+The name of the provider that that hosts the path.
+```yaml
+Type: string
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: the name of the current working container provider
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

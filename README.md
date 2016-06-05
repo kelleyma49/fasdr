@@ -12,19 +12,29 @@ Fasdr allows you to open files or change directories by using accessing its data
 `j` is aliased to `Set-Frecent`, which accepts leaves and containers.  `jl` is aliased to `Set-FrecentFromLeaf`, which forwards to `Set-Frecent`; however, tab completion will filter only leaf paths.
 
 # Installation
-Fasdr is available on the [PowerShell Gallery](https://www.powershellgallery.com/packages/Fasdr).
+Fasdr is available on the [PowerShell Gallery](https://www.powershellgallery.com/packages/Fasdr). Note that it will hook into the current prompt and tab completion functions for proper support of word completion mode.
 
 # Matching
-Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching).
+Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching).  Exact matches between the search string and the last element of items stored in the database are returned first; then fuzzy matches are returned.
 
 # Search Syntax
-| Token      | Match type         | Description                     |
-| ---------- | -----------------  | ------------------------------- |
-| `^notepad` | prefix exact match | Items that start with `notepad` |
-| `.cpp$`    | suffix exact match | Items that end with `.cpp`      |
+Fasdr's search syntax supports prefix, suffix, and current directory searches.
+
+| Token Example | Match type                              | Description                                          |
+| ------------- | --------------------------------------  | ---------------------------------------------------- | 
+| `^notepad`    | prefix exact match                      | Items that start with `notepad`                      |
+| `.cpp$`       | suffix exact match                      | Items that end with `.cpp`                           |
+| `**Documents` | match against current working directory | Items that exist below the current working directory |
 
 # Word Completion
 Fasdr has special tokens that can be used for tab completion from any command.
+
+| Token Example         | Match type                      | Description                        |
+| ------------- | --------------------------------------  | ---------------------------------- | 
+| `:::Windows`  | containers and leaves                   | Items that contain Windows         |
+| `c::Windows`  | containers only                         | Containers that contain  `Windows` |
+| `l::txt`      | leaves only                             | Leaves that contain `txt`          |
+
 
 # Global Settings
 TBD

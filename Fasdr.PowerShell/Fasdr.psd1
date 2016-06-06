@@ -27,7 +27,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) 2016 . All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'TBD'
+Description = 'Fasdr (pronounced similar to "faster") is a command-line productivity booster for PowerShell.  It supports quick access to leaf and container classes for PowerShell providers.  Leaf and container paths are tracked and ranked based on frequency and date.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''

@@ -5,6 +5,10 @@ before_build:
   nuget restore Fasdr\fasdrPowershell.sln
   echo Installing pester...
   cinst pester
+  #nuget install platyPS -Version 0.4.0 -source https://www.powershellgallery.com/api/v2 -outputDirectory . -ExcludeVersion
+  #Import-Module .\platyPS
+  #.\platyPS\New-ExternalHelp %APPVEYOR_BUILD_FOLDER%\docs -Force -OutputPath %APPVEYOR_BUILD_FOLDER%\Fasdr.PowerShell\en-US
+  #Get-HelpPreview .\Fasdr.PowerShell\en-US\Fasdr.psm1-help.xml > Fasdr.txt
 build:
   project: Fasdr/fasdrPowershell.sln
   parallel: true

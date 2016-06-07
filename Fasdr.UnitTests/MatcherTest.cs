@@ -191,6 +191,15 @@ namespace Fasdr.UnitTests
                         .SetName("TestSingleElementMatchWithBasePathCasesMatchSuffix");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\d1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\D1D2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
+                        new string[] { "**d2$" },
+                        new string[] { @"c:\tools\D1D2" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchSuffixDifferenceCase");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\tools\d1d2", 101, DateTime.Now, false),
                         new Entry(@"c:\tools\d2d1", 101, DateTime.Now, false),
                         new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
@@ -198,6 +207,15 @@ namespace Fasdr.UnitTests
                         new string[] { @"c:\tools\d2d1" },
                         @"c:\tools")
                         .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefix");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\D1D2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\D2D1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\d1", 102, DateTime.Now, false)),
+                        new string[] { "**^d2" },
+                        new string[] { @"c:\tools\D2D1" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefixDifferentCase");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\tools\d1d2", 101, DateTime.Now, false),
@@ -211,12 +229,31 @@ namespace Fasdr.UnitTests
                         .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefixAndSuffix");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\tools\D1D2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\D2D1", 101, DateTime.Now, false),
+                        new Entry(@"c:\tools\D2", 101, DateTime.Now, false),
+                        new Entry(@"c:\tree\D1", 102, DateTime.Now, false),
+                        new Entry(@"c:\tree\D2", 102, DateTime.Now, false)),
+                        new string[] { "**^d2$" },
+                        new string[] { @"c:\tools\D2" },
+                        @"c:\tools")
+                        .SetName("TestSingleElementMatchWithBasePathCasesMatchPrefixAndSuffixDifferentCase");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\tools\", 101, DateTime.Now, false),
                         new Entry(@"c:\tree\", 102, DateTime.Now, false)),
                         new string[] { "**t" },
                         new string[] { @"c:\tree", @"c:\tools" },
                         @"c:\")
                         .SetName("TestSingleElementMatchWithBasePathCasesSingleChar");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                        new Entry(@"c:\TOOLS\", 101, DateTime.Now, false),
+                        new Entry(@"c:\TREE\", 102, DateTime.Now, false)),
+                        new string[] { "**t" },
+                        new string[] { @"c:\TREE", @"c:\TOOLS" },
+                        @"c:\")
+                        .SetName("TestSingleElementMatchWithBasePathCasesSingleCharDifferentCase");
 
                     yield return new TestCaseData(String.Join(Environment.NewLine,
                         new Entry(@"c:\dir1\dir2\final3", 101, DateTime.Now, false),

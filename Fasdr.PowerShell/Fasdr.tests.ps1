@@ -48,7 +48,7 @@ Describe "Find-Frecent" {
 
 
 Describe "Add-Frecent" {
-	Context "Empty Database" {
+	Context "Empty Database Add File" {
 		$testFile = "TestDrive:\TestFile1.txt"
 		Set-Content $testFile -value " "
 		
@@ -58,7 +58,33 @@ Describe "Add-Frecent" {
 			{ Add-Frecent $testFile } | Should Not Throw
 			Find-Frecent "TestFile1.txt" | Should Be ( $testFile )
 		}
+
 	}
+
+	Context "Empty Database Add Relative Entry" {
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
+	
+		It "Add Relative Entry" {
+			New-Item "TestDrive:\AddRelativeEntryCheck" -ItemType Directory
+			New-Item "TestDrive:\AddRelativeEntryCheck\TestDir" -ItemType Directory 
+			Push-Location
+			Set-Location "TestDrive:\AddRelativeEntryCheck"
+			{ Add-Frecent '.\TestDir' } | Should Not Throw
+			Find-Frecent "TestDir" | Should Be ("TestDrive:\AddRelativeEntryCheck\TestDir")
+			Pop-Location
+		}
+
+		It "Relative Entry Doesnt Exist" {
+			New-Item "TestDrive:\AddRelativeEntryCheck" -ItemType Directory
+			Push-Location
+			Set-Location "TestDrive:\AddRelativeEntryCheck"
+			{ Add-Frecent '.\DoesNotExist' } | Should Throw
+			Find-Frecent "DoesNotExist" | Should Be $Null
+			Pop-Location
+		}
+	}
+
+
 
 	Context "Small Database" {
 		Set-Content $testDatabase -value $testData
@@ -70,6 +96,7 @@ Describe "Add-Frecent" {
 			Find-Frecent "testStr" | Should Be ('c:\dir1\dir2\testStr','c:\testStr')
 		}
 
+		
 		It "Should Find New Entry" {
 			{ Add-Frecent 'c:\dir1\BrandNewEntry' } | Should Not Throw
 			Find-Frecent "BrandNewEntry" | Should Be 'c:\dir1\BrandNewEntry'

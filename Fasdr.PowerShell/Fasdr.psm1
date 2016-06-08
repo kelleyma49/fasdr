@@ -320,6 +320,9 @@ function Add-Frecent {
 	}
 	
     Process {
+		if (!(Split-Path $FullName -IsAbsolute)) {
+			$FullName = Resolve-Path (Join-Path $PWD.Path $FullName)
+		}
 		if (!$global:fasdrDatabase.AddEntry($ProviderName,$FullName,[System.Predicate[string]]{param($fullPath) Test-Path $fullPath -PathType Leaf})) {
 			throw ("Failed to add '{0}' for provider '{1}'" -f $FullName,$ProviderName)
 		}

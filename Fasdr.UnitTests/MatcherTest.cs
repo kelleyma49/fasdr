@@ -165,7 +165,42 @@ namespace Fasdr.UnitTests
                       new Entry(@"c:\this is test", 150, DateTime.Now, false)),
                       new string[] { "^test$" },
                       new string[] { @"c:\test" })
-                      .SetName("TestPrefixAndSuffix");
+                      .SetName("TestPrefixAndSuffixMatchesExact");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                      new Entry(@"c:\test this is", 150, DateTime.Now, false),
+                      new Entry(@"c:\testandtest", 101, DateTime.Now, false),
+                      new Entry(@"c:\te", 101, DateTime.Now, false),
+                      new Entry(@"c:\this is test", 150, DateTime.Now, false)),
+                      new string[] { "^test$" },
+                      new string[] { @"c:\testandtest" })
+                      .SetName("TestPrefixAndSuffixAtBothEnds");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                     new Entry(@"c:\test this is\", 150, DateTime.Now, false),
+                     new Entry(@"c:\test\", 101, DateTime.Now, false),
+                     new Entry(@"c:\te\", 150, DateTime.Now, false)),
+                     new string[] { "=" },
+                     new string[] { })
+                     .SetName("TestExactButNoStringToMatch");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                      new Entry(@"c:\test this is", 150, DateTime.Now, false),
+                      new Entry(@"c:\test", 101, DateTime.Now, false),
+                      new Entry(@"c:\te", 101, DateTime.Now, false),
+                      new Entry(@"c:\this is test", 150, DateTime.Now, false)),
+                      new string[] { "=test" },
+                      new string[] { @"c:\test" })
+                      .SetName("TestExactMatch");
+
+                    yield return new TestCaseData(String.Join(Environment.NewLine,
+                      new Entry(@"c:\test this is", 150, DateTime.Now, false),
+                      new Entry(@"c:\testtest", 101, DateTime.Now, false),
+                      new Entry(@"c:\te", 101, DateTime.Now, false),
+                      new Entry(@"c:\this is test", 150, DateTime.Now, false)),
+                      new string[] { "=test" },
+                      new string[] {})
+                      .SetName("TestExactMatchShouldFail");
                 }
             }
 

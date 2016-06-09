@@ -58,8 +58,9 @@ namespace Fasdr.Backend
             }
 
 
-            bool tryPrefixMatch = lastInput.Length > 1 && lastInput[0] == '^';
-            if (tryPrefixMatch)
+            bool exactMatch = lastInput.Length > 1 && lastInput[0] == '=';
+            bool tryPrefixMatch = lastInput.Length > 1 && (lastInput[0] == '^');
+            if (tryPrefixMatch || exactMatch)
             {
                 lastInput = lastInput.Substring(1); // remove '^'
             }
@@ -68,6 +69,13 @@ namespace Fasdr.Backend
             {
                 lastInput = lastInput.Substring(0, lastInput.Length - 1); // remove '$'
             }
+
+            // exact match overrides other matches:
+            if (exactMatch)
+            {
+                tryPrefixMatch = trySuffixMatch = false;
+            }
+
             var listExact = new SortedList<double, string>(new DuplicateKeyComparer<double>());
             var list = new SortedList<double, string>(new DuplicateKeyComparer<double>());
 
@@ -97,7 +105,7 @@ namespace Fasdr.Backend
                 if (!tryPrefixMatch && !trySuffixMatch)
                 {
                     exact = String.Compare(lastInput, name, ignoreCase: true) == 0;
-                    if (!exact)
+                    if (!exact && !exactMatch)
                         fts.FuzzyMatcher.FuzzyMatch(lastInput, name, out score);
                 }
                     
@@ -164,7 +172,10 @@ namespace Fasdr.Backend
                 }
             }
 
-            return listExact.Values.Concat(list.Values).ToArray();
+            if (exactMatch)
+                return listExact.Values.ToArray();
+            else
+                return listExact.Values.Concat(list.Values).ToArray();
         }
     }
 }

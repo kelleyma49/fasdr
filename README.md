@@ -1,4 +1,4 @@
-# fasdr [![Build Status Travis](https://travis-ci.org/kelleyma49/fasdr.svg?branch=master)](https://travis-ci.org/kelleyma49/fasdr) [![Build Status Appveyor](https://ci.appveyor.com/api/projects/status/x2wm66qujmxf2ln3?svg=true)](https://ci.appveyor.com/project/kelleyma49/fasdr) [![Coverity Scan Build Status](https://scan.coverity.com/projects/8537/badge.svg)](https://scan.coverity.com/projects/kelleyma49-fasdr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kelleyma49/fasdr/blob/master/LICENSE.md)
+# Fasdr [![Build Status Travis](https://travis-ci.org/kelleyma49/fasdr.svg?branch=master)](https://travis-ci.org/kelleyma49/fasdr) [![Build Status Appveyor](https://ci.appveyor.com/api/projects/status/x2wm66qujmxf2ln3?svg=true)](https://ci.appveyor.com/project/kelleyma49/fasdr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kelleyma49/fasdr/blob/master/LICENSE.md)
 
 Fasdr (pronounced similar to "faster") is a command-line productivity booster for PowerShell.  It supports quick access to leaf and container classes for PowerShell providers.  Leaf and container paths are tracked and ranked based on frequency and date.
 
@@ -23,7 +23,9 @@ Fasdr has similar matching rules to [Fasd](https://github.com/clvv/fasd#matching
 Fasdr's search syntax supports prefix, suffix, and current directory searches.
 
 | Token Example | Match type                              | Description                                          |
-| ------------- | --------------------------------------  | ---------------------------------------------------- | 
+| ------------- | --------------------------------------  | ---------------------------------------------------- |
+| `log.txt`     | fuzzy match                             | Items that exactly match or fuzzy match `log.txt`    |
+| `=log.txt`    | exact match                             | Items that exactly match `log.txt`                   | 
 | `^notepad`    | prefix exact match                      | Items that start with `notepad`                      |
 | `.cpp$`       | suffix exact match                      | Items that end with `.cpp`                           |
 | `**Documents` | match against current working directory | Items that exist below the current working directory |
@@ -50,4 +52,7 @@ Global settings can be set dynamically by accessing the global hashtable `$globa
 | `MaxEntries`  | maximum number of entries saved in each provider database | `10000`                             |
 
 
-Reference: https://github.com/clvv/fasd ; https://github.com/hugows/hf ; https://github.com/junegunn/fzf
+# Reference/Inspiration
+* https://github.com/clvv/fasd 
+* https://github.com/hugows/hf
+* https://github.com/junegunn/fzf

@@ -106,7 +106,24 @@ namespace Fasdr.Backend
             }
 
             return provider.UpdateEntry(fullPath, checkIsLeaf);
-        }   
+        }
+        
+        public bool GetEntries(string providerName,out Entry[] entries)
+        {
+            Provider provider;
+            bool result = Providers.TryGetValue(providerName, out provider);
+
+            if (provider != null)
+            {
+                entries = provider.Entries.
+                    OrderByDescending(p => p.Value.CalculateFrecency()).
+                    Select(p => p.Value).
+                    ToArray();
+            }
+            else
+                entries = null;
+            return result;
+        }  
 
         public void Save(int maxEntries)
         {

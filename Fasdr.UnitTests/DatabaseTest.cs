@@ -221,5 +221,25 @@ namespace Fasdr.UnitTests
 			StringAssert.DoesNotContain (mockE3.ToString () + Environment.NewLine, configContent);
             StringAssert.DoesNotContain(e4.ToString() + Environment.NewLine, configContent);
         }
+
+        [Test]
+        public void TestGetEntries()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+            fileSystem.AddDirectory(Database.DefaultConfigDir);
+            var db = new Database(fileSystem);
+            var fsp = new Provider("FileSystem");
+            db.Providers.Add("FileSystem", fsp);
+            Entry e1 = new Entry(@"c:\dir1\", 12, DateTime.Now, false);
+            Entry e2 = new Entry(@"c:\dir1\file2", 34, DateTime.Now, true);
+            fsp.Add(e1);
+            fsp.Add(e2);
+
+            string[] paths = null;
+            Entry[] entries = null;
+            Assert.IsTrue(db.GetEntries("FileSystem", out entries));
+            Assert.AreEqual(e2, entries[0]);
+            Assert.AreEqual(e1, entries[1]);
+        }
     }
 }

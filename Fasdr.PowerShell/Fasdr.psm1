@@ -286,6 +286,27 @@ function Import-FasdrRecents {
 	Save-FasdrDatabase
 }
 
+function Get-Frecents {
+	param([string]$ProviderName=$PWD.Provider.Name)
+	
+	if ($global:fasdrDatabase -eq $null) {
+		Initialize-FasdrDatabase
+	}
+
+	$entries = $null
+	if ($global:fasdrDatabase.GetEntries($ProviderName,[ref]$entries)) {
+		$entries | % { 
+			$e = $_
+			Write-host "entry: $e"
+			$obj = New-Object PsObject -Property @{
+				FullPath=$e.FullPath; 
+				Frecency = $e.CalculateFrecency()
+				LastAccessTime = $e.LastAccessTime
+			}
+			$obj
+		}
+	}
+}
 
 <#
 	Find-Frecent
@@ -415,6 +436,7 @@ Export-ModuleMember -Function   Find-Frecent,`
 								Set-Frecent,`
 								Set-FrecentFromLeaf,`
 								Remove-Frecent,`
+								Get-Frecents,`
 								Save-FasdrDatabase,`
 								Import-FasdrRecents
 

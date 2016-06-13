@@ -7,7 +7,7 @@ Get-Module Fasdr | Remove-Module
 Import-Module $PSScriptRoot\Fasdr.psm1 -ErrorAction Stop
 $testData = @"
 c:\dir1\dir2\testStr|109|0|true
-c:\dir1\dir2|110|0|false
+c:\dir1\dir2|111|0|false
 c:\testStr|110|0|false
 "@
 $testDatabase = "TestDrive:\db.FileSystem.txt"
@@ -29,7 +29,10 @@ Describe "Find-Frecent" {
 		It "Finds All With Empty Input" {
 			$expected = $testData.Split("`n")
 			$i = 0
-			Find-Frecent "" | % { $_ | Should Be $expected[$i].Split('|')[0] ; $i++ }
+			$frecents = Find-Frecent "" 
+			$frecents[0] | Should Be 'c:\dir1\dir2\testStr'
+			$frecents[1] | Should Be 'c:\testStr'
+			$frecents[2] | Should Be 'c:\dir1\dir2'
 		}
 
 		It "Finds Nothing" {
@@ -178,6 +181,32 @@ Describe "Save-FasdrDatabase" {
 	}
 }
 
+Describe "Get-Frecents" {
+	Context "Empty Database" {
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
+	
+		It "Get From Empty Database" {
+			Get-Frecents | Should Be $null
+		}
+	}
+
+	Context "Small Database" {
+		Set-Content $testDatabase -value $testData
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
+
+		It "Get From Database" {
+			$frecents = Get-Frecents 
+			$frecents | Should Not Be $null
+			$frecents.Length | Should Be 3
+			$frecents[0].FullPath | Should Be 'c:\dir1\dir2'
+			$frecents[0].Frecency | Should BeGreaterThan 1
+			$frecents[1].FullPath | Should Be 'c:\testStr'
+			$frecents[1].Frecency | Should BeGreaterThan 1
+			$frecents[2].FullPath | Should Be 'c:\dir1\dir2\testStr'
+			$frecents[2].Frecency | Should BeGreaterThan 1
+		}
+	}
+}
 
 Describe "Find-WordCompletion" {
 	InModuleScope Fasdr {

@@ -6,11 +6,11 @@ namespace Fasdr.Backend
 	{
 		public static readonly char Separator = '|';
 
-		public Entry(string fullPath,Int64 frequency,DateTime lastAccessTime,bool isLeaf) :
+		public Entry(string fullPath, long frequency,DateTime lastAccessTime,bool isLeaf) :
 		this(fullPath,frequency,lastAccessTime.ToFileTimeUtc(),isLeaf) {
 		}
 
-		public Entry(string fullPath,Int64 frequency,Int64 lastAccessTimeUtc,bool isLeaf)
+		public Entry(string fullPath, long frequency, long lastAccessTimeUtc,bool isLeaf)
 		{
 			FullPath = fullPath.TrimEnd(new char[] { '\\', '/' });
 			SplitPath = FullPath.Split(new char[] {'\\'},StringSplitOptions.RemoveEmptyEntries);
@@ -30,20 +30,20 @@ namespace Fasdr.Backend
 
 			var path = split[0].TrimEnd(new char[] { '\\', '/' });
 
-			Int64 frequency;
-			if (!Int64.TryParse(split[1], out frequency))
+			long frequency;
+			if (!long.TryParse(split[1], out frequency))
 			{
 				throw new Exception ($"Failed to parse frequency from string '{split[1]}'");
 			}
 
-			Int64 lastAccessTimeUtc;
-			if (!Int64.TryParse(split[2], out lastAccessTimeUtc))
+			long lastAccessTimeUtc;
+			if (!long.TryParse(split[2], out lastAccessTimeUtc))
 			{
 				throw new Exception ($"Failed to parse last access time from string '{split[2]}'");
 			}
 
 			bool isLeaf;
-			if (!Boolean.TryParse(split[3], out isLeaf))
+			if (!bool.TryParse(split[3], out isLeaf))
 			{
 				throw new Exception ($"Failed to parse isLeaf flag from string '{split[3]}'");
 			}
@@ -78,8 +78,8 @@ namespace Fasdr.Backend
 
 		public string FullPath { get; }
 		public string[] SplitPath { get; }
-		public Int64 Frequency { get; }
-		public Int64 LastAccessTimeUtc { get; }
+		public long Frequency { get; }
+		public long LastAccessTimeUtc { get; }
 		public DateTime LastAccessTime {
 			get {
 				return DateTime.FromFileTimeUtc(LastAccessTimeUtc);
@@ -87,7 +87,7 @@ namespace Fasdr.Backend
 		}
 		public bool IsLeaf { get; }
 
-		public static readonly Int64 cInvalid = -1;
+		public static readonly long cInvalid = -1;
 
 		public bool IsValid { get { return Frequency >= 0; } }
 	}

@@ -29,7 +29,7 @@ namespace Fasdr.Backend
 
 		public void Save(string filePath,IFileSystem fileSystem,int maxEntries)
 		{
-			var fileName = System.IO.Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
+			var fileName = Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
 			using (var s = fileSystem.File.CreateText(fileName))
 			{
                 var sortedEntries = (from pair in Entries
@@ -38,7 +38,7 @@ namespace Fasdr.Backend
                 foreach (var p in sortedEntries)
 				{
 					if (p.Value.IsValid)
-						s.WriteLine(p.Value.ToString());
+						s.WriteLine(p.Value);
 				}
 			}
             if (fileSystem.File.Exists(filePath))
@@ -130,7 +130,7 @@ namespace Fasdr.Backend
 			if (!Entries.TryGetValue (id, out e) || !e.IsValid)
 				return false;
 
-			Int64 newFrequency = remove ? -1 : e.Frequency + 1;
+			long newFrequency = remove ? -1 : e.Frequency + 1;
 			Entries [id] = new Entry (e.FullPath, newFrequency, DateTime.Now.ToFileTimeUtc (), e.IsLeaf);
 			return true;
 		}

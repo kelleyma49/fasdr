@@ -1,9 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Fasdr.Backend;
-using System.IO.Abstractions.TestingHelpers;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -71,8 +69,8 @@ namespace Fasdr.UnitTests
 
             var now = DateTime.UtcNow;
             var newStr = "c:\tree\newEntry";
-            Assert.IsTrue(p.UpdateEntry(newStr,s => s.EndsWith("newentry")));
-            var entry = p.Entries.Values.OfType<Entry>().Where(e => e.FullPath == newStr).First();
+			Assert.IsTrue(p.UpdateEntry(newStr,s => s.EndsWith("newentry",StringComparison.Ordinal)));
+            var entry = p.Entries.Values.OfType<Entry>().First(e => e.FullPath == newStr);
             StringAssert.AreEqualIgnoringCase(newStr, entry.FullPath);
             Assert.AreEqual(1, entry.Frequency);
             Assert.GreaterOrEqual(entry.LastAccessTime, now);
@@ -129,7 +127,7 @@ namespace Fasdr.UnitTests
 		}
 
 
-		public class MyFactoryClass
+		public static class MyFactoryClass
 		{
 			public static IEnumerable TestRemoveEntryCases 
 			{
@@ -138,13 +136,13 @@ namespace Fasdr.UnitTests
 					yield return new TestCaseData ("", @"c:\treeNotThere", false)
 						.SetName("TestFailToRemoveFromEmptyProvider");
 
-					yield return new TestCaseData (String.Join(Environment.NewLine,
+					yield return new TestCaseData (string.Join(Environment.NewLine,
 						new Entry(@"c:\tools\", 101, DateTime.Now, false),
 						new Entry(@"c:\tree\", 102, DateTime.Now, false)), 
 						@"c\treeNotThere", false)
 						.SetName("TestFailToRemoveFromPopulatedProvider");
 
-					yield return new TestCaseData (String.Join(Environment.NewLine,
+					yield return new TestCaseData (string.Join(Environment.NewLine,
 						new Entry(@"c:\tools\", 101, DateTime.Now, false),
 						new Entry(@"c:\tree\", 102, DateTime.Now, false)), 
 						@"c:\tree", true)
@@ -160,13 +158,13 @@ namespace Fasdr.UnitTests
 						.SetName("TestGetAllEntriesEmptyDatabase");
 
 					yield return new TestCaseData (
-						String.Join(Environment.NewLine,
+						string.Join(Environment.NewLine,
 							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
 						new string[] {@"c:\tree"})
 							.SetName("TestGetAllEntriesOneItem");
 					
 					yield return new TestCaseData (
-						String.Join(Environment.NewLine,
+						string.Join(Environment.NewLine,
 							new Entry(@"c:\tools\", 101, DateTime.Now, false),
 							new Entry(@"c:\tree\", 102, DateTime.Now, false)),
 						new string[] {@"c:\tools",@"c:\tree"})

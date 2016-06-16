@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Fasdr.Backend;
 
 namespace Fasdr.UnitTests
@@ -14,7 +13,7 @@ namespace Fasdr.UnitTests
 
 		internal static string GetTwoDirFilesystem()
 		{
-			return String.Join (Environment.NewLine, Dir1.ToString (), Dir1File2.ToString ());
+			return string.Join (Environment.NewLine, Dir1.ToString (), Dir1File2.ToString ());
 		}
 
 		internal static string GetMatchFilesystem()

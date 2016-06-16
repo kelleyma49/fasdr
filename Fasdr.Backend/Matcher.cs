@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DuoVia.FuzzyStrings;
-using System.Collections;
 
 namespace Fasdr.Backend
 {
@@ -42,14 +38,14 @@ namespace Fasdr.Backend
 			if (!db.Providers.TryGetValue (providerName, out provider))
 				return new string[] {};
 
-            if (matchAllOnEmptyInput && (input == null || input.Length == 0 || String.IsNullOrWhiteSpace(input[0])))
+            if (matchAllOnEmptyInput && (input == null || input.Length == 0 || string.IsNullOrWhiteSpace(input[0])))
             {
                 return provider.GetAllEntries().ToArray();
             }
 
             var lastInput = input[input.Length - 1];
 
-            bool matchBasePath = !string.IsNullOrWhiteSpace(basePathMatch) && lastInput.StartsWith("**");
+            bool matchBasePath = !string.IsNullOrWhiteSpace(basePathMatch) && lastInput.StartsWith("**", StringComparison.Ordinal);
             string[] basePathMatchSplit = null;
             if (matchBasePath)
             {
@@ -104,7 +100,7 @@ namespace Fasdr.Backend
 
                 if (!tryPrefixMatch && !trySuffixMatch)
                 {
-                    exact = String.Compare(lastInput, name, ignoreCase: true) == 0;
+                    exact = string.Compare(lastInput, name, true) == 0;
                     if (!exact && !exactMatch)
                         fts.FuzzyMatcher.FuzzyMatch(lastInput, name, out score);
                 }
@@ -129,7 +125,7 @@ namespace Fasdr.Backend
                             // -1 as we already compared the last entry:
                             for (int i = 0; i < basePathMatchSplit.Length; i++)
                             {
-                                addEntry = String.Compare(basePathMatchSplit[i], entryPathSplit[i], ignoreCase: true) == 0;
+                                addEntry = string.Compare(basePathMatchSplit[i], entryPathSplit[i], true) == 0;
                                 if (!addEntry)
                                     break;
                             }
@@ -157,7 +153,7 @@ namespace Fasdr.Backend
 
                             }
                             int subScore = 0;
-                            exact = exact && String.Compare(input[i], entryPathSplit[start], ignoreCase:true) == 0;
+                            exact = exact && String.Compare(input[i], entryPathSplit[start], true) == 0;
                             if (!exact)
                                 fts.FuzzyMatcher.FuzzyMatch(input[i], entryPathSplit[start], out subScore);
                             start--;

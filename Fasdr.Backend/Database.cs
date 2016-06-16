@@ -4,8 +4,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Fasdr.UnitTests")]
 
@@ -16,11 +14,11 @@ namespace Fasdr.Backend
         public Database(IFileSystem fileSystem,string configDir=null)
         {
             FileSystem = fileSystem;
-            if (String.IsNullOrEmpty(configDir))
+            if (string.IsNullOrEmpty(configDir))
                 ConfigDir = DefaultConfigDir;
             else
                 ConfigDir = configDir;
-            ConfigPath = System.IO.Path.Combine(ConfigDir, ConfigFileName);
+            ConfigPath = Path.Combine(ConfigDir, ConfigFileName);
             if (!Directory.Exists(ConfigDir))
             {
                 Directory.CreateDirectory(ConfigDir);
@@ -29,7 +27,7 @@ namespace Fasdr.Backend
 
         static Database()
         {
-            DefaultConfigDir = System.IO.Path.Combine(
+            DefaultConfigDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                 ".fasdr");
         }
@@ -43,7 +41,7 @@ namespace Fasdr.Backend
         
         public string GetProviderDatabaseLocation(string providerName)
         {
-            return System.IO.Path.Combine(ConfigDir, ConfigFileName.Replace("*", providerName));
+            return Path.Combine(ConfigDir, ConfigFileName.Replace("*", providerName));
         }
 
 		public void Load()
@@ -71,7 +69,7 @@ namespace Fasdr.Backend
 
 		private Provider LoadProvider(string textFile)
 		{
-			string fileNameOnly = System.IO.Path.GetFileName(textFile); 
+			string fileNameOnly = Path.GetFileName(textFile); 
 			string[] fileSplit = fileNameOnly.Split(new char[]{'.'});
 			if (fileSplit==null || fileSplit.Length!=3)
 			{
@@ -130,7 +128,7 @@ namespace Fasdr.Backend
 			using (var sgi = new SingleGlobalInstance (5000)) 
 			{
 				foreach (var p in Providers) {
-					var fileName = System.IO.Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
+					var fileName = Path.Combine (ConfigDir, ConfigFileName.Replace ("*", p.Key));
 					if (FileSystem.File.Exists (fileName)) {
 						// merge with currently saved file in case another shell instance
 						// saved out after our initial load.

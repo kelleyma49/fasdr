@@ -297,10 +297,9 @@ function Get-Frecents {
 	if ($global:fasdrDatabase.GetEntries($ProviderName,[ref]$entries)) {
 		$entries | % { 
 			$e = $_
-			Write-host "entry: $e"
 			$obj = New-Object PsObject -Property @{
 				FullPath=$e.FullPath; 
-				Frecency = $e.CalculateFrecency()
+				Frecency = $e.CalculateFrecency() ;
 				LastAccessTime = $e.LastAccessTime
 			}
 			$obj

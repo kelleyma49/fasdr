@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25029.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fasdr.Backend", "..\Fasdr.Backend\Fasdr.Backend.csproj", "{20F8F9DB-C960-48ED-93E2-FBE95AED3C09}"
 EndProject
@@ -24,8 +24,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		..\docs\Add-Frecent.md = ..\docs\Add-Frecent.md
 		..\docs\Find-Frecent.md = ..\docs\Find-Frecent.md
+		..\docs\Get-Frecents.md = ..\docs\Get-Frecents.md
+		..\docs\Import-FasdrRecents.md = ..\docs\Import-FasdrRecents.md
 		..\docs\Remove-Frecent.md = ..\docs\Remove-Frecent.md
+		..\docs\Save-FasdrDatabase.md = ..\docs\Save-FasdrDatabase.md
 		..\docs\Set-Frecent.md = ..\docs\Set-Frecent.md
+		..\docs\Set-FrecentFromLeaf.md = ..\docs\Set-FrecentFromLeaf.md
 	EndProjectSection
 EndProject
 Global

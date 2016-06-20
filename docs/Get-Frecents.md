@@ -1,0 +1,58 @@
+---
+external help file: Fasdr.psm1-help.xml
+online version: 
+schema: 2.0.0
+---
+
+# Get-Frecents
+## SYNOPSIS
+Gets the current entries from the database for a given provider.
+
+## SYNTAX
+
+```
+Get-Frecents [[-ProviderName] <String>]
+```
+
+## DESCRIPTION
+Returns a list of entries in the Fasdr database for given provider.  Entries include the calculated frecency value, the last access date and time, and the full path.  Modifications to the returned object will have no effect on the items in the database.
+## EXAMPLES
+
+### Example 1
+```
+PS C:\> Get-Frecents -ProviderName 'FileSystem'
+```
+
+Gets all entries for the FileSystem provider.
+
+## PARAMETERS
+
+### -ProviderName
+The provider to query for entries
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: 0
+Default value: the name of the current working container provider
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+## INPUTS
+
+### None
+
+
+## OUTPUTS
+
+### [PSObject]
+An array of objects representing the database items.
+
+## NOTES
+
+## RELATED LINKS
+

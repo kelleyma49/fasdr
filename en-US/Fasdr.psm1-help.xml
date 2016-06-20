@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems schema="maml">
+
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Add-Frecent</command:name>
+<command:verb>Add</command:verb>
+<command:noun>Frecent</command:noun>
+<maml:description><maml:para>Adds a path to the Fasdr database.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>The Add-Frecent function adds a path to the Fasdr database for the passed in provider.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Add-Frecent</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<maml:Description><maml:para>The full name of the path to add from the database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that that hosts the path.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<maml:Description><maml:para>The full name of the path to add from the database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that that hosts the path.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String</maml:name>
+</dev:type>
+<maml:description><maml:para>You can pipe a string that contains a path to Add-Frecent.
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>This cmdlet does not generate any output.
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert></maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Add Directory</maml:title>
+<dev:code>Add-Frecent c:\Windows\</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Find-Frecent</command:name>
+<command:verb>Find</command:verb>
+<command:noun>Frecent</command:noun>
+<maml:description><maml:para>Attempts to find paths in the Fasdr database based on a string argument.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>The Find-Frecent function finds paths and returns them based on the passed in string.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Find-Frecent</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderPath</maml:name>
+<maml:Description><maml:para>The string to compare against items in the Fasdr database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>none</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterContainers</maml:name>
+<maml:Description><maml:para>Removes container paths from the results.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterLeaves</maml:name>
+<maml:Description><maml:para>Removes leaf paths from the results.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that that hosts the path.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderPath</maml:name>
+<maml:Description><maml:para>The string to compare against items in the Fasdr database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>none</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterContainers</maml:name>
+<maml:Description><maml:para>Removes container paths from the results.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterLeaves</maml:name>
+<maml:Description><maml:para>Removes leaf paths from the results.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that that hosts the path.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>You cannot pipe objects to Find-Frecent
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>[string]</maml:name>
+</dev:type>
+<maml:description><maml:para>This function returns an array of strings.
+</maml:para>
+<maml:para>## RELATED LINKS
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert></maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Find Directory</maml:title>
+<dev:code>Find-Frecent Windows</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Get-Frecents</command:name>
+<command:verb>Get</command:verb>
+<command:noun>Frecents</command:noun>
+<maml:description><maml:para>Gets the current entries from the database for a given provider.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Returns a list of entries in the Fasdr database for given provider.  Entries include the calculated frecency value, the last access date and time, and the full path.  Modifications to the returned object will have no effect on the items in the database.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Get-Frecents</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The provider to query for entries
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The provider to query for entries
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>[PSObject]</maml:name>
+</dev:type>
+<maml:description><maml:para>An array of objects representing the database items.
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; Get-Frecents -ProviderName 'FileSystem'</dev:code>
+<dev:remarks><maml:para>Gets all entries for the FileSystem provider.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Import-FasdrRecents</command:name>
+<command:verb>Import</command:verb>
+<command:noun>FasdrRecents</command:noun>
+<maml:description><maml:para>Imports container and leaf paths from various areas in Windows.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Imports containers and leaves based on stored locations in the Windows operating system.  This function currently only works with the FileSystem provider, and it pulls items from application jump lists, the Recents folder, and Windows Special Folders.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Import-FasdrRecents</maml:name>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters></command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; Import-FasdrRecents</dev:code>
+<dev:remarks><maml:para>Imports entries into the Fasdr databases for the currently known providers.
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Remove-Frecent</command:name>
+<command:verb>Remove</command:verb>
+<command:noun>Frecent</command:noun>
+<maml:description><maml:para>Removes a path from the Fasdr database.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>The Remove-Frecent function removes a path from the Fasdr database for the passed in provider.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Remove-Frecent</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<maml:Description><maml:para>The full name of the path to remove from the database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that contains the path to remove.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<maml:Description><maml:para>The full name of the path to remove from the database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<maml:Description><maml:para>The name of the provider that contains the path to remove.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>System.String</maml:name>
+</dev:type>
+<maml:description><maml:para>You can pipe a string that contains a path to Remove-Frecent.
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>This cmdlet does not generate any output.
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert></maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Remove Directory</maml:title>
+<dev:code>Remove-Frecent c:\Windows\</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Save-FasdrDatabase</command:name>
+<command:verb>Save</command:verb>
+<command:noun>FasdrDatabase</command:noun>
+<maml:description><maml:para>{{Fill in the Synopsis}}
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>{{Fill in the Description}}
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Save-FasdrDatabase</maml:name>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters></command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; {{ Add example code here }}</dev:code>
+<dev:remarks><maml:para>{{ Add example description here }}
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Set-Frecent</command:name>
+<command:verb>Set</command:verb>
+<command:noun>Frecent</command:noun>
+<maml:description><maml:para>Sets the current container location and stores the location in the Fasdr database.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>The Set-Frecent function sets the current container location.  If Path is not a valid path, Set-Frecent will call Find-Frecent and use the first result. If Path is a file, Set-Frecent will use the parent directory of the file.  If Path is a valid path, the path will be saved to the Fasdr database.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Set-Frecent</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>This parameter is used to specify the path to a new working location.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>This parameter is used to specify the path to a new working location.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
+<dev:type><maml:name>string</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>None</dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>You cannot pipe objects to Set-Frecent
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>This cmdlet does not generate any output.
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert></maml:alert>
+</maml:alertSet>
+<command:examples></command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Set-FrecentFromLeaf</command:name>
+<command:verb>Set</command:verb>
+<command:noun>FrecentFromLeaf</command:noun>
+<maml:description><maml:para>This function is intended only to be used by the Tab Expansion function.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Set-FrecentFromLeaf works exactly like Set-Frecent, except it is not intended to be used by users.  It is used by the tab expansion functions.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Set-FrecentFromLeaf</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>{{Fill Path Description}}
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue></dev:defaultValue>
+</command:parameter>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>Path</maml:name>
+<maml:Description><maml:para>{{Fill Path Description}}
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue></dev:defaultValue>
+</command:parameter>
+</command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples></command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+</helpItems>

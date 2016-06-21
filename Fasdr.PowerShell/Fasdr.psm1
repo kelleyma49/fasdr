@@ -243,7 +243,7 @@ function Save-FasdrDatabase {
 	$global:fasdrDatabase.Save($global:Fasdr.MaxEntries) 
 }
 
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Import-FasdrRecents {
 	if ($global:fasdrDatabase -eq $null) {
 		Initialize-FasdrDatabase
@@ -312,7 +312,7 @@ function Get-Frecents {
 <#
 	Find-Frecent
 #>
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Find-Frecent {
 	param([string]$ProviderPath,[bool]$FilterContainers=$false,[bool]$FilterLeaves=$false,[string]$ProviderName=$PWD.Provider.Name)
 	if ($global:fasdrDatabase -eq $null) {
@@ -330,7 +330,7 @@ function Find-Frecent {
 <#
 	Add-Frecent
 #>
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Add-Frecent {
 	param(
 		[parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)]
@@ -356,7 +356,7 @@ function Add-Frecent {
 <#
 	Remove-Frecent
 #>
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Remove-Frecent {
 	param(
 		[parameter(Mandatory,ValueFromPipeline,ValueFromPipelineByPropertyName)]
@@ -383,7 +383,7 @@ function Remove-Frecent {
 <# 
 	Set-Frecent
 #>
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Set-Frecent {
 	param([string]$Path)
 
@@ -408,7 +408,7 @@ function Set-Frecent {
 }
 
 <# This exists only for tab completion purposes #>
-#.ExternalHelp MyModule.psm1-help.xml
+#.ExternalHelp Fasdr.psm1-help.xml
 function Set-FrecentFromLeaf {
 	param([string]$Path)
 

@@ -3,7 +3,7 @@
 Fasdr (pronounced similar to "faster") is a command-line productivity booster for PowerShell.  It supports quick access to leaf and container classes for PowerShell providers.  Leaf and container paths are tracked and ranked based on frequency and date.
 
 # Introduction
-Fasdr allows you to open files or change directories by using accessing its database that it keeps of your history.  `Set-Frecent` is used to jump between paths.  You can even use tab completion to iterate through Fasdr's database.  Here are some examples:
+Fasdr allows you to open files or change directories by accessing its database that it keeps of your history.  `Set-Frecent` is used to jump between paths.  You can even use tab completion to iterate through Fasdr's database.  Here are some examples:
 
 ```powershell
   j 'Files'         # cd 'c:\Program Files'

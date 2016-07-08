@@ -27,7 +27,27 @@ namespace Fasdr.Backend
 			}
 		}
 
-		public void Save(string filePath,IFileSystem fileSystem,int maxEntries)
+        public void RemoveStaleEntries(Predicate<string> checkPath)
+        {
+            if (checkPath==null)
+                return;
+
+            var toRemove = new List<string>();
+            foreach (var e in GetAllEntries())
+            {
+                if (!checkPath(e))
+                {
+                    toRemove.Add(e);
+                }
+            }
+
+            foreach (var e in toRemove)
+            {
+                Remove(e);
+            }
+        }
+
+        public void Save(string filePath,IFileSystem fileSystem,int maxEntries)
 		{
 			var fileName = Path.Combine(Path.GetTempPath(),Path.GetRandomFileName());
 			using (var s = fileSystem.File.CreateText(fileName))
@@ -135,10 +155,11 @@ namespace Fasdr.Backend
 			return true;
 		}
 
-		public IEnumerable<string> GetAllEntries()
+        public IEnumerable<string> GetAllEntries()
 		{
 			return from pair in Entries
 				orderby pair.Value.CalculateFrecency()
+                   where pair.Value.IsValid
 					select pair.Value.FullPath;
 		}
 			

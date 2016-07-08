@@ -10,6 +10,11 @@ c:\dir1\dir2\testStr|109|0|true
 c:\dir1\dir2|111|0|false
 c:\testStr|110|0|false
 "@
+$testDataTestDrive = @"
+TestDrive:\dir1\dir2\testStr|109|0|true
+TestDrive:\dir1\dir2|111|0|false
+TestDrive:\testStr|110|0|false
+"@
 $testDatabase = "TestDrive:\db.FileSystem.txt"
 
 Describe "Find-Frecent" {
@@ -177,6 +182,33 @@ Describe "Save-FasdrDatabase" {
 				$testDatabase | Should Contain $_.Replace('\','\\')
 			}
 			
+		}
+	}
+
+	Context "Small Database Remove All Stale Entries" {
+		Set-Content $testDatabase -value $testDataTestDrive
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
+	
+		It "Save From Small Database Remove Stale Entries" {
+			Save-FasdrDatabase -RemoveStaleEntries
+			$testDatabase | Should Exist	
+			$testDataTestDrive.Split('`n') | ForEach-Object {
+				$testDatabase | Should Not Contain $_.Replace('\','\\')
+			}
+		}
+	}
+
+	Context "Small Database Remove All Stale Entries Except One" {
+		Set-Content $testDatabase -value $testDataTestDrive
+		Initialize-FasdrDatabase -defaultDrive "$TestDrive"
+		$testFile = "TestDrive:\dir1\dir2\testStr"
+		New-Item (Split-Path $testFile -Parent) -ItemType Directory
+		Out-File -FilePath $testFile -InputObject " "
+	
+		It "Save From Small Database Remove Stale Entries" {
+			Save-FasdrDatabase -RemoveStaleEntries
+			$testDatabase | Should Exist	
+			$testDatabase | Should ContainExactly $testFile.Replace('\','\\')
 		}
 	}
 }

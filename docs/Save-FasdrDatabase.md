@@ -6,12 +6,12 @@ schema: 2.0.0
 
 # Save-FasdrDatabase
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Saves all provider entries out to the file system.
 
 ## SYNTAX
 
 ```
-Save-FasdrDatabase
+Save-FasdrDatabase [-RemoveStaleEntries]
 ```
 
 ## DESCRIPTION
@@ -27,6 +27,20 @@ PS C:\> {{ Add example code here }}
 {{ Add example description here }}
 
 ## PARAMETERS
+
+### -RemoveStaleEntries
+If this switch is specified, entries that no longer exist in the provider will be removed.
+
+```yaml
+Type: switch
+Parameter Sets: (All)
+
+Required: false
+Position: named
+Default value: false
+Accept pipeline input: false
+Accept wildcard characters: false
+```
 
 ## INPUTS
 

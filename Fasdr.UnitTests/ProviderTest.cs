@@ -126,8 +126,18 @@ namespace Fasdr.UnitTests
 			CollectionAssert.AreEqual (expected, p.GetAllEntries ());
 		}
 
+        [Test, TestCaseSource(typeof(MyFactoryClass), "TestCanRemoveStaleEntriesCases")]
+        public void TestCanRemoveStaleEntries(string configFileContents,
+            Predicate<string> pathExists,
+            string[] expected)
+        {
+            var p = SetupMatchSimple(configFileContents);
+            p.RemoveStaleEntries(pathExists);
+            CollectionAssert.AreEqual(expected, p.GetAllEntries());
+        }
 
-		public static class MyFactoryClass
+
+        public static class MyFactoryClass
 		{
 			public static IEnumerable TestRemoveEntryCases 
 			{
@@ -171,7 +181,38 @@ namespace Fasdr.UnitTests
 							.SetName("TestGetAllEntriesTwoItems");
 				}
 			}
-		}
+
+            public static IEnumerable TestCanRemoveStaleEntriesCases
+            {
+                get
+                {
+                    yield return new TestCaseData("", new Predicate<string>(e => false), new string[] { })
+                        .SetName("TestCanRemoveStaleEntriesEmptyDatabase");
+
+                    yield return new TestCaseData(
+                        string.Join(Environment.NewLine,
+                            new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+                        new Predicate<string>(e => true),
+                        new string[] { @"c:\tree" })
+                            .SetName("TestCanRemoveStaleEntriesOneItemExists");
+
+                    yield return new TestCaseData(
+                        string.Join(Environment.NewLine,
+                            new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+                        new Predicate<string>(e => false),
+                        new string[] { })
+                            .SetName("TestCanRemoveStaleEntriesOneItemDoesNotExist");
+
+                    yield return new TestCaseData(
+                        string.Join(Environment.NewLine,
+                            new Entry(@"c:\tools\", 101, DateTime.Now, false),
+                            new Entry(@"c:\tree\", 102, DateTime.Now, false)),
+                        new Predicate<string>(e => e == @"c:\tools"),
+                        new string[] { @"c:\tools" })
+                            .SetName("TestCanRemoveStaleEntriesTwoItems");
+                }
+            }
+        }
 	}
 }
 

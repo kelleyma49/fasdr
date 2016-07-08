@@ -240,6 +240,13 @@ function Initialize-FasdrDatabase {
 }
 
 function Save-FasdrDatabase {
+	param([switch]$RemoveStaleEntries=$false)
+	if ($RemoveStaleEntries) {
+		$pred = [System.Predicate[string]]{param($fullPath) $result = Test-Path $fullPath ; Write-Host "testing $fullPath,$result" ; return $result}
+		$global:fasdrDatabase.Providers.Values | Where-Object Name -eq 'FileSystem' | ForEach-Object {
+			$_.RemoveStaleEntries($pred)
+		}
+	}
 	$global:fasdrDatabase.Save($global:Fasdr.MaxEntries) 
 }
 

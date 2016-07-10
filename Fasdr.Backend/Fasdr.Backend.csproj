@@ -41,9 +41,6 @@
     <Reference Include="System.IO.Abstractions">
       <HintPath>..\Fasdr\packages\System.IO.Abstractions.2.0.0.124\lib\net40\System.IO.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="DuoVia.FuzzyStrings">
-      <HintPath>..\Fasdr\packages\DuoVia.FuzzyStrings.1.0.1\lib\net40\DuoVia.FuzzyStrings.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\lib_fts\code\fts_fuzzy_match.cs">

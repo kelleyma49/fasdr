@@ -19,11 +19,11 @@ Returns a list of entries in the Fasdr database for given provider.  Entries inc
 ## EXAMPLES
 
 ### Example 1
-```
+Gets all entries for the FileSystem provider.
+```powershell
 PS C:\> Get-Frecents -ProviderName 'FileSystem'
 ```
 
-Gets all entries for the FileSystem provider.
 
 ## PARAMETERS
 

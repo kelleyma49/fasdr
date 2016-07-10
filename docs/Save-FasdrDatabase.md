@@ -15,16 +15,16 @@ Save-FasdrDatabase [-RemoveStaleEntries]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+This function saves all provider entries in the current PowerShell session out to the file system.  Immediately before saving, the current process will merge databases currently saved to the file system.  This prevents the current PowerShell session from wiping previously saved entries from another PowerShell session.
 
 ## EXAMPLES
 
 ### Example 1
-```
-PS C:\> {{ Add example code here }}
-```
 
-{{ Add example description here }}
+Saves the current in memory database out to the file system.
+```powershell
+PS C:\> Save-FasdrDatabase
+```
 
 ## PARAMETERS
 
@@ -48,10 +48,8 @@ Accept wildcard characters: false
 
 
 ## OUTPUTS
-
-### System.Object
-
-## NOTES
+### None
+This cmdlet does not generate any output.
 
 ## RELATED LINKS
 

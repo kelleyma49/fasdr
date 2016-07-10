@@ -1,7 +1,6 @@
 ---
-external help file: Fasdr.psm1-help.xml
-online version: 
 schema: 2.0.0
+external help file: Fasdr.psm1-help.xml
 ---
 
 # Set-FrecentFromLeaf
@@ -17,6 +16,11 @@ Set-FrecentFromLeaf [[-Path] <String>]
 ## DESCRIPTION
 Set-FrecentFromLeaf works exactly like Set-Frecent, except it is not intended to be used by users.  It is used by the tab expansion functions.
 ## EXAMPLES
+Adds the `c:\Windows\` path to the current provider database.
+
+```powershell
+Set-Frecent c:\Windows\
+```
 
 ## PARAMETERS
 

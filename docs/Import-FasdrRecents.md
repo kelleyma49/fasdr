@@ -6,7 +6,7 @@ schema: 2.0.0
 
 # Import-FasdrRecents
 ## SYNOPSIS
-Imports container and leaf paths from various areas in Windows.
+Imports container and leaf paths from various areas in the Windows operating system.
 
 ## SYNTAX
 
@@ -20,11 +20,11 @@ Imports containers and leaves based on stored locations in the Windows operating
 ## EXAMPLES
 
 ### Example 1
+
+Imports entries into the Fasdr databases for the currently known providers.
 ```
 PS C:\> Import-FasdrRecents
 ```
-
-Imports entries into the Fasdr databases for the currently known providers.
 
 ## PARAMETERS
 

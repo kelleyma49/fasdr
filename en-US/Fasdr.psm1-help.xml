@@ -242,7 +242,7 @@
 </maml:alertSet>
 <command:examples><command:example><maml:title>Example 1</maml:title>
 <dev:code>PS C:\&gt; Get-Frecents -ProviderName 'FileSystem'</dev:code>
-<dev:remarks><maml:para>Gets all entries for the FileSystem provider.
+<dev:remarks><maml:para>
 </maml:para>
 </dev:remarks>
 </command:example>
@@ -253,7 +253,7 @@
 <command:details><command:name>Import-FasdrRecents</command:name>
 <command:verb>Import</command:verb>
 <command:noun>FasdrRecents</command:noun>
-<maml:description><maml:para>Imports container and leaf paths from various areas in Windows.
+<maml:description><maml:para>Imports container and leaf paths from various areas in the Windows operating system.
 </maml:para>
 </maml:description>
 </command:details>
@@ -284,7 +284,7 @@
 </maml:alertSet>
 <command:examples><command:example><maml:title>Example 1</maml:title>
 <dev:code>PS C:\&gt; Import-FasdrRecents</dev:code>
-<dev:remarks><maml:para>Imports entries into the Fasdr databases for the currently known providers.
+<dev:remarks><maml:para>
 </maml:para>
 </dev:remarks>
 </command:example>
@@ -371,17 +371,34 @@
 <command:details><command:name>Save-FasdrDatabase</command:name>
 <command:verb>Save</command:verb>
 <command:noun>FasdrDatabase</command:noun>
-<maml:description><maml:para>{{Fill in the Synopsis}}
+<maml:description><maml:para>Saves all provider entries out to the file system.
 </maml:para>
 </maml:description>
 </command:details>
-<maml:description><maml:para>{{Fill in the Description}}
+<maml:description><maml:para>This function saves all provider entries in the current PowerShell session out to the file system.  Immediately before saving, the current process will merge databases currently saved to the file system.  This prevents the current PowerShell session from wiping previously saved entries from another PowerShell session.
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Save-FasdrDatabase</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
+<maml:Description><maml:para>If this switch is specified, entries that no longer exist in the provider will be removed.
+</maml:para>
+</maml:Description>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters></command:parameters>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
+<maml:Description><maml:para>If this switch is specified, entries that no longer exist in the provider will be removed.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+<dev:type><maml:name>SwitchParameter</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>false</dev:defaultValue>
+</command:parameter>
+</command:parameters>
 <command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
 </dev:type>
 <maml:description><maml:para>
@@ -389,20 +406,18 @@
 </maml:description>
 </command:inputType>
 </command:inputTypes>
-<command:returnValues><command:returnValue><dev:type><maml:name>System.Object</maml:name>
+<command:returnValues><command:returnValue><dev:type><maml:name>None</maml:name>
 </dev:type>
-<maml:description><maml:para>
+<maml:description><maml:para>This cmdlet does not generate any output.
 </maml:para>
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert><maml:para>
-</maml:para>
-</maml:alert>
+<maml:alertSet><maml:alert></maml:alert>
 </maml:alertSet>
 <command:examples><command:example><maml:title>Example 1</maml:title>
-<dev:code>PS C:\&gt; {{ Add example code here }}</dev:code>
-<dev:remarks><maml:para>{{ Add example description here }}
+<dev:code>PS C:\&gt; Save-FasdrDatabase</dev:code>
+<dev:remarks><maml:para>
 </maml:para>
 </dev:remarks>
 </command:example>
@@ -458,7 +473,13 @@
 </command:returnValues>
 <maml:alertSet><maml:alert></maml:alert>
 </maml:alertSet>
-<command:examples></command:examples>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>Set-Frecent c:\Windows\</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
 <command:relatedLinks></command:relatedLinks>
 </command:command>
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
@@ -512,7 +533,13 @@
 </maml:para>
 </maml:alert>
 </maml:alertSet>
-<command:examples></command:examples>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>Set-Frecent c:\Windows\</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
 <command:relatedLinks></command:relatedLinks>
 </command:command>
 </helpItems>

@@ -19,6 +19,8 @@ The Set-Frecent function sets the current container location.  If Path is not a 
 If Path is a file, Set-Frecent will use the parent directory of the file.  If Path is a valid path, the path will be saved to the Fasdr database.
 
 ## EXAMPLES
+
+### Example 1
 Adds the c:\Windows\ path to the current provider database.
 
 ```powershell

@@ -16,6 +16,7 @@ Set-FrecentFromLeaf [[-Path] <String>]
 ## DESCRIPTION
 Set-FrecentFromLeaf works exactly like Set-Frecent, except it is not intended to be used by users.  It is used by the tab expansion functions.
 ## EXAMPLES
+### Example 1
 Adds the `c:\Windows\` path to the current provider database.
 
 ```powershell

@@ -8,26 +8,26 @@ $global:fasdrDatabase = $null
 # configuration vars
 $global:Fasdr = @{
 	MaxResults = 50;
-	MaxEntries = 10000
+	MaxEntries = 10000;
 }
 
+$script:FoundPaths = @()
 #region prompt
 $global:oldPrompt = $function:prompt
 $global:fasdrPrevLocation = $null
-$global:fasdrPrevArgs = @(@(),@(),@(),@(),@(),@(),@(),@(),@(),@())
 
 function FindPathsInLastCommand
 {
 	param([string]$PrevLocation = $null)
 
+	$script:FoundPaths = @()
+	
 	if (-not [string]::IsNullOrWhiteSpace($PrevLocation)) {
         $global:fasdrPrevLocation = $PrevLocation
 	}
 	if ($global:fasdrPrevLocation -ne $null) {
         $lastHistory = Get-History -Count 1
 		$lastCommand = $lastHistory.CommandLine   
-
-		$foundArgs = @()
 
 		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) |
 			Where-Object {$_.type -eq "commandargument" -or $_.type -eq "string"} | foreach-object {
@@ -41,11 +41,9 @@ function FindPathsInLastCommand
 
 				if ($null -ne $foundPath) {
 					Add-Frecent $foundPath.Path $foundPath.Provider.Name | out-null
-					$foundArgs += $foundPath
+					$script:FoundPaths += $foundPath
 				}
 			}
-
-			#$global:fasdrPrevArgs = $foundArgs + $global:fasdrPrevArgs[0..8]
 	}
 
 	$global:fasdrPrevLocation = (Get-Location).Path
@@ -222,6 +220,10 @@ $MyInvocation.MyCommand.ScriptBlock.Module.OnRemove =
 	{
 		Set-Item Function:\prompt $oldPrompt
 	}
+}
+
+function Get-FasdrFoundPaths {
+	return $script:FoundPaths;
 }
 
 <#

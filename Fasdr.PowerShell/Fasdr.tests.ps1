@@ -374,6 +374,7 @@ Describe "FindPathsInLastCommand" {
 			It 'Processes empty history line' {
 				{ FindPathsInLastCommand -PrevLocation "$env:TEMP" } | Should Not Throw
 				Assert-MockCalled Add-Frecent -Exactly 0
+				(Get-FasdrFoundPaths).Length | Should be 0				
 			}
 		}
 
@@ -384,6 +385,8 @@ Describe "FindPathsInLastCommand" {
 			It 'Processes correctly' {
 				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq $env:windir ; $ProviderName -eq 'FileSystem'}
+				(Get-FasdrFoundPaths).Length | Should be 1
+				(Get-FasdrFoundPaths)[0] | Should be "$env:windir"
 			}
 		}
 
@@ -395,6 +398,8 @@ Describe "FindPathsInLastCommand" {
 					It "Processes '$cmd' correctly" {
 						{ FindPathsInLastCommand -PrevLocation "$env:SYSTEMDRIVE\" } | Should Not Throw
 						Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:SYSTEMDRIVE\windows" -and $ProviderName -eq 'FileSystem'}
+						(Get-FasdrFoundPaths).Length | Should be 1
+						(Get-FasdrFoundPaths)[0] | Should be "$env:SYSTEMDRIVE\windows"
 					}
 			}
 		}
@@ -407,6 +412,9 @@ Describe "FindPathsInLastCommand" {
 				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:windir" -and $ProviderName -eq 'FileSystem'}
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:ProgramData" -and $ProviderName -eq 'FileSystem'}
+				(Get-FasdrFoundPaths).Length | Should be 2
+				(Get-FasdrFoundPaths)[0] | Should be "$env:windir"
+				(Get-FasdrFoundPaths)[1] | Should be "$env:ProgramData"
 			}
 		}
 
@@ -417,6 +425,8 @@ Describe "FindPathsInLastCommand" {
 			It "Processes '$cmd' correctly" {
 				{ FindPathsInLastCommand -PrevLocation $env:TEMP } | Should Not Throw
 				Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:ProgramData" -and $ProviderName -eq 'FileSystem'}
+				(Get-FasdrFoundPaths).Length | Should be 1
+				(Get-FasdrFoundPaths)[0] | Should be "$env:ProgramData"
 			}
 		}
 	}

@@ -7,11 +7,10 @@ schema: 2.0.0
 # Get-Frecents
 ## SYNOPSIS
 Gets the current entries from the database for a given provider.
-
 ## SYNTAX
 
 ```
-Get-Frecents [[-ProviderName] <String>]
+Get-Frecents [[-ProviderName] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -20,10 +19,10 @@ Returns a list of entries in the Fasdr database for given provider.  Entries inc
 
 ### Example 1
 Gets all entries for the FileSystem provider.
-```powershell
+
+```
 PS C:\> Get-Frecents -ProviderName 'FileSystem'
 ```
-
 
 ## PARAMETERS
 
@@ -42,16 +41,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 ## INPUTS
 
 ### None
-
 
 ## OUTPUTS
 
 ### [PSObject]
 An array of objects representing the database items.
-
 ## NOTES
 
 ## RELATED LINKS

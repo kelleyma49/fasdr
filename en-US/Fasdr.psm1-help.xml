@@ -13,41 +13,41 @@
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Add-Frecent</maml:name>
-<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none"><maml:name>FullName</maml:name>
 <maml:Description><maml:para>The full name of the path to add from the database.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that that hosts the path.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none"><maml:name>FullName</maml:name>
 <maml:Description><maml:para>The full name of the path to add from the database.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that that hosts the path.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
 </command:parameter>
@@ -66,7 +66,9 @@
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert></maml:alert>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
 </maml:alertSet>
 <command:examples><command:example><maml:title>Add Directory</maml:title>
 <dev:code>Add-Frecent c:\Windows\</dev:code>
@@ -89,77 +91,79 @@
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Find-Frecent</maml:name>
-<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderPath</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>ProviderPath</maml:name>
 <maml:Description><maml:para>The string to compare against items in the Fasdr database.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>none</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterContainers</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>FilterContainers</maml:name>
 <maml:Description><maml:para>Removes container paths from the results.
 </maml:para>
 </maml:Description>
-<dev:type><maml:name>SwitchParameter</maml:name>
+<command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+<dev:type><maml:name>Boolean</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>false</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterLeaves</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none"><maml:name>FilterLeaves</maml:name>
 <maml:Description><maml:para>Removes leaf paths from the results.
 </maml:para>
 </maml:Description>
-<dev:type><maml:name>SwitchParameter</maml:name>
+<command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+<dev:type><maml:name>Boolean</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>false</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that that hosts the path.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderPath</maml:name>
-<maml:Description><maml:para>The string to compare against items in the Fasdr database.
-</maml:para>
-</maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
-<maml:uri /></dev:type>
-<dev:defaultValue>none</dev:defaultValue>
-</command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterContainers</maml:name>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>FilterContainers</maml:name>
 <maml:Description><maml:para>Removes container paths from the results.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-<dev:type><maml:name>SwitchParameter</maml:name>
+<command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+<dev:type><maml:name>Boolean</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>false</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>FilterLeaves</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none"><maml:name>FilterLeaves</maml:name>
 <maml:Description><maml:para>Removes leaf paths from the results.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-<dev:type><maml:name>SwitchParameter</maml:name>
+<command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+<dev:type><maml:name>Boolean</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>false</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that that hosts the path.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
+</command:parameter>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>ProviderPath</maml:name>
+<maml:Description><maml:para>The string to compare against items in the Fasdr database.
+</maml:para>
+</maml:Description>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
+<maml:uri /></dev:type>
+<dev:defaultValue>none</dev:defaultValue>
 </command:parameter>
 </command:parameters>
 <command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
@@ -173,15 +177,57 @@
 </dev:type>
 <maml:description><maml:para>This function returns an array of strings.
 </maml:para>
-<maml:para>## RELATED LINKS
+</maml:description>
+</command:returnValue>
+</command:returnValues>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
+</maml:alertSet>
+<command:examples><command:example><maml:title>Find Directory</maml:title>
+<dev:code>Find-Frecent Windows</dev:code>
+<dev:remarks><maml:para>
+</maml:para>
+</dev:remarks>
+</command:example>
+</command:examples>
+<command:relatedLinks></command:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<command:details><command:name>Get-FasdrFoundPaths</command:name>
+<command:verb>Get</command:verb>
+<command:noun>FasdrFoundPaths</command:noun>
+<maml:description><maml:para>Returns an array that contains the found paths in the last command line.
+</maml:para>
+</maml:description>
+</command:details>
+<maml:description><maml:para>Returns an array that contains the found paths in the last command line.  The Fasdr prompt override, which is installed by default, must be installed for this to operate correctly.
+</maml:para>
+</maml:description>
+<command:syntax><command:syntaxItem><maml:name>Get-FasdrFoundPaths</maml:name>
+</command:syntaxItem>
+</command:syntax>
+<command:parameters></command:parameters>
+<command:inputTypes><command:inputType><dev:type><maml:name>None</maml:name>
+</dev:type>
+<maml:description><maml:para>
+</maml:para>
+</maml:description>
+</command:inputType>
+</command:inputTypes>
+<command:returnValues><command:returnValue><dev:type><maml:name>[PSObject]</maml:name>
+</dev:type>
+<maml:description><maml:para>An array of objects representing the database items.
 </maml:para>
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert></maml:alert>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
 </maml:alertSet>
-<command:examples><command:example><maml:title>Find Directory</maml:title>
-<dev:code>Find-Frecent Windows</dev:code>
+<command:examples><command:example><maml:title>Example 1</maml:title>
+<dev:code>PS C:\&gt; Get-FasdrFoundPaths</dev:code>
 <dev:remarks><maml:para>
 </maml:para>
 </dev:remarks>
@@ -303,41 +349,41 @@
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Remove-Frecent</maml:name>
-<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none"><maml:name>FullName</maml:name>
 <maml:Description><maml:para>The full name of the path to remove from the database.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that contains the path to remove.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="named" aliases="none"><maml:name>FullName</maml:name>
+<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none"><maml:name>FullName</maml:name>
 <maml:Description><maml:para>The full name of the path to remove from the database.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>ProviderName</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none"><maml:name>ProviderName</maml:name>
 <maml:Description><maml:para>The name of the provider that contains the path to remove.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>the name of the current working container provider</dev:defaultValue>
 </command:parameter>
@@ -356,7 +402,9 @@
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert></maml:alert>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
 </maml:alertSet>
 <command:examples><command:example><maml:title>Remove Directory</maml:title>
 <dev:code>Remove-Frecent c:\Windows\</dev:code>
@@ -379,7 +427,7 @@
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Save-FasdrDatabase</maml:name>
-<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
 <maml:Description><maml:para>If this switch is specified, entries that no longer exist in the provider will be removed.
 </maml:para>
 </maml:Description>
@@ -389,7 +437,7 @@
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none"><maml:name>RemoveStaleEntries</maml:name>
 <maml:Description><maml:para>If this switch is specified, entries that no longer exist in the provider will be removed.
 </maml:para>
 </maml:Description>
@@ -413,7 +461,9 @@
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert></maml:alert>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
 </maml:alertSet>
 <command:examples><command:example><maml:title>Example 1</maml:title>
 <dev:code>PS C:\&gt; Save-FasdrDatabase</dev:code>
@@ -436,23 +486,23 @@
 </maml:para>
 </maml:description>
 <command:syntax><command:syntaxItem><maml:name>Set-Frecent</maml:name>
-<command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>Path</maml:name>
+<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>Path</maml:name>
 <maml:Description><maml:para>This parameter is used to specify the path to a new working location.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
 </command:syntaxItem>
 </command:syntax>
-<command:parameters><command:parameter required="true" variableLength="true" globbing="false" pipelineInput="false" position="named" aliases="none"><maml:name>Path</maml:name>
+<command:parameters><command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none"><maml:name>Path</maml:name>
 <maml:Description><maml:para>This parameter is used to specify the path to a new working location.
 </maml:para>
 </maml:Description>
-<command:parameterValue required="true" variableLength="false">string</command:parameterValue>
-<dev:type><maml:name>string</maml:name>
+<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+<dev:type><maml:name>String</maml:name>
 <maml:uri /></dev:type>
 <dev:defaultValue>None</dev:defaultValue>
 </command:parameter>
@@ -471,7 +521,9 @@
 </maml:description>
 </command:returnValue>
 </command:returnValues>
-<maml:alertSet><maml:alert></maml:alert>
+<maml:alertSet><maml:alert><maml:para>
+</maml:para>
+</maml:alert>
 </maml:alertSet>
 <command:examples><command:example><maml:title>Example 1</maml:title>
 <dev:code>Set-Frecent c:\Windows\</dev:code>

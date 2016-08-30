@@ -447,6 +447,7 @@ New-Alias jl Set-FrecentFromLeaf
 
 Export-ModuleMember -Function   Find-Frecent,`
 								Initialize-FasdrDatabase,`
+								Get-FasdrFoundPaths,`
 								Add-Frecent,`
 								Set-Frecent,`
 								Set-FrecentFromLeaf,`

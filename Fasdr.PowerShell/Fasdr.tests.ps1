@@ -404,6 +404,18 @@ Describe "FindPathsInLastCommand" {
 			}
 		}
 
+		Context "Home Directory" {
+				$cmd = 'cd ~'
+				Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }
+				Mock Add-Frecent {}
+				It "Processes '$cmd' correctly" {
+					{ FindPathsInLastCommand -PrevLocation "~" } | Should Not Throw
+					Assert-MockCalled Add-Frecent -Exactly 1 -ParameterFilter {$FullName -eq "$env:USERPROFILE" -and $ProviderName -eq 'FileSystem'}
+					(Get-FasdrFoundPaths).Length | Should be 1
+					(Get-FasdrFoundPaths)[0] | Should be "$env:USERPROFILE"
+				}
+		}
+
 		Context "Multiple File Paths" {
 			$cmd = 'copy-item -Path {0} -Destination "{1}"' -f $env:windir,$env:ProgramData
 			Mock Get-History { $l = New-Object -TypeName PSObject ; $l | Add-Member -MemberType NoteProperty -Name CommandLine -Value $cmd; return $l }

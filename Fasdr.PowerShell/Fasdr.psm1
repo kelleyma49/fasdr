@@ -32,10 +32,10 @@ function FindPathsInLastCommand
 		[System.Management.Automation.PsParser]::Tokenize($lastCommand, [ref] $null) |
 			Where-Object {$_.type -eq "commandargument" -or $_.type -eq "string"} | foreach-object {
 				$path = $_.Content
-        		if (Split-Path $path -IsAbsolute) {
-					$foundPath = Resolve-Path $path -ErrorAction SilentlyContinue
- 				} else {
-					# attempt to find the path in the prev directory:
+				# try resolving as a full path first:
+				$foundPath = Resolve-Path $path -ErrorAction SilentlyContinue
+        		if ($null -eq $foundPath) {
+ 					# attempt to find the path in the prev directory:
                     $foundPath = Resolve-Path (Join-Path $global:fasdrPrevLocation $path) -ErrorAction SilentlyContinue	
 				}
 

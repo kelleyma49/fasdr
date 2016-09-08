@@ -389,12 +389,61 @@ function Remove-Frecent {
 	}
 }
 
+function ShowJumpMenu 
+{
+	param([string]$Path)
+	
+	# split path:
+	if ([System.String]::IsNullOrEmpty($Path)) {
+		$splitPath = @()
+	} else {
+		$splitPath = $Path.Split('\\', [StringSplitOptions]::RemoveEmptyEntries)
+	}
+
+	# show menu, wait for user input:
+	do {
+		$indent = ' '
+		Write-Host 'Which level would you like to go to (CTRL-C to cancel)?'
+		$numPaths = $splitPath.Length
+		if ($numPaths -le 1) {
+			return $null
+		}
+
+		for ($i = 0;$i -lt $numPaths;$i++) {
+			if ($i -eq 0) { $pathPart = $splitPath[$i] + '\' } else { $pathPart = $splitPath[$i]}
+			Write-Host ('{0}{1}: {2}' -f $indent,$i,$pathPart)
+			$indent = $indent + ' '
+		}
+		$prompt = 'Jump to [0-{0}] (default is {1})' -f ($numPaths-1),($numPaths-2)
+		$choice = Read-Host $prompt
+		#$choice = Read-Host "Jump to"
+		if ($choice -eq '') {
+			$choice = $numPaths-2
+		} 
+			
+		if ($choice -lt 0 -or $choice -ge $numPaths) {
+			Write-Warning "invalid input '$choice'"
+		} else {
+			$result = $splitPath[0..$choice] -join '\'
+			if ($choice -eq 0) {
+				$result = $result + '\'
+			}
+			Write-Host "Moving to $result"
+			return $result
+		}
+	} while ($true)
+}
 <# 
 	Set-Frecent
 #>
 #.ExternalHelp Fasdr.psm1-help.xml
 function Set-Frecent {
 	param([string]$Path)
+
+	# show current selection menu:
+	if ([System.String]::IsNullOrWhiteSpace($Path)) {
+		$Path = ShowJumpMenu (Get-Location)
+	}
 
 	# if it's not a valid path from tab completion or input,
 	# find the last result:

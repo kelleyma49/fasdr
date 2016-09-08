@@ -20,6 +20,7 @@ The Find-Frecent function finds paths and returns them based on the passed in st
 ### Find Directory
 Finds directory that contains the word 'Windows'.
 
+
 ```
 Find-Frecent Windows
 ```
@@ -96,8 +97,6 @@ You cannot pipe objects to Find-Frecent
 
 ### [string]
 This function returns an array of strings.
-
-## RELATED LINKS
 ## NOTES
 
 ## RELATED LINKS

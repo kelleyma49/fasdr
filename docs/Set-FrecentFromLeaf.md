@@ -20,6 +20,7 @@ Set-FrecentFromLeaf works exactly like Set-Frecent, except it is not intended to
 Adds the `c:\Windows\` path to the current provider database.
 
 
+
 ```
 Set-Frecent c:\Windows\
 ```

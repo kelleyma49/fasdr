@@ -1,7 +1,7 @@
 ---
 external help file: Fasdr.psm1-help.xml
-online version: 
 schema: 2.0.0
+online version: 
 ---
 
 # Get-FasdrFoundPaths
@@ -19,6 +19,7 @@ Returns an array that contains the found paths in the last command line.  The Fa
 
 ### Example 1
 Outputs array of last found paths.
+
 
 ```
 PS C:\> Get-FasdrFoundPaths

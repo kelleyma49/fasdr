@@ -20,6 +20,7 @@ The Remove-Frecent function removes a path from the Fasdr database for the passe
 Removes a directory from the database.
 
 
+
 ```
 Remove-Frecent c:\Windows\
 ```

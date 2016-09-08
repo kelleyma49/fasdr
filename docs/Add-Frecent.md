@@ -21,6 +21,7 @@ The Add-Frecent function adds a path to the Fasdr database for the passed in pro
 Adds a directory to the database.
 
 
+
 ```
 Add-Frecent c:\Windows\
 ```

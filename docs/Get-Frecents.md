@@ -1,7 +1,7 @@
 ---
 external help file: Fasdr.psm1-help.xml
-online version: 
 schema: 2.0.0
+online version: 
 ---
 
 # Get-Frecents
@@ -19,6 +19,7 @@ Returns a list of entries in the Fasdr database for given provider.  Entries inc
 
 ### Example 1
 Gets all entries for the FileSystem provider.
+
 
 ```
 PS C:\> Get-Frecents -ProviderName 'FileSystem'

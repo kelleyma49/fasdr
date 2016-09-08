@@ -15,10 +15,12 @@ Set-Frecent [[-Path] <String>] [<CommonParameters>]
 ## DESCRIPTION
 The Set-Frecent function sets the current container location.  If Path is not a valid path, Set-Frecent will call Find-Frecent and use the first result.
 If Path is a file, Set-Frecent will use the parent directory of the file.  If Path is a valid path, the path will be saved to the Fasdr database.
+If path is $null or whitespace, Set-Frecent shows a menu that allows the user to select a parent path relative to the current location.
 ## EXAMPLES
 
 ### Example 1
 Adds the c:\Windows\ path to the current provider database.
+
 
 
 ```

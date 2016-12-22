@@ -415,14 +415,13 @@ function ShowJumpMenu
 			$indent = $indent + ' '
 		}
 		$prompt = 'Jump to [0-{0}] (default is {1})' -f ($numPaths-1),($numPaths-2)
-		$choice = Read-Host $prompt
-		#$choice = Read-Host "Jump to"
-		if ($choice -eq '') {
-			$choice = $numPaths-2
+        $choiceStr = Read-Host $prompt
+		if ($choiceStr -eq '') {
+			$choiceStr = $numPaths-2
 		} 
-			
-		if ($choice -lt 0 -or $choice -ge $numPaths) {
-			Write-Warning "invalid input '$choice'"
+        $choice = $choiceStr -as [int]
+		if ($choice -eq $null -or $choice -lt 0 -or $choice -ge $numPaths) {
+			Write-Warning "invalid input '$choiceStr'"
 		} else {
 			$result = $splitPath[0..$choice] -join '\'
 			if ($choice -eq 0) {

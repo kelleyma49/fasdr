@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9baa50b02fd0440b91a2ce2084e69bb5)](https://app.codacy.com/app/kelleyma49/fasdr?utm_source=github.com&utm_medium=referral&utm_content=kelleyma49/fasdr&utm_campaign=badger)
 # Fasdr [![Build Status Travis](https://travis-ci.org/kelleyma49/fasdr.svg?branch=master)](https://travis-ci.org/kelleyma49/fasdr) [![Build Status Appveyor](https://ci.appveyor.com/api/projects/status/x2wm66qujmxf2ln3?svg=true)](https://ci.appveyor.com/project/kelleyma49/fasdr) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kelleyma49/fasdr/blob/master/LICENSE.md)
 
 Fasdr (pronounced similar to "faster") is a command-line productivity booster for PowerShell.  It supports quick access to leaf and container classes for PowerShell providers.  Leaf and container paths are tracked and ranked based on frequency and date.
